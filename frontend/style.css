@@ -1,0 +1,148 @@
+:root {
+    --primary-color: #A34925; /* Màu nâu cam đặc trưng Chăm */
+    --accent-purple: #8E44AD; /* Màu tím khi chọn */
+    --correct-green: #27AE60; /* Màu xanh lá đáp án đúng */
+    --text-dark: #333;
+}
+
+/* --- RESET & CHUNG --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/2.png') no-repeat center center/cover;
+    min-height: 100vh;
+}
+
+/* Nav bar */
+header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 8%; background: rgba(255, 255, 255, 0.9);
+}
+
+/* Tìm hoặc thêm đoạn code điều chỉnh Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa ảnh và chữ */
+}
+
+.logo img {
+    height: 40px;    /* Khống chế chiều cao logo (mày có thể chỉnh 30px-50px tùy ý) */
+    width: auto;      /* Giữ đúng tỉ lệ ảnh, không bị méo */
+    object-fit: contain;
+}
+
+.logo span {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+nav a {
+    text-decoration: none; margin: 0 35px; color: var(--text-dark); font-weight: 800;
+}
+
+nav a.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
+
+/* Hero */
+.hero {
+    display: flex; 
+    padding: 40px 8% 150px 5%; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 30px;
+}
+
+.hero-content {margin-top: -95px;}
+
+.hero-content h1 { font-size: 3rem; color:  #4B2D25; font-family: 'Times New Roman', Times, serif; }
+.hero-content span { color: #B64B26; } /*DÂN TỘC CHĂM?*/
+.hero-content p {font-weight: 500; margin-top: 10px;}
+.hero-content button {
+   width: 50%; background: var(--primary-color); color: white; font-weight: 600;
+    border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 30px;}
+
+/* Quiz Card */
+.quiz-card {
+    background: white; padding: 25px; border-radius: 20px; max-width: 100%;
+    width: 300px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.option {
+    padding: 10px; border: 1px solid #ddd; margin: 8px 0;
+    border-radius: 8px; cursor: pointer; transition: 0.3s;
+}
+
+/* Trạng thái chọn màu tím */
+.option.selected {
+    background-color: var(--accent-purple); color: white; border-color: var(--accent-purple);
+}
+
+/* Trạng thái đúng màu xanh */
+.option.correct {
+    background-color: var(--correct-green) !important; color: white; border-color: var(--correct-green);
+}
+
+#btn-result {
+    width: 50%; background: var(--primary-color); color: white; font-weight: 600;
+    border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 10px;
+}
+
+/* Stats Bar */
+.stats-bar {
+    position: absolute; 
+    bottom: -10px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    display: flex; 
+    background: white; 
+    padding: 30px; 
+    border-radius: 20px; 
+    width: 85%;
+    justify-content: space-around; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    gap: 20px;
+}
+.stat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1; /* Chia đều không gian cho 3 cột */
+}
+
+/* Fix lỗi font icon ô vuông */
+.icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    min-width: 30px;
+}
+
+.stat-item p {
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.value {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--primary-color);
+    display: block;
+}
+
+/* --- MEDIA QUERIES (XỬ LÝ TRÊN MOBILE/TABLET) --- */
+@media (max-width: 1024px) {
+    .stats-bar {
+        position: relative; /* Bỏ absolute để nó tự xuống dưới cùng */
+        width: 90%;
+        flex-direction: column; /* Chuyển thành hàng dọc trên màn hình nhỏ */
+        margin: 20px auto;
+        transform: none;
+        left: 0;
+    }
+}
