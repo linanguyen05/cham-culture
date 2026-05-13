@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="title">Cộng đồng – Chia sẻ & Thảo luận</h2>
+
+<div class="community">
+
+    <div class="posts">
+        <textarea id="post"></textarea>
+        <button onclick="addPost()">Đăng</button>
+
+        <div id="list"></div>
+    </div>
+
+    <div class="sidebar">
+        <p># Lễ hội Kate</p>
+        <p># Văn hóa Chăm</p>
+    </div>
+
+</div>
+
+<script>
+function addPost(){
+let c=document.getElementById("post").value;
+
+fetch("/add_post",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({content:c})
+}).then(load);
+}
+
+function load(){
+fetch("/get_posts")
+.then(res=>res.json())
+.then(data=>{
+let html="";
+data.forEach(p=>{
+html += "<div class='post'>"+p.content+"</div>";
+});
+document.getElementById("list").innerHTML=html;
+});
+}
+
+load();
+</script>
+
+{% endblock %}

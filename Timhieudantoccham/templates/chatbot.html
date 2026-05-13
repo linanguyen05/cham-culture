@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="title">Chatbot – Hỏi gì về dân tộc Chăm?</h2>
+
+<div class="chat-layout">
+
+    <div class="suggest">
+        <p>Gợi ý câu hỏi</p>
+        <button>Người Chăm ở đâu?</button>
+        <button>Lễ hội gì?</button>
+    </div>
+
+    <div class="chat-box" id="chat"></div>
+
+</div>
+
+<div class="chat-input">
+    <input id="msg">
+    <button onclick="send()">➤</button>
+</div>
+
+<script>
+function send(){
+let msg=document.getElementById("msg").value;
+
+fetch("/ask",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:msg})
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("chat").innerHTML += 
+"<div class='user'>"+msg+"</div>" +
+"<div class='bot'>"+data.reply+"</div>";
+});
+}
+</script>
+
+{% endblock %}
