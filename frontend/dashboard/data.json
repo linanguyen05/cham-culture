@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "nguyenla1105@gmail.com",
+      "password": "$2b$10$NJmAq4Do9bWvKU20c.0G7eNGIP4u3.6qochSavFI5/n2BO/4bjuXy",
+      "createdAt": "2026-05-13T14:55:49.654Z"
+    }
+  ]
+}
