@@ -3,70 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kết Nối - Văn Hóa Chăm</title>
+    <title>Đăng nhập & Đăng ký</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- HEADER & NAVIGATION -->
-    <header>
-        <div class="logo">
-            <img src="1.png" alt="Logo"> 
-            <span>Chăm Culture</span>
-        </div>
-        <nav>
-            <a href="#" class="active">Trang chủ</a>
-            <a href="#">Tìm hiểu</a>
-            <a href="#">Chatbot</a>
-            <a href="#">Cộng đồng</a>
-        </nav>
-        <div class="search-icon">🔍</div>
-    </header>
 
-    <!-- HERO SECTION -->
-    <main class="hero">
-        <div class="hero-content">
-            <h1>Bạn hiểu đúng <br> bao nhiêu về <br><span>DÂN TỘC CHĂM?</span></h1>
-            <p>Khám phá nét đẹp văn hóa, lịch sử và đời sống <br> của một trong những dân tộc lâu đời ở Việt Nam.</p>
-            <button class="btn-discover">Bắt đầu khám phá</button>
-        </div>
-
-        <!-- MINI TEST (ẢNH 2) -->
-        <div class="quiz-card">
-            <h3>Câu hỏi nhanh</h3>
-            <p><strong>Người Chăm theo tôn giáo nào?</strong></p>
-            <div class="options">
-                <div class="option" data-ans="A">A. Phật giáo</div>
-                <div class="option" data-ans="B">B. Hồi giáo</div>
-                <div class="option" data-ans="C" id="correct-answer">C. Bà la môn giáo</div>
-                <div class="option" data-ans="D">D. Công giáo</div>
-            </div>
-            <button id="btn-result">Xem kết quả</button>
-            <p class="stats">Đã có 1.248 người tham gia</p>
-        </div>
-    </main>
-
-    <!-- STATS BAR -->
-    <section class="stats-bar">
-    <div class="stat-item">
-        <span class="icon">👤</span>
-        <div>
-            <p>Khoảng <span class="value">200.000+</span> người Chăm tại Việt Nam</p>
-        </div>
+<div class="container">
+    <!-- Đã xóa nút tải database thủ công -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchForm('login')">Đăng nhập</button>
+        <button class="tab-btn" onclick="switchForm('register')">Đăng ký</button>
     </div>
-    <div class="stat-item">
-        <span class="icon">📍</span>
-        <div>
-            <p>Sinh sống chủ yếu tại <br><strong>Ninh Thuận, Bình Thuận, An Giang...</strong></p>
-        </div>
-    </div>
-    <div class="stat-item">
-        <span class="icon">⏳</span>
-        <div>
-            <p>Hơn <span class="value">1.000 năm</span> lịch sử và văn hóa độc đáo</p>
-        </div>
-    </div>
-</section>
 
-    <script src="script.js"></script>
+    <!-- Form Đăng Nhập -->
+    <form id="loginForm" class="active" onsubmit="return handleLogin(event)">
+        <div class="input-group">
+            <label>Email</label>
+            <input type="text" id="loginEmail" placeholder="example@gmail.com">
+            <p class="error-msg" id="loginEmailError">Email không hợp lệ.</p>
+        </div>
+        <div class="input-group">
+            <label>Mật khẩu</label>
+            <input type="password" id="loginPass" placeholder="••••••••">
+            <p class="error-msg" id="loginPassError">Mật khẩu có ít nhất 8 kí tự.</p>
+        </div>
+        <button type="submit" class="btn-submit">Đăng nhập</button>
+    </form>
+
+    <!-- Form Đăng Ký -->
+    <form id="registerForm" onsubmit="return handleRegister(event)">
+        <div class="input-group">
+            <label>Email</label>
+            <input type="text" id="regEmail" placeholder="yourname@gmail.com">
+            <p class="error-msg" id="regEmailError">Email không hợp lệ.</p>
+        </div>
+        <div class="input-group">
+            <label>Mật khẩu</label>
+            <input type="password" id="regPass" placeholder="Tối thiểu 8 ký tự">
+            <p class="error-msg" id="regPassError">Mật khẩu có ít nhất 8 ký tự.</p>
+        </div>
+        <button type="submit" class="btn-submit">Tạo tài khoản</button>
+    </form>
+</div>
+
+<script>
+    function isEmail(email) {
+        return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
+    }
+
+    function switchForm(type) {
+        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', (type === 'login' && idx === 0) || (type === 'register' && idx === 1));
+        });
+        document.getElementById('loginForm').classList.toggle('active', type === 'login');
+        document.getElementById('registerForm').classList.toggle('active', type === 'register');
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const emailErr = document.getElementById('regEmailError');
+        const passErr = document.getElementById('regPassError');
+
+        let isValid = true;
+        if (!isEmail(email)) { emailErr.style.display = 'block'; isValid = false; } 
+        else { emailErr.style.display = 'none'; }
+        if (pass.length < 8) { passErr.style.display = 'block'; isValid = false; } 
+        else { passErr.style.display = 'none'; }
+        if (!isValid) return false;
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                switchForm('login');
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPass').value = '';
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            alert('Không thể kết nối đến server. Hãy chắc chắn bạn đã chạy "node script.js"');
+        }
+        return false;
+    }
+
+    async function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        const emailErr = document.getElementById('loginEmailError');
+        const passErr = document.getElementById('loginPassError');
+
+        let isValid = true;
+        if (!isEmail(email)) { emailErr.style.display = 'block'; isValid = false; }
+        else { emailErr.style.display = 'none'; }
+        if (pass.length < 8) { passErr.style.display = 'block'; isValid = false; }
+        else { passErr.style.display = 'none'; }
+        if (!isValid) return false;
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass })
+            });
+            const data = await response.json();
+            if (response.status === 404) {
+                alert(data.message);
+                switchForm('register');
+            } else if (!response.ok) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            alert('Không thể kết nối đến server.');
+        }
+        return false;
+    }
+
+    document.getElementById('registerForm').onsubmit = handleRegister;
+    document.getElementById('loginForm').onsubmit = handleLogin;
+</script>
 </body>
 </html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chăm Culture - Cộng đồng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo-area">
+                <img src="../1.png" alt="Chăm Culture Logo" class="logo-img">
+                <span class="logo-text">Chăm Culture</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">Trang chủ</a>
+                <a href="#" class="nav-item">Tìm hiểu</a>
+                <a href="#" class="nav-item">Chatbot</a>
+                <a href="#" class="nav-item active">Cộng đồng</a>
+            </nav>
+            <div class="search-area">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-layout">
+
+        <section class="feed-section">
+            <div class="feed-header">
+                <h1 class="feed-title">Cộng đồng – Chia sẻ & Thảo luận</h1>
+                <button class="btn-create-post" id="openModalBtn">
+                    <i class="fa-solid fa-plus"></i> Tạo bài viết
+                </button>
+            </div>
+
+            <div class="feed-tabs">
+                <span class="tab-item active">Tổng quan</span>
+                <span class="tab-item">Được quan tâm</span>
+                <span class="tab-item">Văn hóa</span>
+                <span class="tab-item">Ẩm thực</span>
+                <span class="tab-item">Câu hỏi</span>
+                <span class="tab-item">Trải nghiệm</span>
+                <span class="tab-item">Lễ hội</span>
+                <span class="tab-item">Daily</span>
+            </div>
+
+            <div class="posts-container" id="postsContainer">
+            </div>
+        </section>
+
+        <aside class="sidebar-section">
+
+            <div class="sidebar-card">
+                <h3 class="card-title">Chủ đề được quan tâm</h3>
+                <div class="topic-list" id="topicListContainer">
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="card-title">Thành viên tích cực</h3>
+                <div id="active-member-container">
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal-overlay" id="postModal">
+        <div class="modal-box">
+
+            <div class="modal-header">
+                <h2>Tạo bài viết mới</h2>
+                <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <textarea id="postContentInput" placeholder="Chia sẻ suy nghĩ của bạn về văn hóa Chăm..."></textarea>
+
+                <div class="post-author-tag">
+                    <img id="modalUserAvatar" src="" alt="User Avatar" class="mini-avatar">
+                    <span id="modalUserName">Đang tải...</span>
+                </div>
+
+                <div class="upload-section">
+                    <label class="upload-label">Đăng tải hình ảnh</label>
+                    <div class="upload-grid-wrapper">
+                        <div class="upload-drag-zone" id="dragZone">
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                            <i class="fa-solid fa-camera camera-icon"></i>
+                            <p>Nhấn hoặc kéo thả hình ảnh tại đây (tối đa 4 ảnh)</p>
+                        </div>
+                        <div class="preview-slots" id="previewSlotsContainer">
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-settings">
+                    <div class="setting-dropdown">
+                        <label>Chủ đề</label>
+                        <select id="topicSelect">
+                            <option value="Văn hóa Chăm">Văn hóa</option>
+                            <option value="Ẩm thực Chăm">Ẩm thực</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Du lịch – Trải nghiệm">Trải nghiệm</option>
+                            <option value="Hỏi đáp">Hỏi đáp</option>
+                            <option value="Lễ hội">Lễ hội</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelModalBtn">Hủy</button>
+                <button class="btn-submit-post" id="submitPostBtn"><i class="fa-solid fa-plus"></i> Đăng bài</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

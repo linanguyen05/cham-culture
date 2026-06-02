@@ -1,0 +1,573 @@
+/* --- TOÀN CỤC & TONE MÀU CHỦ ĐẠO --- */
+:root {
+    --bg-color: #FAF5EF;       /* Màu nền kem hồng hào nhạt cực sang */
+    --primary-color: #B34E24;  /* Màu đỏ đất nung Chămpa của nút bấm vs chữ active */
+    --primary-hover: #963E1B;
+    --text-dark: #2D231E;      /* Chữ nâu đậm thay vì đen để nhìn dịu mắt */
+    --text-muted: #8A7E77;     /* Chữ xám nâu cho thời gian, phụ lục */
+    --card-bg: #FFFFFF;        /* Nền trắng cho các block phần tử */
+    --border-color: #EFE9E2;   /* Đường viền mảnh nhẹ */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+}
+
+/* --- THE NAVBAR (Thanh menu trên cùng) --- */
+.navbar {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-img {
+    height: 35px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 6px 0;
+    position: relative;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Thanh gạch chân màu đỏ cam bên dưới item đang active */
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+.search-icon {
+    font-size: 18px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+/* --- BỐ CỤC KHUNG TRANG CHÍNH --- */
+.main-layout {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 25px;
+    padding: 0 20px;
+}
+
+/* --- CỘT TRÁI: TIÊU ĐỀ & FEED BÀI VIẾT --- */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feed-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.btn-create-post {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-create-post:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Khung tab phân loại bài viết */
+.feed-tabs {
+    display: flex;
+    gap: 15px;
+    border-bottom: 2px solid #EAE3DA;
+    margin-bottom: 20px;
+}
+
+.tab-item {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 10px 12px;
+    cursor: pointer;
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 600;
+}
+
+/* --- THIẾT KẾ CARD BÀI VIẾT (POST CARD) --- */
+.post-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(45, 35, 30, 0.04);
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.user-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 15px;
+    display: block;
+}
+
+.post-time-tag {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.post-tag-badge {
+    background-color: #F4EFEA;
+    color: #665C56;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.post-more-btn {
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.post-text {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+}
+
+/* Lưới hiển thị hình ảnh trg bài đăng */
+.post-images-grid {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Style linh hoạt tùy số lượng hình ảnh */
+.post-images-grid[data-count="1"] { grid-template-columns: 1fr; }
+.post-images-grid[data-count="2"] { grid-template-columns: 1fr 1fr; }
+.post-images-grid[data-count="3"] { grid-template-columns: 1.2fr 1fr 1fr; }
+.post-images-grid[data-count="4"] { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+
+.post-img-item {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #EFEAE4;
+}
+
+.post-images-grid[data-count="1"] .post-img-item {
+    height: 350px;
+}
+
+/* Chân bài viết gồm tim, bình luận, share */
+.post-footer {
+    display: flex;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    gap: 25px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #554A42;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-item:hover {
+    color: var(--primary-color);
+}
+
+.action-item i.fa-heart {
+    color: #E25C5C;
+}
+
+/* --- CỘT PHẢI: SIDEBAR --- */
+.sidebar-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(45, 35, 30, 0.04);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+}
+
+/* Bảng xếp hạng các hashtag */
+.topic-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #FAF8F5;
+    font-size: 14px;
+}
+
+.topic-name {
+    font-weight: 600;
+    color: #4A3E36;
+}
+
+.topic-count {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* Khung thành viên tích cực */
+.active-member {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.member-name {
+    font-weight: 600;
+    display: block;
+    font-size: 14px;
+}
+
+.member-stats {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* --- MODAL DIALOG TẠO BÀI VIẾT MỚI --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(45, 35, 30, 0.5); /* Phông nền xám mờ che trang web gốc */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background-color: var(--card-bg);
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); }
+    to { transform: translateY(0); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+/* Toolbar định dạng chữ */
+.rich-text-toolbar {
+    background-color: #F9F6F2;
+    padding: 8px 15px;
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.rich-text-toolbar button {
+    background: none;
+    border: none;
+    color: #665C56;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.rich-text-toolbar button:hover {
+    color: var(--primary-color);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-body textarea {
+    width: 100%;
+    height: 80px;
+    border: none;
+    resize: none;
+    outline: none;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.post-author-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.mini-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+/* Phần upload ảnh trg modal */
+.upload-label {
+    font-size: 13px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.upload-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.upload-drag-zone {
+    border: 2px dashed #D5C9BE;
+    background-color: #FAF8F5;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.upload-drag-zone p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+.camera-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+/* Lưới 4 ô preview trống */
+.preview-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+}
+
+.slot {
+    background-color: #EFEAE4;
+    border-radius: 6px;
+    width: 100%;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Đáy modal chứa cấu hình chọn chủ đề */
+.modal-footer-settings {
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+.setting-dropdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.setting-dropdown label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.setting-dropdown select {
+    background-color: #F6F1EC;
+    border: 1px solid #E5DBD0;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    color: #4A3E36;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Nút hủy vs đăng bài ở cuối modal */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 15px 20px;
+    background-color: #FAF8F5;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-cancel {
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: #665C56;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-submit-post {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-submit-post:hover {
+    background-color: var(--primary-hover);
+}

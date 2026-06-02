@@ -1,114 +1,210 @@
 :root {
-    --primary-color: #e66ea0;
-    --secondary-color: #d4627b;
-    --text-color: #333;
-    --bg-color: #f4f7f6;
+    --primary-color: #A34925;
+    /* Màu nâu cam đặc trưng Chăm */
+    --accent-purple: #8E44AD;
+    /* Màu tím khi chọn */
+    --correct-green: #27AE60;
+    /* Màu xanh lá đáp án đúng */
+    --text-dark: #333;
 }
 
+/* --- RESET & CHUNG --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-image: url("b.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('2.png') no-repeat center center/cover;
+    min-height: 100vh;
+}
+
+/* Nav bar */
+header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 100vh;
+    padding: 20px 8%;
+    background: rgba(255, 255, 255, 0.9);
 }
 
-.container {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px;
-}
-
-.tabs {
+/* Tìm hoặc thêm đoạn code điều chỉnh Logo */
+.logo {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 2rem;
+    align-items: center;
+    gap: 10px;
+    /* Khoảng cách giữa ảnh và chữ */
 }
 
-.tab-btn {
-    border: none;
-    background: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: #ccc;
-    padding-bottom: 5px;
-    transition: 0.3s;
+.logo img {
+    height: 40px;
+    /* Khống chế chiều cao logo (mày có thể chỉnh 30px-50px tùy ý) */
+    width: auto;
+    /* Giữ đúng tỉ lệ ảnh, không bị méo */
+    object-fit: contain;
 }
 
-.tab-btn.active {
+.logo span {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+nav a {
+    text-decoration: none;
+    margin: 0 35px;
+    color: var(--text-dark);
+    font-weight: 800;
+}
+
+nav a.active {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
 }
 
-form {
-    display: none;
-    flex-direction: column;
-}
-
-form.active {
+/* Hero */
+.hero {
     display: flex;
+    padding: 40px 8% 150px 5%;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
-.input-group {
-    margin-bottom: 1.2rem;
+.hero-content {
+    margin-top: -95px;
 }
 
-.input-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
+.hero-content h1 {
+    font-size: 3rem;
+    color: #4B2D25;
+    font-family: 'Times New Roman', Times, serif;
 }
 
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    transition: 0.3s;
+.hero-content span {
+    color: #B64B26;
 }
 
-.input-group input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 5px rgba(79, 172, 254, 0.3);
+/*DÂN TỘC CHĂM?*/
+.hero-content p {
+    font-weight: 500;
+    margin-top: 10px;
 }
 
-.error-msg {
-    color: #ff4d4d;
-    font-size: 0.8rem;
-    margin-top: 5px;
-    display: none;
-}
-
-.btn-submit {
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+.hero-content button {
+    width: 50%;
+    background: var(--primary-color);
     color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
     font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+/* Quiz Card */
+.quiz-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    max-width: 100%;
+    width: 300px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin: 8px 0;
+    border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.btn-submit:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+/* Trạng thái chọn màu tím */
+.option.selected {
+    background-color: var(--accent-purple);
+    color: white;
+    border-color: var(--accent-purple);
+}
+
+/* Trạng thái đúng màu xanh */
+.option.correct {
+    background-color: var(--correct-green) !important;
+    color: white;
+    border-color: var(--correct-green);
+}
+
+#btn-result {
+    width: 50%;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Stats Bar */
+.stats-bar {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 85%;
+    justify-content: space-around;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1;
+    /* Chia đều không gian cho 3 cột */
+}
+
+/* Fix lỗi font icon ô vuông */
+.icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    min-width: 30px;
+}
+
+.stat-item p {
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.value {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--primary-color);
+    display: block;
+}
+
+/* --- MEDIA QUERIES (XỬ LÝ TRÊN MOBILE/TABLET) --- */
+@media (max-width: 1024px) {
+    .stats-bar {
+        position: relative;
+        /* Bỏ absolute để nó tự xuống dưới cùng */
+        width: 90%;
+        flex-direction: column;
+        /* Chuyển thành hàng dọc trên màn hình nhỏ */
+        margin: 20px auto;
+        transform: none;
+        left: 0;
+    }
 }
