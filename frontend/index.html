@@ -122,6 +122,13 @@
                 alert(data.message);
             } else {
                 alert(data.message);
+                if (data.user) {
+                    localStorage.setItem('loggedInUser', JSON.stringify({
+                        name: data.user.username,
+                        avatar: data.user.avatar_url || "https://i.pravatar.cc/150?img=47"
+                    }));
+                }
+                window.location.href = '/dashboard/index.html';
             }
         } catch (err) {
             alert('Không thể kết nối đến server.');

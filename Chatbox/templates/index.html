@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot Địa danh Việt Nam</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+	  background: #fff;
+	  border-radius: 12px;
+	  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+	  width: 420px;
+	  min-width: 300px;
+	  min-height: 300px;
+	  display: flex;
+	  flex-direction: column;
+	  /* khung tổng thể cố định */
+	  height: 80vh;          /* giới hạn theo chiều cao trang */
+	}
+	.chat-header {
+	  background: #4a90e2;
+	  color: #fff;
+	  padding: 15px;
+	  text-align: center;
+	  font-size: 18px;
+	  font-weight: bold;
+	  border-radius: 12px 12px 0 0;
+	  flex-shrink: 0;        /* giữ nguyên, không co */
+	}
+
+	#chatbox {
+	  flex: 1;               /* chiếm toàn bộ phần giữa */
+	  overflow-y: auto;      /* nội dung cuộn */
+	  padding: 10px;
+	  box-sizing: border-box;
+	  display: flex;
+	  flex-direction: column;
+	  gap: 10px;
+	}
+
+	.chat-input {
+	  display: flex;
+	  border-top: 1px solid #ddd;
+	  flex-shrink: 0;        /* giữ cố định ở dưới */
+	}
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      max-width: 80%;
+    }
+    .message .bubble {
+      padding: 10px;
+      border-radius: 12px;
+      line-height: 1.4;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .user .bubble {
+      background: #d1e7dd;   /* xanh nhạt cho BẠN */
+    }
+    .bot .bubble {
+      background: #f8d7da;   /* hồng nhạt cho BOT */
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+    }
+    #userInput {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+    button {
+      background: #4a90e2;
+      color: #fff;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #357ABD;
+    }
+    /* Icon loading xoay */
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ccc;
+      border-top: 2px solid #4a90e2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">🤖 Chatbot Huỳnh Kim Nhật Vy</div>
+    <div id="chatbox"></div>
+    <div class="chat-input">
+      <input id="userInput" type="text" placeholder="Nhập câu hỏi...">
+      <button onclick="sendMessage()">Gửi</button>
+	  <span id="counter" style="margin-left:10px; font-size:12px; color:#555;">
+		0/20
+	  </span>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById("userInput");
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      let msg = input.value.trim();
+      if (!msg) return;
+      let chatbox = document.getElementById("chatbox");
+
+      // Tin nhắn người dùng
+      let userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.innerHTML = `<div class="avatar">👤</div><div class="bubble">${msg}</div>`;
+      chatbox.appendChild(userMsg);
+
+      // Hiển thị icon loading cho BOT
+      let loadingIcon = document.createElement("div");
+      loadingIcon.className = "message bot";
+      loadingIcon.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><div class="loading"></div></div>`;
+      chatbox.appendChild(loadingIcon);
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      // Gửi request tới server
+      fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+      })
+      .then(res => res.json())
+      .then(data => {
+        chatbox.removeChild(loadingIcon);
+        let botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.innerHTML = `<div class="avatar">🤖</div><div class="bubble">${data.reply}</div>`;
+        chatbox.appendChild(botMsg);
+        chatbox.scrollTop = chatbox.scrollHeight;
+      });
+
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
