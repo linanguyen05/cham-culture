@@ -1,0 +1,30 @@
+# Environment variables
+.env
+Chatbox/.env
+.env.*
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Databases
+*.db
+*.sqlite
+frontend/cham_culture.db
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Local/Usage State
+Chatbox/usage.json
+
+# PDF/Misc
+github.pdf

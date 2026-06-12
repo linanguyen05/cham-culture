@@ -1,9 +1,12 @@
-#genai.configure(api_key="AIzaSyAPhK0Hnhq8fjXjr7zfbtEpf_ezSWa3xXw")
 from flask import Flask, render_template, request, jsonify
 from waitress import serve
 import google.generativeai as genai
 from google.api_core import exceptions
 import json, os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # ====== Quản lý biến đếm ======
 def load_count():
@@ -23,7 +26,10 @@ with open("faq.json", "r", encoding="utf-8") as f:
 # ====== Flask App ======
 app = Flask(__name__)
 
-genai.configure(api_key="AIzaSyAPhK0Hnhq8fjXjr7zfbtEpf_ezSWa3xXw")
+api_key = os.environ.get("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable is not set. Please configure it in a .env file.")
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 question_count = load_count()
