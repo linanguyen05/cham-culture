@@ -82,9 +82,8 @@
             const data = await response.json();
             if (response.ok) {
                 alert(data.message);
-                switchForm('login');
-                document.getElementById('regEmail').value = '';
-                document.getElementById('regPass').value = '';
+                localStorage.setItem('tempUserId', data.userId);
+                window.location.href = '/profile.html';
             } else {
                 alert(data.message);
             }
@@ -124,6 +123,7 @@
                 alert(data.message);
                 if (data.user) {
                     localStorage.setItem('loggedInUser', JSON.stringify({
+                        user_id: data.user.user_id,
                         name: data.user.username,
                         avatar: data.user.avatar_url || "https://i.pravatar.cc/150?img=47"
                     }));

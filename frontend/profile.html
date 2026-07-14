@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoàn tất đăng ký</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Thông tin tài khoản</h2>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="username">Tên người dùng:</label>
+                <input type="text" id="username" name="username" placeholder="Tên người dùng" required>
+            </div>
+
+           <div class="avatar-upload-container">
+                <div class="avatar-wrapper">
+                    <img id="preview-avatar" src="avatarmacdinh.svg" alt="Ảnh đại diện">
+                    
+                    <label for="avatar" class="edit-btn">
+                        <img src="chinhsua.svg" alt="Thay đổi">
+                    </label>
+                    
+                    <input type="file" id="avatar" name="avatar" accept="image/*">
+                </div>
+            </div>
+
+            <button type="submit">Lưu thông tin</button>
+        </form>
+
+        <p id="status-msg"></p>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>

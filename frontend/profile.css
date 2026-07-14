@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+    /* Lấy ảnh nền từ thư mục static */
+    background-image: url('b.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    
+    /* Dùng Flexbox để căn giữa khung trắng tuyệt đối */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 320px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #d32f2f;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button {
+    background-color: #d32f2f;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #b71c1c;
+}
+
+#status-msg {
+    margin-top: 15px;
+    font-weight: bold;
+    display: none;
+}
+/* --- CODE CSS MỚI CHO AVATAR --- */
+.avatar-upload-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+#preview-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #d32f2f;
+    background-color: #e0e0e0;
+}
+
+/* Nút hình tròn chứa cây bút */
+.edit-btn {
+   position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+    border: 2px solid white; /* Viền trắng cho nổi */
+    
+    /* Thêm cái này để bo tròn và cắt đi phần góc vuông bị thừa của ảnh */
+    overflow: hidden; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Phòng hờ nếu ảnh load chậm thì vẫn có nền đen */
+}
+
+.edit-btn:hover {
+    transform: scale(1.1);
+}
+
+.edit-btn img {
+   width: 100%; /* Phóng to ảnh lấp đầy chiều rộng của nút */
+    height: 100%; /* Phóng to ảnh lấp đầy chiều cao của nút */
+    object-fit: cover; /* Căn chỉnh ảnh cho vừa vặn khung tròn mà ko bị méo */
+    /* Thêm scale nếu m thấy cây bút vẫn hơi nhỏ so vs viền, có thể chỉnh 1.1, 1.2 tùy mắt nhìn */
+    transform: scale(1.2);
+}
+
+/* Ẩn cái input file mặc định đi */
+input[type="file"]#avatar {
+    display: none;
+}

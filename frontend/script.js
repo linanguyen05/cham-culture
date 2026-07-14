@@ -4,11 +4,30 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const multer = require('multer');
+const fsSync = require('fs');
 
 const app = express();
 const PORT = 3000;
 const DATA_PATH = path.join(__dirname, 'data.json');
 const DB_PATH = path.join(__dirname, 'cham_culture.db');
+
+const avatarsDir = path.join(__dirname, 'uploads/avatars');
+if (!fsSync.existsSync(avatarsDir)) {
+    fsSync.mkdirSync(avatarsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, avatarsDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 app.use(express.static(__dirname));
 app.use(express.json());
@@ -233,6 +252,50 @@ app.post('/register', async (req, res) => {
     } catch (error) {
         console.error('[REGISTER] Lỗi server:', error);
         res.status(500).json({ message: 'Lỗi server!' });
+    }
+});
+
+// CẬP NHẬT PROFILE (HOÀN TẤT ĐĂNG KÝ)
+app.post('/update_profile', upload.single('avatar'), async (req, res) => {
+    console.log('[UPDATE PROFILE] Request body:', req.body);
+    console.log('[UPDATE PROFILE] File:', req.file);
+    try {
+        const { username, userId } = req.body;
+        if (!userId) {
+            return res.status(400).json({ error: 'Không tìm thấy ID người dùng!' });
+        }
+
+        // Kiểm tra xem user có tồn tại không
+        const user = await db.get('SELECT * FROM users WHERE user_id = ?', [userId]);
+        if (!user) {
+            return res.status(404).json({ error: 'Không tìm thấy người dùng!' });
+        }
+
+        let avatarUrl = user.avatar_url;
+        if (req.file) {
+            // Lưu đường dẫn tương đối để client load được (VD: 'uploads/avatars/tenfile.jpg')
+            avatarUrl = 'uploads/avatars/' + req.file.filename;
+        }
+
+        // Cập nhật username và avatar_url trong SQLite
+        await db.run(
+            'UPDATE users SET username = ?, avatar_url = ? WHERE user_id = ?',
+            [username || user.username, avatarUrl, userId]
+        );
+
+        console.log(`[UPDATE PROFILE] Đã cập nhật profile cho user ID: ${userId}`);
+        
+        res.status(200).json({
+            message: 'Cập nhật thông tin thành công!',
+            user: {
+                user_id: userId,
+                username: username || user.username,
+                avatar_url: avatarUrl
+            }
+        });
+    } catch (error) {
+        console.error('[UPDATE PROFILE] Lỗi server:', error);
+        res.status(500).json({ error: 'Lỗi hệ thống!' });
     }
 });
 
