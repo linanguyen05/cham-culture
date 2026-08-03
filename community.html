@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chăm Culture - Cộng đồng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<style>
+/* --- TOÀN CỤC & TONE MÀU CHỦ ĐẠO --- */
+:root {
+    --bg-color: #FAF5EF;       /* Màu nền kem hồng hào nhạt cực sang */
+    --primary-color: #B34E24;  /* Màu đỏ đất nung Chămpa của nút bấm vs chữ active */
+    --primary-hover: #963E1B;
+    --text-dark: #2D231E;      /* Chữ nâu đậm thay vì đen để nhìn dịu mắt */
+    --text-muted: #8A7E77;     /* Chữ xám nâu cho thời gian, phụ lục */
+    --card-bg: #FFFFFF;        /* Nền trắng cho các block phần tử */
+    --border-color: #EFE9E2;   /* Đường viền mảnh nhẹ */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+}
+
+/* --- THE NAVBAR (Thanh menu trên cùng) --- */
+.navbar {
+    background-color: var(--card-bg);
+	width: 100%;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: none;
+	width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+	box-sizing: border-box;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 130px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 20px;
+    padding: 10px 0;
+    position: relative;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Thanh gạch chân màu đỏ cam bên dưới item đang active */
+
+
+.search-icon {
+    font-size: 18px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+/* --- BỐ CỤC KHUNG TRANG CHÍNH --- */
+.main-layout {
+    max-width: none;
+	width: 100%;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 25px;
+    padding: 20px 40px;
+}
+
+/* --- CỘT TRÁI: TIÊU ĐỀ & FEED BÀI VIẾT --- */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.feed-title {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.btn-create-post {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.btn-create-post:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Khung tab phân loại bài viết */
+.feed-tabs {
+    display: flex;
+    gap: 53px;
+    border-bottom: 2px solid #EAE3DA;
+    margin-bottom: 20px;
+}
+
+.tab-item {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 10px 12px;
+    cursor: pointer;
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    font-weight: 600;
+}
+
+/* --- THIẾT KẾ CARD BÀI VIẾT (POST CARD) --- */
+.post-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(45, 35, 30, 0.04);
+}
+
+.post-user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.user-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 15px;
+    display: block;
+}
+
+.post-time-tag {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.post-tag-badge {
+    background-color: #F4EFEA;
+    color: #665C56;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.post-more-btn {
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.post-text {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+}
+
+/* Lưới hiển thị hình ảnh trg bài đăng */
+.post-images-grid {
+    display: grid;
+    gap: 12px;
+	width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Style linh hoạt tùy số lượng hình ảnh */
+.post-images-grid[data-count="1"] { grid-template-columns: 1fr; }
+.post-images-grid[data-count="2"] { grid-template-columns: 1fr 1fr; }
+.post-images-grid[data-count="3"] { grid-template-columns: 1.2fr 1fr 1fr; }
+.post-images-grid[data-count="4"] { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+
+.post-img-item {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #EFEAE4;
+}
+
+.post-images-grid[data-count="1"] .post-img-item {
+    height: 350px;
+}
+
+/* Chân bài viết gồm tim, bình luận, share */
+.post-footer {
+    display: flex;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    gap: 25px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #554A42;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-item:hover {
+    color: var(--primary-color);
+}
+
+.like-btn.liked i{
+    color:#ff2d55;
+}
+
+/* --- CỘT PHẢI: SIDEBAR --- */
+.sidebar-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(45, 35, 30, 0.04);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+}
+
+/* Bảng xếp hạng các hashtag */
+.topic-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #FAF8F5;
+    font-size: 14px;
+}
+
+.topic-name {
+    font-weight: 600;
+    color: #4A3E36;
+}
+
+.topic-count {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* Khung thành viên tích cực */
+.active-member {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.member-name {
+    font-weight: 600;
+    display: block;
+    font-size: 14px;
+}
+
+.member-stats {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ================================
+   CREATE POST MODAL - THREAD STYLE
+================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(45,35,30,.45);
+    backdrop-filter: blur(6px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    opacity:0;
+    visibility:hidden;
+    transition:.25s ease;
+
+    z-index:9999;
+}
+
+
+.modal-overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+
+
+.modal-box{
+
+    width:800px;
+    max-width:95%;
+	padding: 30px;
+	box-sizing: border-box;
+	display: block;
+    background:#fff;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow: 0 25px 80px rgba(0,0,0,.18);
+
+    transform:translateY(30px) scale(.96);
+
+    transition:.3s ease;
+
+}
+
+
+
+.modal-overlay.show .modal-box{
+
+    transform:
+    translateY(0)
+    scale(1);
+
+}
+
+
+
+/* HEADER */
+
+.modal-header{
+
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    border-bottom:
+    1px solid #eee5dc;
+
+}
+
+
+
+.modal-header h2{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#2d231e;
+
+}
+
+
+
+.close-modal-btn{
+
+    position:absolute;
+
+    right:18px;
+
+    top:5px;
+
+
+    width:35px;
+    height:35px;
+
+    border-radius:50%;
+
+    border:none;
+
+    background:#f4eee8;
+
+    font-size:24px;
+
+    color:#806f64;
+
+    cursor:pointer;
+
+}
+
+
+.close-modal-btn:hover{
+
+    background:#eaded3;
+
+}
+
+
+
+/* BODY */
+
+.modal-body{
+
+    padding:22px 25px;
+
+}
+
+
+
+/* textarea */
+
+.modal-body textarea{
+
+    width:100%;
+
+    height:110px;
+
+    resize:none;
+
+
+    border:none;
+
+    outline:none;
+
+
+    font-size:16px;
+
+    line-height:1.5;
+
+
+    color:#332923;
+
+
+    background:#faf7f3;
+
+
+    padding:15px;
+
+    border-radius:15px;
+
+
+}
+
+
+.modal-body textarea::placeholder{
+
+    color:#aaa;
+
+}
+
+
+
+/* user */
+
+.post-author-tag{
+
+    margin-top:18px;
+	margin-bottom: 24px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+.mini-avatar{
+
+    width:44px;
+
+    height:44px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid #eee;
+
+}
+
+
+
+/* upload */
+
+.upload-label{
+
+    margin-top:10px;
+	display: block;
+
+    margin-bottom:15px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+
+
+.upload-grid-wrapper{
+
+    display:grid;
+
+    grid-template-columns:1fr 140px;
+
+    gap:12px;
+
+}
+
+
+
+.upload-drag-zone{
+
+    height:120px;
+
+    border:
+
+    2px dashed #d8c6b8;
+
+
+    background:#fcfaf7;
+
+
+    border-radius:18px;
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    transition:.2s;
+
+}
+
+
+
+.upload-drag-zone:hover{
+
+    border-color:#b34e24;
+
+    background:#fff8f2;
+
+}
+
+
+
+.camera-icon{
+
+    font-size:28px;
+
+    color:#b34e24;
+
+}
+
+
+
+.upload-drag-zone p{
+
+    width:160px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    color:#8a7e77;
+
+}
+
+
+
+/* preview */
+
+
+.preview-slots{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+}
+
+
+
+.slot{
+
+    height:55px;
+
+    border-radius:12px;
+
+    background:#eee7df;
+
+    background-size:cover;
+
+    background-position:center;
+
+}
+
+
+
+/* select */
+
+.modal-footer-settings{
+
+    margin-top:20px;
+
+}
+
+
+
+.setting-dropdown label{
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+
+
+.setting-dropdown select{
+
+    margin-top:7px;
+
+    width:100%;
+
+
+    border:none;
+
+    background:#f7f1eb;
+
+
+    padding:12px;
+
+
+    border-radius:12px;
+
+
+    font-size:14px;
+
+}
+
+
+
+/* FOOTER */
+
+
+.modal-actions{
+
+
+    padding:16px 25px;
+
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+
+    background:#fcfaf7;
+
+
+}
+
+
+
+.btn-cancel{
+
+
+    border:none;
+
+    background:none;
+
+
+    padding:10px 20px;
+
+
+    color:#76665c;
+
+
+    font-weight:600;
+
+
+    cursor:pointer;
+
+}
+
+
+
+
+.btn-submit-post{
+
+
+    border:none;
+
+    background:#b34e24;
+
+
+    color:white;
+
+
+    padding:10px 25px;
+
+
+    border-radius:14px;
+
+
+    font-weight:700;
+
+
+    cursor:pointer;
+
+
+    transition:.2s;
+
+}
+
+
+
+.btn-submit-post:hover{
+
+    background:#963e1b;
+
+}
+
+
+.modal-box{
+    position:relative;
+    z-index:1000000;
+}.image-viewer{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+.image-viewer.show{
+    display:flex;
+}
+
+.image-viewer img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+    object-fit:contain;
+}
+
+#closeViewer{
+    position:absolute;
+    top:20px;
+    right:30px;
+    color:white;
+    font-size:45px;
+    cursor:pointer;
+    user-select:none;
+}
+
+.like-btn{
+    cursor:pointer;
+    transition:.2s;
+}
+
+.like-btn:hover{
+    transform:scale(1.05);
+}
+
+.like-btn.liked{
+    color:#ff2d55;
+}
+
+.like-btn.liked i{
+    color:#ff2d55;
+}
+
+.post-menu{
+    position:relative;
+}
+
+.post-more-btn{
+    cursor:pointer;
+    font-size:20px;
+}
+
+.post-dropdown{
+    position:absolute;
+    right:0;
+    top:30px;
+    width:170px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    display:none;
+    z-index:999;
+}
+
+.post-dropdown.show{
+    display:block;
+}
+
+.report-btn{
+    padding:12px 16px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.report-btn:hover{
+    background:#f5f5f5;
+    color:#e53935;
+}
+
+.comment-modal{
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.4);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:9999;
+}
+
+
+.comment-modal.show{
+
+    display:flex;
+
+}
+
+/* Nút đóng */
+
+#closeComment{
+    position:absolute;
+    top:50%;
+    right:15px;
+    transform:translateY(-50%);
+
+    width:38px;
+    height:38px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f3f3f3;
+    color:#666;
+
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    transition:.25s;
+}
+
+#closeComment:hover{
+    background:#b34e24;
+    color:#fff;
+    transform:translateY(-50%) rotate(90deg);
+}
+
+#closeComment:active{
+
+    transform:scale(.95);
+
+}
+
+.close-comment-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+
+    width:36px;
+    height:36px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f0f2f5;
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    transition:.2s;
+}
+
+
+.comment-box{
+    width:520px;
+    max-height:80vh;
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+
+.comment-header{
+    position:relative;
+    text-align:center;
+    padding:18px 20px;
+    border-bottom:1px solid #eee;
+}
+
+.comment-header h3{
+    margin:0;
+    font-size:20px;
+}
+
+
+#commentList{
+    flex:1;
+    overflow-y:auto;
+    padding:15px 20px;
+}
+
+
+.comment-input{
+    display:flex;
+    gap:10px;
+    padding:15px 20px;
+    border-top:1px solid #eee;
+}
+
+
+.comment-input input{
+    flex:1;
+    padding:12px 15px;
+    border-radius:25px;
+    border:1px solid #ddd;
+    outline:none;
+}
+
+.comment-item{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.comment-item img{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.comment-content{
+    flex:1;
+    background:#f6f6f6;
+    border-radius:15px;
+    padding:10px 14px;
+}
+
+.comment-content b{
+    display:block;
+    margin-bottom:4px;
+    color:#333;
+}
+
+.comment-content p{
+    margin:0;
+    color:#555;
+}
+
+#sendComment{
+    border:none;
+    background:#b34e24;
+    color:#fff;
+    padding:0 22px;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+#sendComment:hover{
+    background:#963e1b;
+}
+
+.repost-tag{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#666;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.repost-tag i{
+    color:#2d8cff;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close-btn{
+    font-size:28px;
+    cursor:pointer;
+    color:#777;
+}
+
+.close-btn:hover{
+    color:#000;
+}
+
+.btn-repost{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#b85a1c;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn-repost:hover{
+    background:#9e4c18;
+}
+
+/* ================= SHARE MODAL ================= */
+
+#shareModal{
+    position:fixed;
+    inset:0;
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:999999;
+}
+
+#shareModal.show{
+    display:flex;
+}
+
+.share-box{
+    width:520px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.share-header{
+    position:relative;
+    padding:18px;
+    border-bottom:1px solid #eee;
+    text-align:center;
+}
+
+.share-header h3{
+    margin:0;
+    font-size:24px;
+}
+
+#closeShareModal{
+    position:absolute;
+    right:15px;
+    top:12px;
+
+    width:38px;
+    height:38px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#efefef;
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.share-body{
+    padding:20px;
+}
+
+.share-user{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.share-user img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.share-user-info{
+    display:flex;
+    flex-direction:column;
+    position:relative;
+}
+
+.share-user-info b{
+    font-size:17px;
+}
+
+.share-privacy{
+    margin-top:5px;
+    padding:6px 12px;
+
+    border:none;
+    border-radius:20px;
+
+    background:#ececec;
+    cursor:pointer;
+
+    font-size:13px;
+}
+
+#shareCaption{
+    width:calc(100% - 40px);
+    margin:20px;
+    min-height:120px;
+    border:none;
+    outline:none;
+    resize:none;
+    font-size:16px;
+}
+
+.share-privacy-menu div{
+    padding:12px 15px;
+    cursor:pointer;
+}
+
+.share-privacy-menu div:hover{
+    background:#f5f5f5;
+}
+
+#shareCaption{
+
+    width:100%;
+
+    min-height:130px;
+
+    margin-top:20px;
+
+    border:none;
+
+    resize:none;
+
+    outline:none;
+
+    font-size:16px;
+
+    font-family:inherit;
+}
+
+.share-footer{
+    padding:18px;
+}
+
+#shareNowBtn{
+    width:100%;
+    height:48px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#1877f2;
+    color:#fff;
+
+    font-size:17px;
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+#shareNowBtn:hover{
+    background:#1668d6;
+}
+.share-privacy-menu{
+    position:absolute;
+    top:65px;
+    left:0;
+
+    width:180px;
+
+    background:#fff;
+
+    border:1px solid #ddd;
+    border-radius:12px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+    display:none;
+
+    z-index:99999;
+}
+
+.share-privacy-menu.show{
+    display:block;
+}
+
+.shared-images{
+    display:grid;
+    gap:8px;
+    margin-top:10px;
+}
+
+.shared-images.one{
+    grid-template-columns:1fr;
+}
+
+.shared-images.two{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.shared-images.three{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.shared-images.four{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.shared-image{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.shared-original{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    margin-top:12px;
+}
+
+.shared-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.shared-header img{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.shared-user-info{
+    display:flex;
+    flex-direction:column;
+}
+
+.shared-user-info b{
+    font-size:14px;
+    color:#222;
+}
+
+.shared-user-info span{
+    font-size:12px;
+    color:#888;
+    margin-top:2px;
+}
+
+</style>
+
+
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo-area">
+                <img src="{{ url_for('static', filename='1.png') }}" alt="Chăm Culture Logo" class="logo-img">
+                <span class="logo-text">Chăm Culture</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">Trang chủ</a>
+
+                <a href="/learn" class="nav-item">Tìm hiểu</a>
+
+                <a href="/chatbot" class="nav-item">Chatbot</a>
+
+                <a href="/community" class="nav-item active">Cộng đồng</a>
+            </nav>
+            <div class="search-area">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-layout">
+
+        <section class="feed-section">
+            <div class="feed-header">
+                <h1 class="feed-title">Cộng đồng – Chia sẻ & Thảo luận</h1>
+                <button class="btn-create-post" id="openModalBtn">
+                    <i class="fa-solid fa-plus"></i> Tạo bài viết
+                </button>
+            </div>
+
+            <div class="feed-tabs">
+                <span class="tab-item active">Tổng quan</span>
+                <span class="tab-item">Được quan tâm</span>
+                <span class="tab-item">Văn hóa</span>
+                <span class="tab-item">Ẩm thực</span>
+                <span class="tab-item">Câu hỏi</span>
+                <span class="tab-item">Trải nghiệm</span>
+                <span class="tab-item">Lễ hội</span>
+                <span class="tab-item">Daily</span>
+            </div>
+
+            <div class="posts-container" id="postsContainer">
+            </div>
+        </section>
+
+        <aside class="sidebar-section">
+
+            <div class="sidebar-card">
+                <h3 class="card-title">Chủ đề được quan tâm</h3>
+                <div class="topic-list" id="topicListContainer">
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="card-title">Thành viên tích cực</h3>
+                <div id="active-member-container">
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal-overlay" id="postModal">
+        <div class="modal-box">
+
+            <div class="modal-header">
+                <h2>Tạo bài viết mới</h2>
+                <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <textarea id="postContentInput" placeholder="Chia sẻ suy nghĩ của bạn về văn hóa Chăm..."></textarea>
+
+                <div class="post-author-tag">
+                    <img id="modalUserAvatar" src="" alt="User Avatar" class="mini-avatar">
+                    <span id="modalUserName">Đang tải...</span>
+                </div>
+
+                <div class="upload-section">
+                    <label class="upload-label">Đăng tải hình ảnh</label>
+                    <div class="upload-grid-wrapper">
+                        <div class="upload-drag-zone" id="dragZone">
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                            <i class="fa-solid fa-camera camera-icon"></i>
+                            <p>Nhấn hoặc kéo thả hình ảnh tại đây (tối đa 4 ảnh)</p>
+                        </div>
+                        <div class="preview-slots" id="previewSlotsContainer">
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                            <div class="slot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-settings">
+                    <div class="setting-dropdown">
+                        <label>Chủ đề</label>
+                        <select id="topicSelect">
+                            <option value="Văn hóa">Văn hóa</option>
+                            <option value="Ẩm thực">Ẩm thực</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Trải nghiệm">Trải nghiệm</option>
+                            <option value="Câu hỏi">Câu hỏi</option>
+                            <option value="Lễ hội">Lễ hội</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelModalBtn">Hủy</button>
+                <button class="btn-submit-post" id="submitPostBtn"><i class="fa-solid fa-plus"></i> Đăng bài</button>
+            </div>
+
+        </div>
+    </div>
+<!-- Xem ảnh -->
+<div id="imageViewer" class="image-viewer">
+    <span id="closeViewer">&times;</span>
+
+    <img id="viewerImage">
+</div>
+
+<!-- COMMENT MODAL -->
+<div id="commentModal" class="comment-modal">
+
+    <div class="comment-box">
+
+        <div class="comment-header">
+            <h3>Bình luận</h3>
+
+            <button id="closeComment">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="commentList"></div>
+
+        <div class="comment-input">
+            <input
+                id="commentInput"
+                type="text"
+                placeholder="Viết bình luận..."
+            >
+
+            <button id="sendComment">
+                Gửi
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="shareModal">
+
+    <div class="share-box">
+
+        <div class="share-header">
+
+            <h3>Chia sẻ</h3>
+
+            <button id="closeShareModal">✕</button>
+
+        </div>
+
+        <div class="share-body">
+
+            <div class="share-user">
+
+                <img id="shareAvatar" src="/static/avatars/default.jpg">
+
+                <div class="share-user-info">
+
+                    <b id="shareName"></b>
+
+                    <button id="sharePrivacyBtn" class="share-privacy">
+					🌍 Công khai ▼
+					</button>
+
+					<div id="sharePrivacyMenu" class="share-privacy-menu">
+						<div data-value="public">
+							🌍 Công khai
+						</div>
+
+						<div data-value="private">
+							🔒 Riêng tư
+						</div>
+					</div>
+                </div>
+			</div>
+			
+            <textarea
+                id="shareCaption"
+                placeholder="Hãy nói gì đó về nội dung này..."
+            ></textarea>
+
+              
+
+        <div class="share-footer">
+
+            <button id="shareNowBtn">
+                Chia sẻ ngay
+            </button>
+
+        </div>
+
+    
+
+</div>
+
+<script>
+const API_BASE_URL = '/api';
+const POSTS_API_URL = `${API_BASE_URL}/posts`;
+const ACTIVE_MEMBER_API_URL = `${API_BASE_URL}/active-member`;
+const TOPICS_API_URL = `${API_BASE_URL}/topics-count`;
+const CURRENT_USER_API_URL = `${API_BASE_URL}/current-user`;
+let sharePrivacy = "public";
+let uploadedImagesBase64 = [];
+// Đối tượng lưu trữ thông tin user hiện tại (Dùng làm bộ nhớ đệm Runtime)
+let currentUser = {
+    name: "",
+    avatar: "/static/avatars/default.jpg"
+};
+// CACHING ĐỘC LẬP TOÀN BỘ PHẦN TỬ DOM
+const DOM = {
+    postsContainer: document.getElementById('postsContainer'),
+    topicListContainer: document.getElementById('topicListContainer'),
+    activeMemberContainer: document.getElementById('active-member-container'),
+    postModal: document.getElementById('postModal'),
+    openModalBtn: document.getElementById('openModalBtn'),
+    closeModalBtn: document.getElementById('closeModalBtn'),
+    cancelModalBtn: document.getElementById('cancelModalBtn'),
+    submitPostBtn: document.getElementById('submitPostBtn'),
+    postContentInput: document.getElementById('postContentInput'),
+    topicSelect: document.getElementById('topicSelect'),
+    dragZone: document.getElementById('dragZone'),
+    fileInput: document.getElementById('fileInput'),
+    previewSlotsContainer: document.getElementById('previewSlotsContainer'),
+    modalUserAvatar: document.getElementById('modalUserAvatar'),
+    modalUserName: document.getElementById('modalUserName')
+};
+
+// =========================================================================
+// XỬ LÝ LẤY THÔNG TIN USER VỪA ĐĂNG NHẬP / ĐĂNG KÝ (TỐI ƯU CỰC MƯỢT)
+// =========================================================================
+async function initUserIdentity() {
+    // Bước 1: Kiểm tra xem trang Đăng Nhập/Đăng Ký có lưu thông tin user vừa đăng nhập vào máy cục bộ không
+    const savedUser = localStorage.getItem('loggedInUser');
+    
+    if (savedUser) {
+        try {
+            currentUser = JSON.parse(savedUser);
+            renderUserToModal();
+        } catch (e) {}
+    }
+    // Bước 2: Dự phòng nếu LocalStorage trống, gọi API Python để quét từ SQLite
+    try{
+        const response = await fetch(CURRENT_USER_API_URL);
+        const result = await response.json();
+
+        if(result.success){
+
+            currentUser = result.data;
+
+            renderUserToModal();
+
+            localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify(currentUser)
+            );
+        }
+
+    }catch(error){
+    console.log(error);
+    }
+}
+// Hàm đẩy thông tin (Tên + Avatar) vào khối `<div class="post-author-tag">`
+function renderUserToModal() {
+
+    if (DOM.modalUserAvatar)
+        DOM.modalUserAvatar.src = currentUser.avatar;
+
+    if (DOM.modalUserName)
+        DOM.modalUserName.textContent = currentUser.name;
+
+    const shareAvatar = document.getElementById("shareAvatar");
+    const shareName = document.getElementById("shareName");
+
+    if (shareAvatar) shareAvatar.src = currentUser.avatar;
+    if (shareName) shareName.textContent = currentUser.name;
+
+}
+// =========================================================================
+// GỌI API & RENDER FEED BÀI VIẾT (TÍCH HỢP LAZY LOADING ẢNH)
+// =========================================================================
+async function fetchAndRenderPosts(tabName = 'Tổng quan') {
+    if (!DOM.postsContainer) return;
+    try {
+        DOM.postsContainer.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 14px;">Đang tải dữ liệu từ SQLite...</p>';
+        
+        const response = await fetch(`${POSTS_API_URL}?tab=${encodeURIComponent(tabName)}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const postsData = result.data;
+            if (postsData.length === 0) {
+                DOM.postsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: var(--text-muted);">Chưa có bài viết nào trg mục này hết m ơi! ✨</p>';
+                return;
+            }
+            
+            DOM.postsContainer.innerHTML = '';
+            postsData.forEach(post => {
+                let imagesGridHTML = '';
+                if (post.images && post.images.length > 0) {
+                    imagesGridHTML = `<div class="post-images-grid" data-count="${post.images.length}">`;
+                    post.images.forEach(imgUrl => {
+                        imagesGridHTML += `<img src="${imgUrl}" alt="Hình ảnh" class="post-img-item" loading="lazy">`;
+                    });
+                    imagesGridHTML += `</div>`;
+                }
+                
+                const cardHTML = `
+                    <article class="post-card">
+						
+                        <div class="post-user-info">
+                            <div class="user-meta">
+
+                                <img
+                                    src="${post.authorAvatar || '/static/avatars/default.png'}"
+                                    alt="${post.authorName}"
+                                    class="user-avatar"
+                                    loading="lazy"
+                                >
+
+                                <div>
+                                    <span class="user-name">${post.authorName}</span>
+                                    <div class="post-time-tag">
+                                        <span>${post.timeText}</span>
+                                        <span class="post-tag-badge">${post.category}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="post-menu">
+                                <i class="fa-solid fa-ellipsis post-more-btn"></i>
+
+                                <div class="post-dropdown">
+                                    <div class="report-btn">
+                                        <i class="fa-solid fa-flag"></i>
+                                        Báo cáo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="post-text">${post.text}</p>
+						${post.original ? `
+						<div class="shared-original">
+
+							<div class="shared-header">
+
+								<img src="${post.original.avatar}" class="user-avatar">
+
+								<div class="shared-user-info">
+									<b>${post.original.name}</b>
+									<span>${post.original.timeText}</span>
+								</div>
+
+							</div>
+
+							<p>${post.original.content}</p>
+
+							${
+								post.original.images.length
+								? `
+								<div class="shared-images ${
+									post.original.images.length == 1 ? "one" :
+									post.original.images.length == 2 ? "two" :
+									post.original.images.length == 3 ? "three" : "four"
+								}">
+
+									${post.original.images.map(img => `
+										<img src="${img}" class="shared-image">
+									`).join("")}
+
+								</div>
+								`
+								: ""
+							}
+
+						</div>
+						`
+						:
+						imagesGridHTML
+						}
+                        <div class="post-footer">
+                            <div class="action-item like-btn ${post.liked?'liked':''}"
+                                 data-id="${post.id}">
+                                <i class="${post.liked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                                <span class="like-count">${post.likes}</span>
+                            </div>
+                            <div class="action-item comment-btn"
+                            data-id="${post.id}">
+
+                            <i class="fa-regular fa-comment"></i>
+
+                            <span>${post.comments} bình luận</span>
+
+                            </div>
+                            <div class="action-item share-btn" data-id="${post.id}">
+                                <i class="fa-solid fa-share"></i>
+
+                                <span>${post.shares}Chia sẻ</span>
+
+                            </div>
+                        </div>
+                    </article>
+                `;
+                DOM.postsContainer.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi render bài viết:", error);
+        DOM.postsContainer.innerHTML = '<p style="text-align:center; padding: 20px; color: red;">Lỗi kết nối máy chủ SQLite m ơi!</p>';
+    }
+}
+
+// =========================================================================
+// BẰNG XẾP HẠNG SIDEBAR VÀ THÀNH VIÊN TÍCH CỰC
+// =========================================================================
+async function fetchAndRenderSidebarTopics() {
+    if (!DOM.topicListContainer) return;
+    try {
+        const response = await fetch(TOPICS_API_URL);
+        const result = await response.json();
+        if (result.success) {
+            DOM.topicListContainer.innerHTML = '';
+            result.data.forEach(topic => {
+                if (topic.count > 0) {
+                    DOM.topicListContainer.insertAdjacentHTML('beforeend', `
+                        <div class="topic-item">
+                            <span class="topic-name"># ${topic.name}</span>
+                            <span class="topic-count">${topic.count} bài viết</span>
+                        </div>
+                    `);
+                }
+            });
+        }
+    } catch (error) {}
+}
+
+async function fetchAndRenderActiveMember() {
+    if (!DOM.activeMemberContainer) return;
+    try {
+        const response = await fetch(ACTIVE_MEMBER_API_URL);
+        const result = await response.json();
+        if (result.success) {
+            const member = result.data;
+            DOM.activeMemberContainer.innerHTML = `
+                <div class="active-member">
+                    <img src="${member.avatar}" alt="Avatar" class="member-avatar" loading="lazy">
+                    <div class="member-info">
+                        <span class="member-name">${member.name}</span>
+                        <span class="member-stats">${member.postCount} bài viết</span>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {}
+}
+
+// =========================================================================
+// ĐĂNG BÀI VIẾT MỚI: SỬ DỤNG THÔNG TIN NGƯỜI DÙNG VỪA ĐĂNG NHẬP ĐỘNG
+// =========================================================================
+function closeAndResetModal(){
+
+    // đóng popup
+    DOM.postModal.classList.remove("show");
+
+    // xóa nội dung bài viết
+    DOM.postContentInput.value = "";
+
+    // reset ảnh đã chọn
+    uploadedImagesBase64 = [];
+
+    // xóa ảnh preview
+    DOM.previewSlotsContainer
+        .querySelectorAll(".slot")
+        .forEach(slot => {
+            slot.style.backgroundImage = "";
+        });
+
+}
+if (DOM.submitPostBtn) {
+    DOM.submitPostBtn.addEventListener('click', async () => {
+        const textContent = DOM.postContentInput.value.trim();
+        const selectedTopic = DOM.topicSelect.value;
+        
+        if (!textContent && uploadedImagesBase64.length === 0) {
+            alert("Vui lòng điền nội dung hoặc chọn ảnh!");
+            return;
+        }
+        
+        // Tuyệt đối không viết cứng tên, bốc thẳng từ runtime identity của user vừa đăng nhập/đăng ký
+        const newPostData = {
+            authorName: currentUser.name,
+            authorAvatar: currentUser.avatar,
+            category: selectedTopic,
+            text: textContent,
+            images: uploadedImagesBase64
+        };
+        
+        try {
+            DOM.submitPostBtn.innerText = "Đang đăng...";
+            DOM.submitPostBtn.disabled = true;
+            
+            const response = await fetch(POSTS_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newPostData)
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                closeAndResetModal();
+                const activeTab = document.querySelector('.tab-item.active');
+                await fetchAndRenderPosts(activeTab ? activeTab.textContent.trim() : 'Tổng quan');
+                await fetchAndRenderActiveMember();
+                await fetchAndRenderSidebarTopics();
+            }
+        } catch (error) {
+            console.error("Lỗi đăng bài viết:", error);
+        } finally {
+            DOM.submitPostBtn.innerText = "Đăng bài";
+            DOM.submitPostBtn.disabled = false;
+        }
+    });
+}
+
+// UI LOGIC FOR FORM MODAL
+document.addEventListener("DOMContentLoaded", function(){
+
+    const openBtn = document.getElementById("openModalBtn");
+    const modal = document.getElementById("postModal");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const cancelBtn = document.getElementById("cancelModalBtn");
+
+
+    console.log(openBtn);
+    console.log(modal);
+
+
+    openBtn.onclick = function(){
+        modal.classList.add("show");
+    };
+
+
+    closeBtn.onclick = function(){
+        modal.classList.remove("show");
+    };
+
+
+    cancelBtn.onclick = function(){
+        modal.classList.remove("show");
+    };
+
+
+    modal.onclick = function(e){
+
+        if(e.target === modal){
+            modal.classList.remove("show");
+        }
+
+    };
+
+
+});
+if (DOM.dragZone) DOM.dragZone.addEventListener('click', () => DOM.fileInput.click());
+
+if (DOM.fileInput) {
+    DOM.fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).slice(0, 4 - uploadedImagesBase64.length);
+        files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                uploadedImagesBase64.push(event.target.result);
+                const slots = DOM.previewSlotsContainer.querySelectorAll('.slot');
+                if (slots[uploadedImagesBase64.length - 1]) {
+                    slots[uploadedImagesBase64.length - 1].style.backgroundImage = `url('${event.target.result}')`;
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+}
+
+document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const active = document.querySelector('.tab-item.active');
+        if (active) active.classList.remove('active');
+        this.classList.add('active');
+        fetchAndRenderPosts(this.textContent.trim());
+    });
+});
+
+// KHỞI ĐỘNG HỆ THỐNG
+document.addEventListener("DOMContentLoaded", () => {
+    initUserIdentity(); // Nhận diện tài khoản đăng ký/đăng nhập vừa thực hiện
+    fetchAndRenderPosts('Tổng quan');
+    fetchAndRenderActiveMember();
+    fetchAndRenderSidebarTopics();
+});
+
+document.addEventListener("click", function(e){
+
+    if(e.target.classList.contains("post-img-item")){
+
+        document.getElementById("viewerImage").src = e.target.src;
+
+        document.getElementById("imageViewer").classList.add("show");
+    }
+
+});
+
+document.getElementById("closeViewer").onclick=function(){
+
+    document.getElementById("imageViewer").classList.remove("show");
+
+};
+
+document.getElementById("imageViewer").onclick=function(e){
+
+    if(e.target.id==="imageViewer"){
+
+        this.classList.remove("show");
+
+    }
+
+};
+
+let currentSharePost = null;
+
+document.addEventListener("click", (e) => {
+
+    const btn = e.target.closest(".share-btn");
+
+    if(!btn) return;
+
+    currentSharePost = btn.dataset.id;
+
+    document
+        .getElementById("shareModal")
+        .classList.add("show");
+
+});
+
+
+
+async function loadComments(postId){
+
+
+let res=await fetch(
+`/api/posts/${postId}/comments`
+);
+
+
+let data=await res.json();
+
+
+let box=document.getElementById("commentList");
+
+
+box.innerHTML="";
+
+
+data.data.forEach(c=>{
+
+
+box.innerHTML+=`
+
+<div style="
+display:flex;
+gap:10px;
+margin:10px 0;
+">
+
+<img src="${c.avatar}"
+width="35"
+height="35"
+style="border-radius:50%">
+
+
+<div>
+
+<b>${c.username}</b>
+
+<p>${c.content}</p>
+
+</div>
+
+
+</div>
+
+`;
+
+
+});
+
+
+}
+
+document.getElementById("closeShareModal").onclick = function(){
+
+    document
+        .getElementById("shareModal")
+        .classList.remove("show");
+
+};
+
+document.getElementById("shareModal").onclick = function(e){
+
+    if(e.target.id === "shareModal"){
+
+        this.classList.remove("show");
+
+    }
+
+};
+
+document.getElementById("closeComment").onclick=function(){
+
+document
+.getElementById("commentModal")
+.classList.remove("show");
+
+};
+
+document.addEventListener("click",(e)=>{
+
+    if(e.target.classList.contains("post-more-btn")){
+
+        const menu=e.target.nextElementSibling;
+
+        document.querySelectorAll(".post-dropdown").forEach(d=>{
+            if(d!==menu) d.classList.remove("show");
+        });
+
+        menu.classList.toggle("show");
+        e.stopPropagation();
+    }
+
+    else{
+
+        document.querySelectorAll(".post-dropdown").forEach(d=>{
+            d.classList.remove("show");
+        });
+
+    }
+
+});
+
+document.addEventListener("click",(e)=>{
+
+    if(e.target.closest(".report-btn")){
+
+        alert("Đã gửi báo cáo đến quản trị viên.");
+
+    }
+
+});
+
+
+// ================= COMMENT =================
+
+let currentCommentPost = null;
+
+// Mở popup bình luận
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".comment-btn");
+
+    if (!btn) return;
+
+    currentCommentPost = btn.dataset.id;
+
+    document
+        .getElementById("commentModal")
+        .classList.add("show");
+
+    await loadComments(currentCommentPost);
+
+});
+
+// Đóng popup bình luận
+document.getElementById("closeComment").onclick = function () {
+
+    document
+        .getElementById("commentModal")
+        .classList.remove("show");
+
+};
+
+// Gửi bình luận
+document.getElementById("sendComment").onclick = async () => {
+
+    let text = document
+        .getElementById("commentInput")
+        .value
+        .trim();
+
+    if (!text) return;
+
+    await fetch(`/api/posts/${currentCommentPost}/comment`, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            content: text
+        })
+
+    });
+
+    document.getElementById("commentInput").value = "";
+
+    await loadComments(currentCommentPost);
+
+    await fetchAndRenderPosts();
+
+};
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".like-btn");
+    if(!btn) return;
+
+    const postId = btn.dataset.id;
+
+    const res = await fetch(`/api/posts/${postId}/like`,{
+        method:"POST"
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        fetchAndRenderPosts();
+    }
+
+});
+document.getElementById("closeComment").onclick = function () {
+    document.getElementById("commentModal").classList.remove("show");
+};
+
+
+const privacyBtn = document.getElementById("sharePrivacyBtn");
+const privacyMenu = document.getElementById("sharePrivacyMenu");
+
+privacyBtn.onclick = function(e){
+    e.stopPropagation();
+    privacyMenu.classList.toggle("show");
+};
+
+document.querySelectorAll("#sharePrivacyMenu div").forEach(item=>{
+
+    item.onclick = function(){
+
+        sharePrivacy = this.dataset.value;
+		console.log("sharePrivacy =", sharePrivacy);
+
+        privacyBtn.innerHTML = this.innerHTML + " ▼";
+
+        privacyMenu.classList.remove("show");
+
+    };
+
+});
+
+document.addEventListener("click",()=>{
+    privacyMenu.classList.remove("show");
+});
+
+document.getElementById("shareNowBtn").onclick = async () => {
+
+    const caption = document.getElementById("shareCaption").value;
+
+    const privacy = sharePrivacy;
+
+    const res = await fetch(`/api/posts/${currentSharePost}/share`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            caption,
+            privacy
+        })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+
+		document.getElementById("shareModal").classList.remove("show");
+
+		document.getElementById("shareCaption").value = "";
+
+		fetchAndRenderPosts();
+
+	} else {
+
+		alert(data.message);
+
+	}
+
+};
+</script>
+</body>
+
+</html>
