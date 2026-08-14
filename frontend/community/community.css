@@ -1,0 +1,9 @@
+/* ==========================================================================
+   community.css
+   --------------------------------------------------------------------------
+   index.html tải "community.css" + "community.js". Toàn bộ hệ thống style của
+   trang cộng đồng đã nằm trong style.css (cùng thư mục), nên file này chỉ
+   import lại để index.html hoạt động đúng mà không phải sửa HTML.
+   ========================================================================== */
+
+@import url("style.css");
