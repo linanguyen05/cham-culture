@@ -1,19 +1,22 @@
-"""Authentication endpoints.
+"""Authentication endpoints (Supabase Auth / GoTrue).
 
-Two families of routes share one session mechanism:
+Two families share one session cookie:
+  * ``/api/auth/*`` — clean JSON API consumed by community.js.
+  * ``/login``, ``/register``, ``/update_profile`` — compatibility routes matching
+    the exact shapes the existing frontend SPA expects.
 
-* ``/api/auth/*`` — clean JSON API consumed by community.js.
-* ``/login``, ``/register``, ``/update_profile`` — compatibility routes that
-  match the exact request/response shapes the existing (unmodifiable) frontend
-  SPA (frontend/index.html, frontend/profile.js) already expects.
+Passwords are never stored by us: registration creates a confirmed Supabase Auth
+user (admin API), login verifies via GoTrue password grant. ``public.users``
+mirrors the auth user (same id) with profile fields.
 """
 
-from typing import Any, Optional
+from typing import Any
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Response, UploadFile
 from pydantic import BaseModel, EmailStr, Field
 
-from app.auth.service import UserService, verify_password
+from app.auth.service import UserRepository
 from app.config import Settings, get_settings
 from app.middleware.auth import (
     CurrentUser,
@@ -23,23 +26,23 @@ from app.middleware.auth import (
     set_session_cookie,
 )
 from app.rate_limit import limiter
+from app.supabase_client import AuthConflictError, SupabaseGateway
 
 router = APIRouter(tags=["Authentication"])
-
-
-# --------------------------------------------------------------------------- #
-# Clean API (community.js)
-# --------------------------------------------------------------------------- #
 api = APIRouter(prefix="/api/auth")
 
 
-class LoginRequest(BaseModel):
+class CredsRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=1, max_length=256)
 
 
-def _service(request: Request) -> UserService:
-    return UserService(request.app.state.resources.db)
+def _repo(request: Request) -> UserRepository:
+    return UserRepository(request.app.state.resources.pool)
+
+
+def _gateway(request: Request) -> SupabaseGateway:
+    return request.app.state.resources.supa
 
 
 def _public_user(row: dict[str, Any]) -> dict[str, Any]:
@@ -51,6 +54,19 @@ def _public_user(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+async def _extension(upload: UploadFile) -> str:
+    name = (upload.filename or "").lower()
+    for ext in (".jpg", ".jpeg", ".png", ".webp"):
+        if name.endswith(ext):
+            return ".jpg" if ext == ".jpeg" else ext
+    return {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}.get(
+        upload.content_type or "", ".png"
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Clean API
+# --------------------------------------------------------------------------- #
 @api.get("/me")
 async def me(user: CurrentUser = Depends(get_current_user)) -> dict[str, Any]:
     return {
@@ -67,20 +83,18 @@ async def me(user: CurrentUser = Depends(get_current_user)) -> dict[str, Any]:
 @api.post("/login")
 @limiter.limit(get_settings().rate_limit_login)
 async def api_login(
-    payload: LoginRequest,
+    payload: CredsRequest,
     request: Request,
     response: Response,
     settings: Settings = Depends(get_settings),
 ) -> dict[str, Any]:
-    svc = _service(request)
-    user = await svc.get_by_email(payload.email)
-    if user is None or not verify_password(payload.password, user["password_hash"]):
-        raise HTTPException(
-            status_code=401,
-            detail={"error": "AUTHENTICATION_REQUIRED", "message": "Email hoặc mật khẩu không đúng."},
-        )
-    set_session_cookie(response, settings, build_session_payload(user["id"], user["email"]))
-    return {"authenticated": True, "user": _public_user(user)}
+    auth_user = await _gateway(request).sign_in_password(payload.email, payload.password)
+    if not auth_user:
+        raise HTTPException(401, detail={"error": "AUTHENTICATION_REQUIRED", "message": "Email hoặc mật khẩu không đúng."})
+    repo = _repo(request)
+    row = await repo.get_or_create_by_email(email=auth_user.get("email") or payload.email)
+    set_session_cookie(response, settings, build_session_payload(row["id"], row["email"]))
+    return {"authenticated": True, "user": _public_user(row)}
 
 
 @api.post("/logout")
@@ -95,25 +109,18 @@ router.include_router(api)
 # --------------------------------------------------------------------------- #
 # Compatibility routes for the existing frontend SPA
 # --------------------------------------------------------------------------- #
-class CredsRequest(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=1, max_length=256)
-
-
 @router.post("/register")
 @limiter.limit(get_settings().rate_limit_login)
-async def compat_register(
-    payload: CredsRequest,
-    request: Request,
-) -> dict[str, Any]:
-    """frontend/index.html handleRegister: expects ok + {message, userId}."""
-    if len(payload.password) < 8:
-        raise HTTPException(422, detail={"message": "Mật khẩu phải có ít nhất 8 ký tự."})
-    svc = _service(request)
-    if await svc.get_by_email(payload.email) is not None:
+async def compat_register(payload: CredsRequest, request: Request) -> dict[str, Any]:
+    if len(payload.password) < 6:
+        raise HTTPException(422, detail={"message": "Mật khẩu phải có ít nhất 6 ký tự."})
+    gateway = _gateway(request)
+    try:
+        await gateway.admin_create_user(payload.email, payload.password)
+    except AuthConflictError:
         raise HTTPException(409, detail={"message": "Email đã được đăng ký. Vui lòng đăng nhập."})
-    user = await svc.create(email=payload.email, password=payload.password)
-    return {"message": "Đăng ký thành công. Hãy hoàn tất hồ sơ.", "userId": user["id"]}
+    row = await _repo(request).get_or_create_by_email(email=payload.email)
+    return {"message": "Đăng ký thành công. Hãy hoàn tất hồ sơ.", "userId": row["id"]}
 
 
 @router.post("/login")
@@ -124,21 +131,21 @@ async def compat_login(
     response: Response,
     settings: Settings = Depends(get_settings),
 ) -> dict[str, Any]:
-    """frontend/index.html handleLogin: 404 unknown email, 401 bad password,
-    else ok + {message, user:{user_id, username, avatar_url}} + session cookie."""
-    svc = _service(request)
-    user = await svc.get_by_email(payload.email)
-    if user is None:
+    repo = _repo(request)
+    existing = await repo.get_by_email(payload.email)
+    if existing is None:
         raise HTTPException(404, detail={"message": "Email chưa được đăng ký."})
-    if not verify_password(payload.password, user["password_hash"]):
+    auth_user = await _gateway(request).sign_in_password(payload.email, payload.password)
+    if not auth_user:
         raise HTTPException(401, detail={"message": "Sai mật khẩu."})
-    set_session_cookie(response, settings, build_session_payload(user["id"], user["email"]))
+    row = await repo.get_or_create_by_email(email=auth_user.get("email") or payload.email)
+    set_session_cookie(response, settings, build_session_payload(row["id"], row["email"]))
     return {
         "message": "Đăng nhập thành công.",
         "user": {
-            "user_id": user["id"],
-            "username": user.get("username") or "Người dùng",
-            "avatar_url": user.get("avatar_url"),
+            "user_id": row["id"],
+            "username": row.get("username") or "Người dùng",
+            "avatar_url": row.get("avatar_url"),
         },
     }
 
@@ -152,12 +159,7 @@ async def compat_update_profile(
     userId: str = Form(default=""),
     avatar: UploadFile | None = File(default=None),
 ) -> dict[str, Any]:
-    """frontend/profile.js: multipart {username, avatar?, userId}. The user has
-    just registered (no session yet), so the id arrives in the ``userId`` field.
-    On success we set the session cookie and return the updated user."""
-    resources = request.app.state.resources
-    svc = _service(request)
-
+    repo = _repo(request)
     resolved_id = (userId or "").strip()
     if not resolved_id:
         token = request.cookies.get(settings.session_cookie_name)
@@ -171,7 +173,7 @@ async def compat_update_profile(
     if not resolved_id:
         raise HTTPException(400, detail={"error": "BAD_REQUEST", "message": "Thiếu userId."})
 
-    user = await svc.get_by_id(resolved_id)
+    user = await repo.get_by_id(resolved_id)
     if user is None:
         raise HTTPException(404, detail={"error": "NOT_FOUND", "message": "Người dùng không tồn tại."})
 
@@ -185,15 +187,15 @@ async def compat_update_profile(
         if data:
             if len(data) > settings.max_image_size_bytes:
                 raise HTTPException(422, detail={"error": "VALIDATION_ERROR", "message": "Ảnh vượt quá dung lượng cho phép."})
-            avatar_url = await resources.storage.save_avatar(
-                data, avatar.content_type or "", avatar.filename
+            path = f"avatars/{uuid4().hex}{await _extension(avatar)}"
+            avatar_url = await _gateway(request).upload_object(
+                path, data, avatar.content_type or "image/png"
             )
 
-    updated = await svc.update_profile(
+    updated = await repo.update_profile(
         user_id=resolved_id, username=clean_username, avatar_url=avatar_url
     )
     assert updated is not None
-
     set_session_cookie(response, settings, build_session_payload(updated["id"], updated["email"]))
     return {
         "message": "Lưu thông tin thành công.",

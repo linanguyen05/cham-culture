@@ -2,14 +2,30 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-ALLOWED_CATEGORIES = {
-    "Văn hóa Chăm",
-    "Ẩm thực Chăm",
-    "Daily",
-    "Du lịch – Trải nghiệm",
-    "Hỏi đáp",
-    "Lễ hội",
+# The frontend (unmodifiable) uses these category labels, but the Supabase
+# `posts.category` CHECK constraint allows a different, shorter set. We map
+# between them: frontend label -> DB value on write/filter, DB value -> frontend
+# label on read. Labels that are identical in both need no translation.
+CATEGORY_TO_DB = {
+    "Văn hóa Chăm": "Văn hóa",
+    "Ẩm thực Chăm": "Ẩm thưc",
+    "Hỏi đáp": "Câu hỏi",
+    "Du lịch – Trải nghiệm": "Trải nghiệm",
+    "Lễ hội": "Lễ hội",
+    "Daily": "Daily",
 }
+CATEGORY_FROM_DB = {db: fe for fe, db in CATEGORY_TO_DB.items()}
+
+# API-facing (frontend) categories accepted by the endpoints.
+ALLOWED_CATEGORIES = set(CATEGORY_TO_DB)
+
+
+def to_db_category(value: str) -> str:
+    return CATEGORY_TO_DB.get(value, value)
+
+
+def from_db_category(value: str) -> str:
+    return CATEGORY_FROM_DB.get(value, value)
 
 
 class AuthorOut(BaseModel):

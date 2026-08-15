@@ -1,87 +1,93 @@
-# Chăm Culture — Backend hợp nhất
+# Chăm Culture — Backend hợp nhất (Supabase / PostgreSQL)
 
 Một dịch vụ FastAPI độc lập, chuyên nghiệp cho toàn bộ dự án. Nó phục vụ luôn
-frontend SPA chuẩn (`../frontend`) và cung cấp mọi API mà frontend cần, chạy
-hoàn toàn bằng **SQLite cục bộ + lưu file trên ổ đĩa cục bộ** — không cần bất kỳ
-thông tin đăng nhập cloud nào, nên chạy được và kiểm thử được ngay lập tức.
+frontend SPA chuẩn (`../frontend`) và cung cấp mọi API mà frontend cần, chạy trên
+**đúng nền tảng đã thống nhất**: **Supabase PostgreSQL** (dữ liệu, qua psycopg),
+**Supabase Auth** (đăng nhập/đăng ký) và **Supabase Storage** (ảnh).
 
-> Backend này giữ nguyên kiến trúc phân lớp của nền tảng gốc
-> `backend` / `backend_community` (routes → service → repository, phiên đăng nhập
-> bằng cookie mã hóa, kiểm tra dữ liệu đầu vào, giới hạn tần suất, chống CSRF /
-> origin guard) và hoàn thiện thành một dịch vụ duy nhất chạy được. Bản gốc dùng
-> Postgres/Supabase được lưu trữ tại `../legacy/` để tham khảo.
+> Giữ nguyên kiến trúc phân lớp của nền tảng gốc (routes → service → repository,
+> phiên đăng nhập bằng cookie mã hóa, kiểm tra dữ liệu, giới hạn tần suất, chống
+> CSRF/origin) và hoàn thiện thành một dịch vụ duy nhất. Các bản cũ được lưu ở
+> `../legacy/`.
 
 ## Kiến trúc
 
 ```
 Trình duyệt ── cùng origin ──> FastAPI
                                 ├── /                      frontend tĩnh (SPA)
-                                ├── /uploads/*             ảnh đã tải lên (ổ đĩa cục bộ)
                                 ├── /login /register       auth tương thích (frontend/index.html)
                                 ├── /update_profile        hồ sơ tương thích (frontend/profile.js)
-                                ├── /api/auth/*            API phiên đăng nhập (community.js)
+                                ├── /api/auth/*            phiên đăng nhập (community.js)
                                 ├── /api/community/*       bài viết, thích, bình luận, chia sẻ, thống kê
                                 └── /api/community/profiles/{id}
+                                        │
+                                        ├── psycopg  ──> Supabase PostgreSQL
+                                        └── httpx    ──> Supabase Auth (GoTrue) + Storage
 ```
 
-Mỗi tính năng chia làm các lớp: `routes.py` (HTTP) → `service.py` (nghiệp vụ /
-kiểm tra) → `repository.py` (SQLite). Các thành phần dùng chung: `config.py`,
-`db.py`, `extensions.py` (vòng đời ứng dụng), `middleware/auth.py` (cookie phiên
-Fernet + `get_current_user`), `middleware/security.py` (chống CSRF / origin
-guard), `rate_limit.py`, `storage/` (lưu media cục bộ), `web.py` (gắn file tĩnh).
+- **Dữ liệu**: Supabase PostgreSQL, truy cập bằng psycopg (async pool). Bảng
+  `users / posts / comments / post_likes` (khóa `bigint`), liên kết `users`↔auth
+  bằng **email**.
+- **Xác thực**: Supabase Auth giữ mật khẩu. Đăng ký tạo user đã xác nhận qua
+  admin API; đăng nhập xác thực qua password grant. Backend phát hành cookie
+  phiên HTTPOnly mã hóa (Fernet) — không tin `localStorage`.
+- **Lưu ảnh**: Supabase Storage (bucket `community-images`), trả về URL công khai.
+- **Ánh xạ category**: frontend dùng nhãn dài (vd "Văn hóa Chăm") trong khi ràng
+  buộc CHECK của DB dùng nhãn ngắn (vd "Văn hóa"); backend tự dịch hai chiều.
 
-- **Dữ liệu**: SQLite tại `data/cham_culture.db` (schema trong `app/schema.sql`).
-- **Xác thực**: email/mật khẩu băm bằng PBKDF2-HMAC-SHA256; cookie phiên HTTPOnly
-  được mã hóa (khóa dẫn xuất từ `SECRET_KEY`). Không bao giờ tin `localStorage`
-  làm nguồn xác thực.
-- **Lưu trữ**: ảnh tải lên được ghi vào `uploads/` và phục vụ tại `/uploads/...`.
+## Cấu hình `.env`
+
+Sao chép `.env.example` → `.env` và điền thông tin Supabase. **Không commit `.env`.**
+
+| Biến | Ý nghĩa |
+| --- | --- |
+| `SECRET_KEY` | ≥32 ký tự; dẫn xuất khóa mã hóa phiên. |
+| `SUPABASE_URL`, `SUPABASE_PROJECT_REF` | Project URL / ref. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Khóa service-role (chỉ dùng phía server, tối mật). |
+| `SUPABASE_DB_PASSWORD` | Mật khẩu database. |
+| `DATABASE_URL` | Chuỗi kết nối psycopg. Khuyến nghị **Session Pooler (IPv4)**: `host=aws-0-<region>.pooler.supabase.com port=5432 dbname=postgres user=postgres.<ref> password=... sslmode=require`. Nếu để trống sẽ tự suy ra kết nối trực tiếp `db.<ref>.supabase.co` (có thể chỉ có IPv6). |
+| `SUPABASE_STORAGE_BUCKET` | Mặc định `community-images`. |
+| `SESSION_SECURE` | `true` khi chạy HTTPS. |
+| `FRONTEND_ORIGINS` | Origin công khai bổ sung (cùng origin luôn được chấp nhận). |
 
 ## Chạy dự án
 
 ```powershell
 cd backend
 python -m venv .venv
-.\.venv\Scripts\activate            # Windows (macOS/Linux: source .venv/bin/activate)
+.\.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-copy .env.example .env               # tùy chọn; nếu không có vẫn dùng giá trị mặc định hợp lý
-python seed.py                        # tùy chọn: tạo dữ liệu demo
+copy .env.example .env               # rồi điền thông tin Supabase
+python seed.py                        # tùy chọn: tạo user + bài viết demo
 python run.py                         # http://127.0.0.1:8000
 ```
 
-Sau đó mở <http://127.0.0.1:8000/> — trang đăng nhập/đăng ký. Sau khi đăng nhập
-bạn vào trang chủ (dashboard); trang Cộng đồng nằm ở `/community/index.html`.
+> Lưu ý Windows: psycopg (async) không chạy trên ProactorEventLoop, nên `run.py`
+> và `seed.py` tự đặt `WindowsSelectorEventLoopPolicy`.
 
-Tài khoản demo (sau khi chạy `seed.py`): `minhanh@gmail.com` / `123Aa`.
+Mở <http://127.0.0.1:8000/>. Tài khoản demo (sau `seed.py`): `minhanh@gmail.com` / `123Aa`.
 
-## Kiểm thử / xác minh
+## Kiểm thử
 
 ```powershell
-python run.py                 # ở một cửa sổ terminal
-python verify.py              # ở terminal khác — 42 kiểm thử đầu-cuối
+python run.py            # terminal 1
+python verify.py         # terminal 2 — 39 kiểm thử đầu-cuối trên Supabase thật
 ```
+`verify.py` tạo tài khoản + bài viết tạm để kiểm tra rồi **tự dọn sạch** dữ liệu
+đó (xóa bài viết test và user auth tạm) để không làm bẩn project.
 
-`verify.py` chạy qua toàn bộ hợp đồng API: chặn khách chưa đăng nhập, đăng ký →
-cập nhật hồ sơ → phiên đăng nhập, đăng nhập/đăng xuất, tải feed + lọc + sắp xếp,
-tạo bài (kèm tải ảnh lên), bật/tắt thích, bình luận, chia sẻ (kèm bài gốc nhúng),
-thống kê, quyền riêng tư hồ sơ, chống CSRF, và phục vụ trang tĩnh.
+## Đưa API ra ngoài (tóm tắt)
 
-## Cấu hình
+Cùng origin nên frontend + API dùng chung URL. Để công khai:
+1. Deploy lên máy chủ công khai (VPS / Render / Railway / Fly.io) có HTTPS, đặt
+   `SESSION_SECURE=true`, `SECRET_KEY` mạnh, `FRONTEND_ORIGINS` nếu cần.
+2. Hoặc demo nhanh: tunnel (`cloudflared tunnel --url http://127.0.0.1:8000`) và
+   thêm URL tunnel vào `FRONTEND_ORIGINS`.
+Vì dữ liệu đã ở Supabase (cloud) nên có thể chạy nhiều bản/scale ngang; chỉ cần
+đổi rate-limit sang Redis khi chạy >1 tiến trình.
 
-Mọi thiết lập đều có giá trị mặc định cho môi trường cục bộ; xem `.env.example`.
-Một số biến quan trọng:
+## ⚠️ Bảo mật
 
-| Biến | Mục đích |
-| --- | --- |
-| `SECRET_KEY` | ≥32 ký tự; dùng để dẫn xuất khóa mã hóa phiên. **Bắt buộc đổi khi lên production.** |
-| `DATABASE_PATH` | File SQLite (tương đối so với thư mục `backend/`). |
-| `UPLOAD_DIR` | Thư mục media cục bộ, phục vụ tại `/uploads`. |
-| `FRONTEND_DIR` | Thư mục frontend cần phục vụ (mặc định `../frontend`). |
-| `SESSION_SECURE` | Đặt `true` khi chạy qua HTTPS. |
-| `FRONTEND_ORIGINS` | Các origin bổ sung được phép; cùng origin luôn được chấp nhận. |
-| `RATE_LIMIT_*` | Giới hạn tần suất theo từng endpoint. |
-
-## Về các dịch vụ khác
-
-`../services/chatbot` (chatbot Gemini) và `../services/learn` (nội dung tìm hiểu)
-là các ứng dụng Flask độc lập, được giữ nguyên; chúng không nằm trong tiến trình
-của backend này và có thể chạy riêng khi cần.
+- `.env` và file `../Van_hoa_Cham_Database.docx` chứa **service-role key + mật
+  khẩu DB thật** — tuyệt đối không commit lên git. Nên **rotate lại** service key
+  trong Supabase vì nó đã từng lộ ra ngoài.

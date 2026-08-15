@@ -77,18 +77,18 @@ def raise_auth_required(message: str = "Yêu cầu đăng nhập để sử dụ
 
 
 async def load_user(resources: AppResources, user_id: str) -> dict[str, Any] | None:
-    row = await resources.db.fetchone(
-        "SELECT id, username, email, avatar_url FROM users WHERE id = ?",
-        (user_id,),
-    )
-    if row is None:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
         return None
-    return {
-        "id": row["id"],
-        "username": row["username"],
-        "email": row["email"],
-        "avatar_url": row["avatar_url"],
-    }
+    async with resources.pool.connection() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute(
+                "SELECT id::text AS id, username, email, avatar_url FROM users WHERE id = %s",
+                (uid,),
+            )
+            row = await cur.fetchone()
+    return dict(row) if row else None
 
 
 async def get_current_user(

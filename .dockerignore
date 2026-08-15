@@ -1,0 +1,26 @@
+# Keep the build context small and secrets out of the image.
+.git/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Python envs / local runtime data
+backend/.venv/
+backend/data/
+backend/uploads/
+backend/.pytest_cache/
+
+# Secrets (provided as platform env vars instead)
+**/.env
+**/.env.*
+Van_hoa_Cham_Database.docx
+
+# Node deps of the frontend (not needed at runtime; backend serves static files)
+frontend/node_modules/
+
+# Not part of the deployed service
+legacy/
+services/
+HANDOVER.md
+DEPLOY.md
+README.md

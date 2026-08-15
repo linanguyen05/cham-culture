@@ -1,16 +1,22 @@
-"""Seed demo users and posts so the community feed isn't empty.
+"""Seed demo users (Supabase Auth) and posts (Supabase PostgreSQL).
 
-Idempotent: running twice won't duplicate the demo accounts.
+Idempotent: existing users are reused; posts are only created when the posts
+table is empty.
 
     python seed.py
 """
 
 import asyncio
+import sys
 
-from app.auth.service import UserService
+from app.auth.service import UserRepository
 from app.community.repository import CommunityRepository
 from app.config import get_settings
-from app.db import Database
+from app.extensions import lifespan_context
+from app.supabase_client import AuthConflictError, SupabaseError
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 DEMO_USERS = [
     {"email": "minhanh@gmail.com", "username": "Minh Anh", "password": "123Aa", "avatar": "https://i.pravatar.cc/150?img=47"},
@@ -30,41 +36,48 @@ DEMO_POSTS = [
 
 async def main() -> None:
     settings = get_settings()
-    db = Database(settings.database_file)
-    await db.init()
+    async with lifespan_context(settings) as res:
+        users = UserRepository(res.pool)
+        repo = CommunityRepository(res.pool)
 
-    users = UserService(db)
-    repo = CommunityRepository(db)
-
-    existing = await users.get_by_email(DEMO_USERS[0]["email"])
-    if existing is not None:
-        print("Demo data already present; skipping seed.")
-        return
-
-    created_ids: list[str] = []
-    for spec in DEMO_USERS:
-        user = await users.create(email=spec["email"], password=spec["password"])
-        await users.update_profile(
-            user_id=user["id"], username=spec["username"], avatar_url=spec["avatar"]
-        )
-        created_ids.append(user["id"])
-        print(f"  + user {spec['username']} <{spec['email']}>")
-
-    for idx, (content, category) in enumerate(DEMO_POSTS):
-        author = created_ids[idx % len(created_ids)]
-        post_id = await repo.create_post(
-            user_id=author, content=content, category=category, image_urls=[]
-        )
-        # A couple of likes/comments for realistic stats.
-        liker = created_ids[(idx + 1) % len(created_ids)]
-        await repo.toggle_like(post_id=post_id, user_id=liker)
-        if idx % 2 == 0:
-            await repo.add_comment(
-                user_id=liker, post_id=post_id, content="Hay quá, cảm ơn bạn đã chia sẻ!"
+        created_ids: list[str] = []
+        for spec in DEMO_USERS:
+            try:
+                await res.supa.admin_create_user(spec["email"], spec["password"])
+                print(f"  + auth    {spec['username']} <{spec['email']}>")
+            except AuthConflictError:
+                print(f"  = exists  {spec['username']} <{spec['email']}>")
+            except SupabaseError as exc:
+                print(f"  ! skip    {spec['email']}: {exc}")
+                continue
+            profile = await users.get_or_create_by_email(email=spec["email"], username=spec["username"])
+            await users.update_profile(
+                user_id=profile["id"], username=spec["username"], avatar_url=spec["avatar"]
             )
+            created_ids.append(profile["id"])
 
-    print(f"Seeded {len(DEMO_USERS)} users and {len(DEMO_POSTS)} posts.")
-    print(f"Demo login: {DEMO_USERS[0]['email']} / {DEMO_USERS[0]['password']}")
+        if not created_ids:
+            print("No demo users available; aborting post seed.")
+            return
+
+        stats = await repo.topic_stats()
+        if sum(s["post_count"] for s in stats) > 0:
+            print("Posts already present; skipping post seed.")
+        else:
+            for idx, (content, category) in enumerate(DEMO_POSTS):
+                author = created_ids[idx % len(created_ids)]
+                post_id = await repo.create_post(
+                    user_id=author, content=content, category=category, image_urls=[]
+                )
+                liker = created_ids[(idx + 1) % len(created_ids)]
+                await repo.toggle_like(post_id=post_id, user_id=liker)
+                if idx % 2 == 0:
+                    await repo.add_comment(
+                        user_id=liker, post_id=post_id, content="Hay quá, cảm ơn bạn đã chia sẻ!"
+                    )
+            print(f"Seeded {len(DEMO_POSTS)} posts.")
+
+        print(f"Demo login: {DEMO_USERS[0]['email']} / {DEMO_USERS[0]['password']}")
 
 
 if __name__ == "__main__":

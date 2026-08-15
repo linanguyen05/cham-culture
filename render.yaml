@@ -1,0 +1,36 @@
+# Render blueprint — deploy the unified Cham Culture backend as a Docker web service.
+# Docs: https://render.com/docs/blueprint-spec
+# Secrets (sync:false) are entered in the Render dashboard, never committed.
+
+services:
+  - type: web
+    name: cham-culture
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      # Render generates a strong random value (used to derive the session key).
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SESSION_SECURE
+        value: "true"
+      - key: SESSION_SAMESITE
+        value: lax
+      - key: SUPABASE_STORAGE_BUCKET
+        value: community-images
+      # --- Secrets: paste from backend/.env in the Render dashboard ---
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PROJECT_REF
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_DB_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        sync: false

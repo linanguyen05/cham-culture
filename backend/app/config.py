@@ -1,19 +1,16 @@
-"""Application configuration.
+"""Application configuration (Supabase / PostgreSQL).
 
-Loaded from environment variables / a local ``.env`` file. Unlike the original
-Supabase-oriented backend, this build runs fully locally: SQLite for data and
-the local filesystem for uploaded media. Cloud settings are therefore optional
-and only consulted if you later wire an external provider back in.
+Data lives in the project's Supabase PostgreSQL (accessed via psycopg); auth uses
+Supabase Auth (GoTrue) and media uses Supabase Storage. Secrets come from a local
+``.env`` (git-ignored). See ``.env.example``.
 """
 
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
-# backend/ directory (parent of the app package). Used to resolve relative paths.
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = BACKEND_DIR.parent
 
@@ -26,20 +23,27 @@ class Settings(BaseSettings):
     app_name: str = "Cham Culture Community API"
     environment: str = "development"
 
-    # A 32+ char default keeps the server runnable out of the box for local dev.
-    # ALWAYS override SECRET_KEY via .env in any shared or production environment.
-    secret_key: str = Field(
-        default="cham-culture-dev-secret-key-change-me!", min_length=32
-    )
+    secret_key: str = Field(min_length=32)
     session_cookie_name: str = "cham_community_session"
     session_ttl_seconds: int = Field(default=60 * 60 * 24 * 7, ge=300)
     session_secure: bool = False
     session_samesite: str = "lax"
 
-    # --- Local storage backends -------------------------------------------------
-    database_path: str = "data/cham_culture.db"
-    upload_dir: str = "uploads"
-    # Location of the canonical frontend/ folder that this backend serves.
+    # --- Supabase ---------------------------------------------------------------
+    supabase_url: str
+    supabase_project_ref: str = ""
+    supabase_service_role_key: str
+    supabase_anon_key: str = ""
+    supabase_db_password: str = ""
+    supabase_storage_bucket: str = "community-images"
+    supabase_storage_public: bool = True
+
+    # Optional explicit connection string; otherwise derived from ref + password.
+    database_url: str = ""
+    database_min_size: int = Field(default=1, ge=1)
+    database_max_size: int = Field(default=10, ge=1)
+
+    # --- Frontend served by this backend ---------------------------------------
     frontend_dir: str = str(PROJECT_ROOT / "frontend")
 
     # --- Content limits ---------------------------------------------------------
@@ -50,7 +54,9 @@ class Settings(BaseSettings):
     max_share_length: int = Field(default=2000, ge=1)
 
     # --- CSRF / CORS ------------------------------------------------------------
-    frontend_origins: list[str] = Field(default_factory=list)
+    # Parsed from a comma-separated string to avoid pydantic-settings treating a
+    # list field as JSON in .env.
+    frontend_origins_raw: str = Field(default="", validation_alias="FRONTEND_ORIGINS")
     allow_missing_origin_for_unsafe_methods: bool = True
 
     # --- Rate limits ------------------------------------------------------------
@@ -60,15 +66,6 @@ class Settings(BaseSettings):
     rate_limit_comment: str = "40/minute"
     rate_limit_like: str = "120/minute"
 
-    @field_validator("frontend_origins", mode="before")
-    @classmethod
-    def split_origins(cls, value: object) -> list[str]:
-        if value is None or value == "":
-            return []
-        if isinstance(value, str):
-            return [item.strip().rstrip("/") for item in value.split(",") if item.strip()]
-        return value  # type: ignore[return-value]
-
     @field_validator("session_samesite")
     @classmethod
     def validate_samesite(cls, value: str) -> str:
@@ -77,16 +74,32 @@ class Settings(BaseSettings):
             raise ValueError("SESSION_SAMESITE must be lax, strict, or none")
         return value
 
-    # --- Resolved absolute paths ------------------------------------------------
-    @property
-    def database_file(self) -> Path:
-        path = Path(self.database_path)
-        return path if path.is_absolute() else BACKEND_DIR / path
+    @model_validator(mode="after")
+    def _derive_ref(self) -> "Settings":
+        if not self.supabase_project_ref and self.supabase_url:
+            host = self.supabase_url.split("//", 1)[-1]
+            self.supabase_project_ref = host.split(".", 1)[0]
+        return self
 
     @property
-    def upload_path(self) -> Path:
-        path = Path(self.upload_dir)
-        return path if path.is_absolute() else BACKEND_DIR / path
+    def frontend_origins(self) -> list[str]:
+        return [i.strip().rstrip("/") for i in self.frontend_origins_raw.split(",") if i.strip()]
+
+    @property
+    def api_base(self) -> str:
+        return self.supabase_url.rstrip("/")
+
+    @property
+    def db_conninfo(self) -> str:
+        """psycopg connection string. Prefer DATABASE_URL if provided, else build
+        the direct Supabase connection from project ref + DB password."""
+        if self.database_url:
+            return self.database_url
+        return (
+            f"host=db.{self.supabase_project_ref}.supabase.co "
+            f"port=5432 dbname=postgres user=postgres "
+            f"password={self.supabase_db_password} sslmode=require"
+        )
 
     @property
     def frontend_path(self) -> Path:

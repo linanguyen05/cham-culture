@@ -1,27 +1,46 @@
-"""Shared application resources bound to the FastAPI lifespan."""
+"""Shared application resources bound to the FastAPI lifespan.
+
+Holds the psycopg async connection pool (Supabase PostgreSQL) and the Supabase
+gateway (Auth + Storage over HTTPS).
+"""
 
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
+import httpx
+from psycopg.rows import dict_row
+from psycopg_pool import AsyncConnectionPool
+
 from app.config import Settings
-from app.db import Database
-from app.storage.service import LocalStorageService
+from app.supabase_client import SupabaseGateway
 
 
 class AppResources:
-    """Holds the shared DB handle and storage service for the app lifespan."""
-
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        self.db = Database(settings.database_file)
-        self.storage = LocalStorageService(settings)
+        self.pool = AsyncConnectionPool(
+            conninfo=settings.db_conninfo,
+            min_size=settings.database_min_size,
+            max_size=settings.database_max_size,
+            open=False,
+            kwargs={"row_factory": dict_row},
+        )
+        self.http = httpx.AsyncClient()
+        self.supa = SupabaseGateway(settings, self.http)
 
     async def startup(self) -> None:
-        await self.db.init()
+        await self.pool.open(wait=True, timeout=30)
+        try:
+            await self.supa.ensure_bucket()
+        except Exception:
+            # Non-fatal: storage may be provisioned later; log-and-continue.
+            import logging
+
+            logging.getLogger(__name__).warning("Could not ensure storage bucket", exc_info=True)
 
     async def close(self) -> None:
-        # SQLite connections are opened per operation; nothing global to close.
-        return None
+        await self.pool.close()
+        await self.http.aclose()
 
 
 @asynccontextmanager

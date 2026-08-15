@@ -7,14 +7,14 @@ from fastapi import HTTPException, UploadFile
 from app.community.repository import CommunityRepository
 from app.community.schemas import ALLOWED_CATEGORIES
 from app.config import Settings
-from app.storage.service import LocalStorageService
+from app.storage.service import StorageService
 
 
 class CommunityService:
     def __init__(
         self,
         repo: CommunityRepository,
-        storage: LocalStorageService,
+        storage: StorageService,
         settings: Settings,
     ) -> None:
         self.repo = repo

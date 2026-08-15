@@ -4,8 +4,9 @@ Nền tảng cộng đồng tìm hiểu và kết nối văn hóa dân tộc Ch�
 thiệu, khu **Cộng đồng** (đăng bài, ảnh, thích, bình luận, chia sẻ, hồ sơ), cùng
 các dịch vụ phụ trợ (Tìm hiểu, Chatbot).
 
-Dự án gồm **một backend FastAPI hợp nhất** chạy hoàn toàn cục bộ (SQLite + lưu
-file trên ổ đĩa, không cần cloud) phục vụ luôn **frontend SPA**.
+Dự án gồm **một backend FastAPI hợp nhất** chạy trên **Supabase** (PostgreSQL +
+Auth + Storage) theo đúng thiết kế database đã thống nhất, phục vụ luôn
+**frontend SPA** cùng origin.
 
 ---
 
@@ -13,7 +14,7 @@ file trên ổ đĩa, không cần cloud) phục vụ luôn **frontend SPA**.
 
 ```
 vhc/
-├─ backend/        Backend hợp nhất — FastAPI + SQLite (xem backend/README.md)
+├─ backend/        Backend hợp nhất — FastAPI + Supabase/PostgreSQL (xem backend/README.md)
 ├─ frontend/       Giao diện SPA (HTML/CSS/JS tĩnh) — được backend phục vụ
 ├─ services/
 │  ├─ chatbot/     App chatbot Gemini (Flask, độc lập)
@@ -25,8 +26,9 @@ vhc/
 
 ## Công nghệ
 
-- **Backend:** Python 3.12, FastAPI, Uvicorn, aiosqlite (SQLite), Pydantic,
-  slowapi (rate limit), cryptography (phiên đăng nhập mã hóa).
+- **Backend:** Python 3.12, FastAPI, Uvicorn, psycopg (Supabase PostgreSQL),
+  Supabase Auth + Storage (qua httpx), Pydantic, slowapi (rate limit),
+  cryptography (phiên đăng nhập mã hóa).
 - **Frontend:** HTML/CSS/JavaScript thuần (SPA), gọi API cùng origin.
 - **Dịch vụ phụ:** Flask (chatbot Gemini, trang Tìm hiểu).
 
@@ -37,7 +39,8 @@ cd "l:\FPT\Side project\vhc\backend"
 python -m venv .venv
 .\.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-python seed.py                       # tạo dữ liệu demo (chạy 1 lần)
+copy .env.example .env               # rồi điền thông tin Supabase (URL, service key, DB password, DATABASE_URL)
+python seed.py                       # tạo user + bài viết demo (chạy 1 lần)
 python run.py                        # http://127.0.0.1:8000
 ```
 
@@ -82,9 +85,11 @@ python verify.py         # terminal 2 — 42 kiểm thử đầu-cuối
 ## Triển khai cho người dùng cuối
 
 `http://127.0.0.1:8000/` chỉ chạy trên **máy cục bộ**. Để người ngoài dùng được
-cần: đưa lên máy chủ công khai + tên miền + HTTPS; và khi tải cao thì chuyển
-SQLite → PostgreSQL, lưu ảnh → object storage, rate limit → Redis, rồi triển khai
-trên cloud. Chi tiết xem [`HANDOVER.md`](HANDOVER.md) mục 3.
+cần đưa lên máy chủ công khai + tên miền + HTTPS (đặt `SESSION_SECURE=true`).
+Dữ liệu đã nằm trên Supabase (cloud) nên có thể scale ngang; chỉ cần đổi
+rate-limit sang Redis khi chạy nhiều tiến trình. Demo nhanh có thể dùng tunnel
+(`cloudflared tunnel --url http://127.0.0.1:8000`) và thêm URL tunnel vào
+`FRONTEND_ORIGINS`. Chi tiết xem [`HANDOVER.md`](HANDOVER.md) mục 3.
 
 ## Ghi chú
 

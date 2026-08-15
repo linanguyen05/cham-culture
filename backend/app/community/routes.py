@@ -19,15 +19,15 @@ from app.community.service import CommunityService
 from app.config import Settings, get_settings
 from app.middleware.auth import CurrentUser, get_current_user
 from app.rate_limit import limiter
-from app.storage.service import LocalStorageService
+from app.storage.service import StorageService
 
 router = APIRouter(prefix="/api/community", tags=["Community"])
 
 
 def get_service(request: Request, settings: Settings = Depends(get_settings)) -> CommunityService:
     resources = request.app.state.resources
-    repo = CommunityRepository(resources.db)
-    storage: LocalStorageService = resources.storage
+    repo = CommunityRepository(resources.pool)
+    storage = StorageService(resources.supa)
     return CommunityService(repo, storage, settings)
 
 

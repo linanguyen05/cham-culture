@@ -3,19 +3,25 @@
 Run from the ``backend/`` directory so the ``app`` package is importable:
 
     python run.py
+
+On Windows we force the Selector event loop because psycopg's async mode does
+not support the default Proactor loop.
 """
+
+import asyncio
+import sys
 
 import uvicorn
 
-from app.config import get_settings
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 if __name__ == "__main__":
-    settings = get_settings()
-    reload = settings.environment == "development"
     uvicorn.run(
         "app:create_app",
         host="127.0.0.1",
         port=8000,
-        reload=reload,
+        reload=False,
         factory=True,
+        loop="asyncio",
     )

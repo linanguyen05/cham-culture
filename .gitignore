@@ -28,3 +28,8 @@ Chatbox/usage.json
 
 # PDF/Misc
 github.pdf
+
+# Secrets: DB design doc chứa service-role key + DB password
+Van_hoa_Cham_Database.docx
+backend/data/
+backend/uploads/
