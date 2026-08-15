@@ -19,7 +19,7 @@ if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 DEMO_USERS = [
-    {"email": "minhanh@gmail.com", "username": "Minh Anh", "password": "123Aa", "avatar": "https://i.pravatar.cc/150?img=47"},
+    {"email": "minhanh@gmail.com", "username": "Minh Anh", "password": "123Aa2026", "avatar": "https://i.pravatar.cc/150?img=47"},
     {"email": "quangkhai@cham.vn", "username": "Quang Khải", "password": "chamculture", "avatar": "https://i.pravatar.cc/150?img=12"},
     {"email": "myduyen@cham.vn", "username": "Mỹ Duyên", "password": "chamculture", "avatar": "https://i.pravatar.cc/150?img=32"},
 ]

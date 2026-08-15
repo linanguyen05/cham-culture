@@ -45,7 +45,7 @@ python run.py                        # http://127.0.0.1:8000
 ```
 
 - Mở: <http://127.0.0.1:8000/>
-- Tài khoản demo: **`minhanh@gmail.com` / `123Aa`**
+- Tài khoản demo: **`minhanh@gmail.com` / `123Aa2026`**
 - Tài liệu API (OpenAPI): <http://127.0.0.1:8000/docs>
 
 Chi tiết cấu hình, kiến trúc phân lớp và biến môi trường: xem

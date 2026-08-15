@@ -65,7 +65,7 @@ python run.py                         # http://127.0.0.1:8000
 > Lưu ý Windows: psycopg (async) không chạy trên ProactorEventLoop, nên `run.py`
 > và `seed.py` tự đặt `WindowsSelectorEventLoopPolicy`.
 
-Mở <http://127.0.0.1:8000/>. Tài khoản demo (sau `seed.py`): `minhanh@gmail.com` / `123Aa`.
+Mở <http://127.0.0.1:8000/>. Tài khoản demo (sau `seed.py`): `minhanh@gmail.com` / `123Aa2026`.
 
 ## Kiểm thử
 

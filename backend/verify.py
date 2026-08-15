@@ -18,7 +18,7 @@ load_dotenv()
 
 BASE = "http://127.0.0.1:8000"
 DEMO_EMAIL = "minhanh@gmail.com"
-DEMO_PASSWORD = "123Aa"
+DEMO_PASSWORD = "123Aa2026"
 
 passed = 0
 failed = 0

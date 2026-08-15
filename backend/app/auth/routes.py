@@ -112,8 +112,8 @@ router.include_router(api)
 @router.post("/register")
 @limiter.limit(get_settings().rate_limit_login)
 async def compat_register(payload: CredsRequest, request: Request) -> dict[str, Any]:
-    if len(payload.password) < 6:
-        raise HTTPException(422, detail={"message": "Mật khẩu phải có ít nhất 6 ký tự."})
+    if len(payload.password) < 8:
+        raise HTTPException(422, detail={"message": "Mật khẩu phải có ít nhất 8 ký tự."})
     gateway = _gateway(request)
     try:
         await gateway.admin_create_user(payload.email, payload.password)

@@ -57,7 +57,7 @@ copy .env.example .env        # điền: SUPABASE_URL, SERVICE_ROLE_KEY, DB_PASS
 python seed.py                # tạo user + bài viết demo (chạy 1 lần)
 python run.py                 # http://127.0.0.1:8000
 ```
-- Mở <http://127.0.0.1:8000/> — **tài khoản demo:** `minhanh@gmail.com` / `123Aa`
+- Mở <http://127.0.0.1:8000/> — **tài khoản demo:** `minhanh@gmail.com` / `123Aa2026`
 - Luồng: Đăng nhập → Trang chủ → **Cộng đồng** → đăng bài (kèm ảnh), thích, bình
   luận, chia sẻ, mở hồ sơ.
 - Tài liệu API: <http://127.0.0.1:8000/docs> · Kiểm thử: `python verify.py`
