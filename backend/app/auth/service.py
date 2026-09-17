@@ -12,7 +12,7 @@ from typing import Any
 
 from psycopg_pool import AsyncConnectionPool
 
-_SELECT = "SELECT id::text AS id, username, email, avatar_url, password_hash FROM users"
+_SELECT = "SELECT id::text AS id, username, email, avatar_url, password_hash, public_status FROM users"
 
 
 class UserRepository:
@@ -35,17 +35,17 @@ class UserRepository:
         return dict(row) if row else None
 
     async def create_profile(
-        self, *, email: str, username: str | None = None, avatar_url: str | None = None, password_hash: str | None = None
+        self, *, email: str, username: str | None = None, avatar_url: str | None = None, password_hash: str | None = None, public_status: bool = True
     ) -> dict[str, Any]:
         async with self.pool.connection() as conn:
             async with conn.cursor() as cur:
                 await cur.execute(
                     """
-                    INSERT INTO users (email, username, avatar_url, password_hash)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING id::text AS id, username, email, avatar_url, password_hash
+                    INSERT INTO users (email, username, avatar_url, password_hash, public_status)
+                    VALUES (%s, %s, %s, %s, %s)
+                    RETURNING id::text AS id, username, email, avatar_url, password_hash, public_status
                     """,
-                    (email.strip(), username, avatar_url, password_hash),
+                    (email.strip(), username, avatar_url, password_hash, public_status),
                 )
                 row = await cur.fetchone()
         return dict(row)
@@ -73,6 +73,9 @@ class UserRepository:
         if kwargs.get("password_hash") is not None:
             sets.append("password_hash = %s")
             params.append(kwargs["password_hash"])
+        if kwargs.get("public_status") is not None:
+            sets.append("public_status = %s")
+            params.append(kwargs["public_status"])
         if sets:
             params.append(uid)
             async with self.pool.connection() as conn:

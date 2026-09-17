@@ -36,7 +36,7 @@ async def get_profile(
     async with pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.execute(
-                "SELECT id::text AS id, username, email, avatar_url FROM users WHERE id = %s",
+                "SELECT id::text AS id, username, email, avatar_url, public_status FROM users WHERE id = %s",
                 (target_id,),
             )
             user_row = await cur.fetchone()

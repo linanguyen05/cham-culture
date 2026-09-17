@@ -36,6 +36,7 @@ api = APIRouter(prefix="/api/auth")
 class CredsRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=1, max_length=256)
+    public_status: bool = True
 
 
 def _repo(request: Request) -> UserRepository:
@@ -52,6 +53,7 @@ def _public_user(row: dict[str, Any]) -> dict[str, Any]:
         "username": row.get("username") or "Người dùng",
         "email": row.get("email") or "",
         "avatar_url": row.get("avatar_url"),
+        "public_status": row.get("public_status", True),
     }
 
 
@@ -88,6 +90,7 @@ async def update_me(
     username: str | None = Form(default=None),
     current_password: str | None = Form(default=None),
     new_password: str | None = Form(default=None),
+    public_status: str | None = Form(default=None),
     avatar: UploadFile | None = File(default=None),
     user: CurrentUser = Depends(get_current_user),
     settings: Settings = Depends(get_settings),
@@ -97,6 +100,10 @@ async def update_me(
     clean_username = username.strip() if username else None
     if username is not None and not clean_username:
         raise HTTPException(422, detail={"error": "VALIDATION_ERROR", "message": "Tên người dùng không được để trống."})
+
+    parsed_public_status = None
+    if public_status is not None:
+        parsed_public_status = public_status.lower() == "true"
 
     password_hash = None
     if new_password:
@@ -127,7 +134,8 @@ async def update_me(
         user_id=user.id, 
         username=clean_username, 
         avatar_url=avatar_url, 
-        password_hash=password_hash
+        password_hash=password_hash,
+        public_status=parsed_public_status
     )
     assert updated is not None
     set_session_cookie(response, settings, build_session_payload(updated["id"], updated["email"]))
@@ -181,7 +189,11 @@ async def compat_register(payload: CredsRequest, request: Request) -> dict[str, 
         raise HTTPException(409, detail={"message": "Email đã được đăng ký. Vui lòng đăng nhập."})
         
     hashed_pw = bcrypt.hashpw(payload.password.encode(), bcrypt.gensalt()).decode()
-    row = await repo.create_profile(email=payload.email, password_hash=hashed_pw)
+    row = await repo.create_profile(
+        email=payload.email, 
+        password_hash=hashed_pw, 
+        public_status=payload.public_status
+    )
     return {"message": "Đăng ký thành công. Hãy hoàn tất hồ sơ.", "userId": row["id"]}
 
 

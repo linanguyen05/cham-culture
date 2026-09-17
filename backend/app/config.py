@@ -66,6 +66,9 @@ class Settings(BaseSettings):
     rate_limit_comment: str = "40/minute"
     rate_limit_like: str = "120/minute"
 
+    # --- Chatbot API ---
+    gemini_api_key: str | None = None
+
     @field_validator("session_samesite")
     @classmethod
     def validate_samesite(cls, value: str) -> str:

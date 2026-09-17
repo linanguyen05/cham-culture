@@ -1,0 +1,1910 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TÃ¬m hiá»ƒu dÃ¢n tá»™c ChÄƒm</title>`n<link rel="stylesheet" href="/dashboard/style.css">
+
+<style>
+:root{
+    --main-brown: #a65d37;
+    --bg-light: #fdf8f4;
+    --text-dark: #333;
+    --tab-bg: #fffbf9;
+    --active-tab: #f4e8e1;
+}
+body{
+    margin:0;
+    font-family:"Times New Roman", Times, serif;
+    background:var(--bg-light);
+
+    height:100vh;          /* ðŸ”¥ thÃªm */
+    display:flex;          /* ðŸ”¥ thÃªm */
+    flex-direction:column; /* ðŸ”¥ thÃªm */
+    overflow:hidden;       /* ðŸ”¥ thÃªm (khÃ´ng cho scroll) */
+}
+
+/* ===== HEADER ===== */
+.header{
+    background:#D28242;
+    color:white;
+    text-align:center;
+    padding:30px;
+    position:relative;
+}
+.header h1{
+    margin:0;
+    font-size:65px;
+    font-weight:700;
+    letter-spacing:3px;
+    text-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+.icon-left,.icon-right{
+    position:absolute;
+    bottom:0;
+	height: 90%;
+	width: auto;
+	opacity: 0.8;
+}
+.icon-left{left:40px;}
+.icon-right{right:40px;}
+
+/* ===== TAB ===== */
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:110px;
+    background:white;
+    border-bottom:2px solid #eee;
+}
+.tab{
+    padding:30px;
+    cursor:pointer;
+    display:flex;
+	gap:5px;
+    align-items:center;
+    font-size:28px;
+    font-weight:bold;
+}
+.tab.active{
+    color:var(--main-brown);
+    border-bottom:3px solid var(--main-brown);
+}
+
+/* ===== SECTION ===== */
+.section{display:none;padding:0px;}
+.section.active{
+    display: block;
+}
+.section.active > img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:24px;
+}
+
+/* ===== LEFT MENU ===== */
+.layout{
+    display:flex;
+    gap:40px;
+    height:100%;
+}
+.left{
+    width:240px;
+    margin-left:30px;
+}
+
+.left a{   /* Ä‘á»•i div â†’ a */
+    display: block;   /* QUAN TRá»ŒNG */
+    padding:45px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:24px;
+    font-weight:900;  /* bá» px */
+    font-family:"Times New Roman", Times, serif;
+    text-decoration: none; /* bá» gáº¡ch chÃ¢n */
+    color: black;
+}
+
+.left a:hover,
+.left a.active{   /* Ä‘á»•i láº¡i Ä‘Ã¢y luÃ´n */
+    background:#f3e2d5;
+    color:var(--main-brown);
+}
+.right{
+    flex:1;
+    background:white;
+    padding:10px 50px;
+    border-radius:20px;
+    height:100%;   /* ðŸ”¥ thÃªm */
+}
+
+/* ===== MINDMAP ===== */
+.mindmap{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+}
+.node{
+    width:120px;height:120px;
+    border-radius:50%;
+    background:#eee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+}
+.node:hover{
+    transform:scale(1.1);
+    background:var(--main);
+    color:white;
+}
+
+/* ===== CARD ===== */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr); /* 2 cá»™t */
+    gap:30px;
+    padding:40px 80px;
+    height:100%;
+}
+.card{
+    background:#f5e6d3;
+    border-radius:20px;
+    padding:40px;
+    font-size:35px;
+    font-weight:bold;
+    text-align:center;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    height:150px; /* ðŸ”¥ chiá»u cao Ä‘á»u nhau */
+
+    transition:.3s;
+}
+.card:hover{
+    transform:scale(1.05) translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.25);
+}
+/* ===== MODAL CINEMATIC ===== */
+.modal{
+    position:fixed;
+    top:0;left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    pointer-events:none;
+    transition:0.4s;
+    z-index:999;
+}
+
+/* khi má»Ÿ */
+.modal.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* khung */
+.modal-content{
+    width:98%;
+    max-width:1700px;
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    transform:scale(0.7) translateY(50px);
+    opacity:0;
+    transition:0.4s;
+    box-shadow:0 30px 80px rgba(0,0,0,0.4);
+    max-height:90vh;  /* ðŸ”¥ tháº¥p láº¡i Ä‘á»ƒ lá»™ nÃºt X */
+    overflow-y:auto;
+}
+/* animation vÃ o */
+.modal.show .modal-content{
+    transform:scale(1) translateY(0);
+    opacity:1;
+}
+
+/* nÃºt Ä‘Ã³ng */
+.close-btn{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* layout bÃªn trong */
+.modal-inner{
+    display:flex;
+    gap:40px;
+}
+
+/* text */
+.modal-text{
+    width:50%;
+}
+
+.modal-text h2{
+    font-size:30px;
+    margin-bottom:15px;
+}
+
+.modal-text p{
+    font-size:15px;
+    line-height:1.7;
+    text-align:justify;
+}
+
+/* áº£nh */
+.modal-img{
+    width:50%;
+    display:flex;
+    align-items:center;
+}
+
+.modal-img img{
+    width:100%;
+    border-radius:15px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+    max-width:750px;   /* ðŸ”¥ áº£nh to hÆ¡n */
+}
+
+.img-box{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+.img-box img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:15px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    animation:zoomIn 0.4s ease;
+}
+
+.close-img{
+    position:absolute;
+    top:20px;
+    right:40px;
+    font-size:35px;
+    color:white;
+    cursor:pointer;
+}
+
+/* animation */
+@keyframes zoomIn{
+    from{
+        transform:scale(0.7);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+/* ===== STORY ===== */
+.story-container {
+    position: relative;
+    width: 100%;
+    height: 650px; /* TÄƒng chiá»u cao Ä‘á»ƒ khá»›p vá»›i ná»™i dung dÃ i */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%; /* To hÆ¡n cÅ© */
+    min-height: 400px;
+    background: white;
+    padding: 60px; /* Padding rá»™ng rÃ£i */
+    border-radius: 40px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+    text-align: justify; /* CÄƒn Ä‘á»u chá»¯ cho Ä‘áº¹p */
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.story-card.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+}
+
+.story-card h2 {
+    font-size: 48px; /* TiÃªu Ä‘á» cá»±c to */
+    color: #c96f2d;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.story-card p {
+    font-size: 28px; /* Chá»¯ ná»™i dung to rÃµ */
+    line-height: 1.8;
+    color: #333;
+}
+
+/* NÃºt báº¥m tinh chá»‰nh */
+.nav-controls {
+    position: absolute;
+    right: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.nav-btn {
+    background: #c96f2d;
+    color: white;
+    border: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Hiá»‡u á»©ng khi nÃºt bá»‹ vÃ´ hiá»‡u hÃ³a (Disabled) */
+.nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+/* ===== ORBIT ===== */
+/* ===== Äáº¶C Sáº®C Má»šI ===== */
+
+.special-start{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding-top:60px;
+}
+
+.special-start h2{
+    font-size:52px;
+    text-align:center;
+
+    margin-bottom:40px; /* gáº§n áº£nh hÆ¡n */
+    margin-top:-20px;   /* kÃ©o lÃªn trÃªn */
+}
+
+.special-grid{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+
+    gap:120px; /* khoáº£ng cÃ¡ch giá»¯a áº£nh rá»™ng hÆ¡n */
+
+    flex-wrap:wrap;
+
+    margin-top:10px; /* sÃ¡t tiÃªu Ä‘á» hÆ¡n */
+}
+
+.special-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:25px;
+    cursor:pointer;
+    width:300px;
+    transition:.4s;
+}
+
+.special-item:hover{
+    transform:translateY(-10px) scale(1.05);
+}
+
+.special-item img{
+    width:300px;
+    height:200px;
+
+    object-fit:cover;
+    object-position:center;
+
+    display:block;
+
+    border-radius:24px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+}
+
+/* hover Ä‘áº¹p hÆ¡n */
+.special-item:hover img{
+    transform:scale(1.05);
+}
+
+.special-item span{
+    font-size:28px;
+    font-weight:bold;
+    text-align:center;
+    line-height:1.4;
+    max-width:260px;
+}
+
+/* overlay */
+.special-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.72);
+    backdrop-filter:blur(6px);
+
+    opacity:0;
+    visibility:hidden;
+    transition:.5s;
+
+    z-index:99999;
+    overflow:hidden;
+}
+
+.special-overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+/* ===== ORBIT ===== */
+/* ===== STAR EFFECT ===== */
+
+.orbit-ring{
+    position:absolute;
+    inset:0;
+    animation:spinOrbit 40s linear infinite;
+}
+
+.orbit-img{
+    position:absolute;
+    width:240px;
+    height:160px;
+    border-radius:50%;
+    overflow:hidden;
+    border:5px solid white;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+.orbit-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* sao */
+.star{
+    position:absolute;
+    background:white;
+    border-radius:50%;
+
+    box-shadow:
+    0 0 8px rgba(255,255,255,0.9),
+    0 0 18px rgba(255,255,255,0.6);
+
+    animation:
+    twinkle 2s ease-in-out infinite alternate,
+    floatStar linear infinite;
+}
+
+/* láº¥p lÃ¡nh */
+@keyframes twinkle{
+    from{
+        opacity:0.2;
+        transform:scale(0.7);
+    }
+    to{
+        opacity:1;
+        transform:scale(1.3);
+    }
+}
+
+/* bay vÃ²ng */
+@keyframes floatStar{
+    from{
+        transform:translateY(0px) translateX(0px);
+    }
+
+    25%{
+        transform:translateY(-20px) translateX(15px);
+    }
+
+    50%{
+        transform:translateY(10px) translateX(-15px);
+    }
+
+    75%{
+        transform:translateY(-15px) translateX(10px);
+    }
+
+    to{
+        transform:translateY(0px) translateX(0px);
+    }
+}
+/* vá»‹ trÃ­ quanh mÃ n hÃ¬nh */
+.img1{
+    top:5%;
+    left:40%;
+}
+
+.img2{
+    top:35%;
+    right:2%;
+}
+
+.img3{
+    bottom:5%;
+    left:38%;
+}
+
+.img4{
+    top:35%;
+    left:2%;
+}
+
+.img5{
+    top:12%;
+    right:18%;
+}
+
+/* animation */
+@keyframes spinOrbit{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* content giá»¯a */
+.special-content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+
+    width:62%;
+    text-align:center;
+
+    color:white;
+
+    opacity:0;
+    transition:1.2s;
+}
+
+.special-content.show{
+    opacity:1;
+}
+
+.special-content h2{
+    font-size:58px;
+    margin-bottom:35px;
+}
+
+.special-content p{
+    font-size:30px;
+    line-height:2;
+}
+
+/* nÃºt quay láº¡i */
+.special-close{
+    position:absolute;
+    top:30px;
+    right:40px;
+
+    color:white;
+    font-size:28px;
+    cursor:pointer;
+
+    padding:14px 28px;
+    border:2px solid white;
+    border-radius:16px;
+
+    transition:.3s;
+}
+
+.special-close:hover{
+    background:white;
+    color:black;
+}
+
+/* ===== THREAD ===== */
+canvas{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;left:0;
+    display:none;
+}
+.info{
+    position:fixed;
+    bottom:-300px;
+    left:50%;
+    transform:translateX(-50%);
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    transition:.8s;
+}
+.info.show{
+    bottom:100px;
+}
+.inner-flex{
+    display:flex;
+    gap:60px;
+    width:100%;
+    height:100%; /* ðŸ”¥ Ä‘á»ƒ cÄƒn giá»¯a dá»c */
+}
+
+
+/* ===== THREAD SCENE ===== */
+
+.thread-scene{
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    background:
+    radial-gradient(circle at center,
+    rgba(255,255,255,0.04),
+    rgba(0,0,0,0.95));
+}
+
+/* canvas */
+#cv{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+/* cá»¥m giá»¯a */
+.thread-core{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.06);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:55px;
+
+    cursor:pointer;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 0 40px rgba(255,255,255,0.08),
+    inset 0 0 20px rgba(255,255,255,0.05);
+
+    transition:.5s;
+    z-index:10;
+
+    animation:coreFloat 4s ease-in-out infinite;
+}
+
+.thread-core:hover{
+    transform:translate(-50%,-50%) scale(1.08);
+}
+
+@keyframes coreFloat{
+    0%{transform:translate(-50%,-50%) translateY(0px);}
+    50%{transform:translate(-50%,-50%) translateY(-12px);}
+    100%{transform:translate(-50%,-50%) translateY(0px);}
+}
+
+/* báº£ng tráº¯ng */
+.truth-card{
+    position:absolute;
+
+    left:50%;
+    bottom:-500px;
+
+    transform:translateX(-50%);
+
+    width:720px;
+    background:white;
+
+    border-radius:30px;
+
+    padding:45px;
+
+    box-shadow:
+    0 30px 80px rgba(0,0,0,0.35);
+
+    opacity:0;
+
+    transition:
+    1s cubic-bezier(.2,.9,.2,1);
+
+    z-index:20;
+}
+
+.truth-card.show{
+    bottom:90px;
+    opacity:1;
+}
+
+.truth-card h2{
+    font-size:42px;
+    margin-bottom:25px;
+    color:#c96f2d;
+}
+
+.truth-card p{
+    font-size:28px;
+    line-height:1.8;
+    color:#333;
+}
+
+.truth-line{
+    margin-top:25px;
+    font-size:24px;
+    color:#c96f2d;
+    font-style:italic;
+}
+
+.content-left{
+    width:55%;
+}
+
+.content-right{
+    width:45%;
+}
+
+.content-right img{
+    width:100%;
+    display:block;
+}
+
+/* ===== HIá»‚U Láº¦M NEW ===== */
+.misconception-scene{
+    position:relative;
+    width:100%;
+    height:78vh;
+    overflow:hidden;
+
+    background: #ffffff;   /* ðŸ”¥ Ä‘á»•i tráº¯ng */
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+    transition: 1.2s ease;
+}
+
+.misconception-scene.active{
+    background: radial-gradient(circle at center,
+    #1a1a1a 0%,
+    #000000 70%);
+}
+
+/* glow */
+.scene-light{
+    position:absolute;
+    width:700px;
+    height:700px;
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    rgba(255,170,90,0.12),
+    transparent 70%);
+
+    animation:pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+}
+
+/* chá»¯ hiá»ƒu láº§m */
+.fake-text{
+    position:absolute;
+    text-align:center;
+    opacity:0;       
+    font-size:72px;
+    font-weight:900;
+    line-height:1.3;
+    transform:scale(0.9);
+    color:rgba(255,255,255,0.9);
+
+    letter-spacing:4px;
+
+    text-shadow:
+    0 0 15px rgba(255,255,255,0.15);
+
+    transition:1.2s;
+
+    z-index:5;
+}
+
+/* máº·t náº¡ */
+.mask{
+    position:absolute;
+
+    width:700px;   /* ðŸ”¥ to hÆ¡n ná»¯a */
+    height:700px;
+
+    z-index:10;
+
+    transition:1.6s cubic-bezier(.2,.9,.2,1);
+
+    filter:drop-shadow(0 0 50px rgba(255,180,100,0.35));
+}
+
+.mask img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+
+    animation:
+    maskFloat 5s ease-in-out infinite;
+}
+
+@keyframes maskFloat{
+
+    0%{
+        transform:
+        translateY(0px)
+        rotate(0deg);
+    }
+
+    50%{
+        transform:
+        translateY(-18px)
+        rotate(2deg);
+    }
+
+    100%{
+        transform:
+        translateY(0px)
+        rotate(0deg);
+    }
+}
+
+/* ===== MASK FRAGMENTS ===== */
+
+.mask-fragments{
+    position:absolute;
+
+    width:340px;
+    height:340px;
+
+    z-index:12;
+
+    pointer-events:none;
+}
+
+/* máº£nh */
+.frag{
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    background:url('/assets/learn/mask.png')
+    center/contain no-repeat;
+
+    opacity:0;
+
+    transition:
+    2s cubic-bezier(.2,.9,.2,1);
+
+    filter:
+    drop-shadow(0 0 20px rgba(255,255,255,0.08));
+}
+
+/* ===== Cáº®T Tá»ªNG Máº¢NH ===== */
+
+.f1{
+    clip-path:polygon(
+    0 0,
+    55% 0,
+    45% 55%,
+    0 45%
+    );
+}
+
+.f2{
+    clip-path:polygon(
+    55% 0,
+    100% 0,
+    100% 45%,
+    60% 55%
+    );
+}
+
+.f3{
+    clip-path:polygon(
+    0 45%,
+    45% 55%,
+    40% 100%,
+    0 100%
+    );
+}
+
+.f4{
+    clip-path:polygon(
+    60% 55%,
+    100% 45%,
+    100% 100%,
+    40% 100%
+    );
+}
+
+/* ===== ACTIVE ===== */
+
+/* máº·t náº¡ gá»‘c biáº¿n máº¥t */
+.misconception-scene.active .mask{
+    opacity:0;
+    transform:scale(1.05);
+}
+
+/* hiá»‡n máº£nh */
+.misconception-scene.active .frag{
+    opacity:1;
+}
+
+/* tÃ¡ch nháº¹ */
+.misconception-scene.active .f1{
+    transform:
+    translate(-35px,-28px)
+    rotate(-8deg);
+}
+
+.misconception-scene.active .f2{
+    transform:
+    translate(35px,-24px)
+    rotate(7deg);
+}
+
+.misconception-scene.active .f3{
+    transform:
+    translate(-28px,35px)
+    rotate(-6deg);
+}
+
+.misconception-scene.active .f4{
+    transform:
+    translate(30px,38px)
+    rotate(8deg);
+}
+
+/* ===== KHI Vá»  ===== */
+
+.misconception-scene.active .shards span{
+    opacity:1;
+}
+
+.misconception-scene.active .shards span:nth-child(1){
+    transform:
+    translate(-500px,-260px)
+    rotate(280deg)
+    scale(.7);
+}
+
+.misconception-scene.active .shards span:nth-child(2){
+    transform:
+    translate(420px,-320px)
+    rotate(220deg)
+    scale(.6);
+}
+
+.misconception-scene.active .shards span:nth-child(3){
+    transform:
+    translate(-420px,320px)
+    rotate(320deg)
+    scale(.8);
+}
+
+.misconception-scene.active .shards span:nth-child(4){
+    transform:
+    translate(460px,260px)
+    rotate(200deg)
+    scale(.75);
+}
+
+.misconception-scene.active .shards span:nth-child(5){
+    transform:
+    translate(-180px,-420px)
+    rotate(380deg)
+    scale(.65);
+}
+
+.misconception-scene.active .shards span:nth-child(6){
+    transform:
+    translate(120px,420px)
+    rotate(280deg)
+    scale(.7);
+}
+
+/* panel */
+.truth-panel{
+    position:absolute;
+
+    width:760px;
+
+    background:white;
+
+    border-radius:32px;
+
+    padding:50px;
+
+    text-align:center;
+
+    box-shadow:
+    0 25px 80px rgba(0,0,0,0.35);
+
+    opacity:0;
+
+    transform:
+    translateY(120px)
+    scale(.9);
+
+    transition:1.4s;
+
+    z-index:20;
+}
+
+.truth-panel h2{
+    font-size:48px;
+    color:#c96f2d;
+    margin-bottom:30px;
+}
+
+.truth-panel p{
+    font-size:28px;
+    line-height:1.8;
+}
+
+.final-line{
+    margin-top:25px;
+    color:#c96f2d;
+    font-weight:bold;
+}
+
+/* ===== ACTIVE ===== */
+
+.misconception-scene.active .fake-text{
+    opacity:1;
+    transform:scale(1);
+    filter:blur(18px);
+}
+
+.misconception-scene.active .mask{
+
+    transform:
+    scale(2.4)
+    rotate(18deg);
+
+    opacity:0;
+}
+
+/* shards bay */
+.misconception-scene.active .shards span{
+    opacity:1;
+}
+
+.misconception-scene.active .shards span:nth-child(1){
+    transform:translate(-420px,-180px) rotate(220deg);
+}
+
+.misconception-scene.active .shards span:nth-child(2){
+    transform:translate(380px,-220px) rotate(180deg);
+}
+
+.misconception-scene.active .shards span:nth-child(3){
+    transform:translate(-320px,260px) rotate(260deg);
+}
+
+.misconception-scene.active .shards span:nth-child(4){
+    transform:translate(300px,260px) rotate(120deg);
+}
+
+.misconception-scene.active .shards span:nth-child(5){
+    transform:translate(-120px,-320px) rotate(320deg);
+}
+
+.misconception-scene.active .shards span:nth-child(6){
+    transform:translate(120px,340px) rotate(240deg);
+}
+
+/* hiá»‡n truth */
+.misconception-scene.active .truth-panel{
+    opacity:1;
+
+    transform:
+    translateY(0)
+    scale(1);
+}
+
+.crack{
+    position:absolute;
+
+    width:340px;
+    height:340px;
+
+    background:
+    linear-gradient(
+    120deg,
+    transparent 48%,
+    rgba(255,255,255,0.9) 50%,
+    transparent 52%
+    );
+
+    opacity:0;
+
+    z-index:20;
+
+    transition:1s;
+}
+
+.misconception-scene.active .crack{
+    opacity:1;
+}
+
+/* ===== CHá»ˆNH CHá»® ===== */
+.content-left h2{
+    font-size:52px;
+    margin-bottom:20px;
+}
+
+.content-left p{
+    font-size:25px;
+    line-height:1.8;
+	margin-bottom: 25px;
+	text-align: justify;
+}
+/* ===== NAVBAR ===== */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 60px;
+    background:white;
+}
+
+/* logo */
+.logo{
+    font-size:22px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo span{
+    color:#c96f2d;
+}
+
+/* search */
+.search-box{
+    position:relative;
+}
+
+.search-box input{
+    padding:10px 40px 10px 15px;
+    border-radius:20px;
+    border:1px solid #ddd;
+    outline:none;
+    width:220px;
+}
+
+.search-box .icon{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+}
+
+/* ===== CHá»ˆNH áº¢NH ===== */
+.content-right{
+    display:flex;
+    justify-content:center;   /* cÄƒn giá»¯a ngang */
+    align-items:center;       /* cÄƒn giá»¯a dá»c ðŸ”¥ */
+}
+
+.content-right img{
+    max-width:550px;
+    width:100%;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
+
+/* ===== VÄ‚N HÃ“A NÃ‚NG Cáº¤P ===== */
+:root{
+    --main: #c96f2d;
+}
+
+/* mindmap Ä‘áº¹p hÆ¡n */
+.mindmap{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    margin:40px 0;
+}
+
+/* node trÃ²n xá»‹n */
+.node{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:linear-gradient(145deg,#d97c3c,#b85f23);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.35s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* hover phÃ³ng to */
+.node:hover{
+    transform:scale(1.15) translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.35);
+}
+
+/* click effect */
+.node:active{
+    transform:scale(0.95);
+}
+
+/* content box */
+.content-box{
+    display:none;
+    width:90%;
+    max-width:1400px;
+    margin:40px auto;
+    padding:35px;
+    background:white;
+    border-left:8px solid #c96f2d;
+    border-radius:16px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    font-size:22px;
+    line-height:1.8;
+}
+
+/* animation */
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+/* ===== VÄ‚N HÃ“A EFFECT ===== */
+.mindmap{
+    display:flex;
+    justify-content:center;
+    gap:250px;
+    margin-top:120px;
+    transition:0.6s;
+}
+
+/* sau khi click -> dáº¡t lÃªn */
+.mindmap.active{
+    margin-top:30px;
+}
+
+/* node Ä‘áº¹p */
+.node{
+    width:200px;   /* ðŸ”¥ tá»« 150 â†’ 180 */
+    height:200px;
+    border-radius:50%;
+    background:#c96f2d;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    font-size:27px;   /* chá»¯ to hÆ¡n */
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+
+.node:hover{
+    transform:scale(1.15);
+}
+
+
+</style>
+</head>
+
+<body>
+<header><div class="logo"><img src="/1.png" alt="Logo"><span>Chăm Culture</span></div><nav><a href="/dashboard/index.html">Trang chủ</a><a href="/learn.html" class="active">Tìm hiểu</a><a href="/chatbot.html">Chatbot</a><a href="/community/index.html">Cộng đồng</a></nav><div class="search-icon">🔍</div></header>
+<div class="navbar">
+    <div class="logo">
+        ðŸ›• <span>ChÄƒm Culture</span>
+    </div>
+
+    <div class="back-btn" onclick="goBack()">â¬…</div>
+</div>
+<div class="header">
+    <img src="../assets/learn/thapp.png" class="icon-left">
+    <h1>TÃ¬m hiá»ƒu vá» dÃ¢n tá»™c ChÄƒm</h1>
+	<img src="../assets/learn/mua.png" class="icon-right">
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="tab(0)">ðŸ  Tá»•ng quan</div>
+<div class="tab" onclick="tab(1)">ðŸŽ¨ VÄƒn hÃ³a</div>
+<div class="tab" onclick="tab(2)">ðŸŽ­ TÃ­n ngÆ°á»¡ng</div>
+<div class="tab" onclick="tab(3)">ðŸŒ¾ Äá»i sá»‘ng</div>
+<div class="tab" onclick="tab(4)">âœ¨ Äáº·c sáº¯c</div>
+<div class="tab" onclick="tab(5)">ðŸ§µ Hiá»ƒu láº§m</div>
+</div>
+<!-- ===== Tá»”NG QUAN ===== -->
+<div class="section active">
+    <div class="layout">
+
+        <div class="left">
+            <a href="learn.html">Tá»”NG QUAN</a>
+            <a href="nguon-goc.html">NGUá»’N Gá»C</a>
+            <a href="dan-so.html">DÃ‚N Sá»</a>
+            <a href="ngon-ngu.html"class="active">NGÃ”N NGá»®</a>
+            <a href="khu-vuc.html">KHU Vá»°C</a>
+        </div>
+
+        <div class="right">
+            <div class="inner-flex">
+                <div class="content-left" style="width: 100%;">
+                    <h2>NgÃ´n ngá»¯</h2>
+                    <p>NgÃ´n ngá»¯ cá»§a ngÆ°á»i ChÄƒm lÃ  tiáº¿ng ChÄƒm, thuá»™c nhÃ³m ngÃ´n ngá»¯ Malayâ€“Polynesia (há» Nam Äáº£o), náº±m trong há»‡ ngÃ´n ngá»¯ Austronesian.</p>
+
+                    <p>Tiáº¿ng ChÄƒm cÃ³ lá»‹ch sá»­ lÃ¢u Ä‘á»i, gáº¯n liá»n vá»›i ná»n vÄƒn minh Champa cá»•. Hiá»‡n nay, tiáº¿ng ChÄƒm váº«n Ä‘Æ°á»£c sá»­ dá»¥ng trong cá»™ng Ä‘á»“ng ngÆ°á»i ChÄƒm, Ä‘áº·c biá»‡t trong sinh hoáº¡t háº±ng ngÃ y, tÃ­n ngÆ°á»¡ng vÃ  lá»… há»™i truyá»n thá»‘ng.</p>
+
+                    <p>NgÃ´n ngá»¯ nÃ y cÃ³ hai nhÃ³m chÃ­nh:</p>
+
+                    <p>- ChÄƒm ÄÃ´ng (ChÄƒm BÃ lamÃ´n): chá»§ yáº¿u á»Ÿ Ninh Thuáº­n, BÃ¬nh Thuáº­n.</p>
+
+
+                    <p>- ChÄƒm Há»“i giÃ¡o (ChÄƒm Islam): má»™t pháº§n chá»‹u áº£nh hÆ°á»Ÿng tiáº¿ng MÃ£ Lai â€“ áº¢ Ráº­p trong tÃ´n giÃ¡o.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== VÄ‚N HÃ“A ===== -->
+<div class="section">
+    
+    <div class="mindmap" id="mindmap">
+        <div class="node" onclick="showContent('trangphuc')">ðŸ‘—<br>Trang phá»¥c</div>
+        <div class="node" onclick="showContent('amthuc')">ðŸ›<br>áº¨m thá»±c</div>
+        <div class="node" onclick="showContent('kientruc')">ðŸ›<br>Kiáº¿n trÃºc</div>
+    </div>
+
+    <div id="contentBox" class="content-box"></div>
+
+</div>
+<!-- ===== TÃN NGÆ¯á» NG ===== -->
+<div class="section">
+<div class="cards">
+<div class="card" onclick="openModal('balamon')">ðŸ›• BÃ  La MÃ´n</div>
+<div class="card" onclick="openModal('bani')">ðŸŒ™ Há»“i giÃ¡o Bani</div>
+<div class="card" onclick="openModal('kate')">ðŸŽ­ Lá»… há»™i Kate</div>
+<div class="card" onclick="openModal('ramuwan')">ðŸŒ™ Ramuwan</div>
+</div>
+</div>
+
+<!-- ===== Äá»œI Sá»NG ===== -->
+<div class="section">
+    <div class="story-container">
+        <div class="nav-controls">
+            <button class="nav-btn up" id="btnUp" onclick="changeCard(-1)">â–²</button>
+            <button class="nav-btn down" id="btnDown" onclick="changeCard(1)">â–¼</button>
+        </div>
+
+        <div class="story-wrap">
+            <div class="story-card active">
+                <h2>ðŸ§© Bá»©c tranh Äá»i sá»‘ng</h2>
+                <p>Äá»i sá»‘ng ngÆ°á»i ChÄƒm khÃ´ng chá»‰ Ä‘Æ¡n thuáº§n lÃ  nhá»¯ng hoáº¡t Ä‘á»™ng sinh hoáº¡t â€œÄƒn â€“ máº·c â€“ á»Ÿâ€ thÆ°á»ng nháº­t, mÃ  Ä‘Ã³ lÃ  má»™t báº£n giao hÆ°á»Ÿng tuyá»‡t Ä‘áº¹p giá»¯a viá»‡c gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ truyá»n thá»‘ng nghÃ¬n nÄƒm vÃ  sá»± thÃ­ch nghi khÃ´n ngoan vá»›i dÃ²ng cháº£y hiá»‡n Ä‘áº¡i. Má»—i náº¿p nhÃ , má»—i lÃ ng ChÄƒm (Palei) Ä‘á»u chá»©a Ä‘á»±ng nhá»¯ng triáº¿t lÃ½ nhÃ¢n sinh sÃ¢u sáº¯c vá» sá»± gáº¯n káº¿t giá»¯a con ngÆ°á»i vÃ  tháº§n linh.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>ðŸŒ¾ GiÃ¡ trá»‹ Lao Ä‘á»™ng</h2>
+                <p>Gáº¯n liá»n vá»›i hÃ¬nh áº£nh nhá»¯ng cÃ¡nh Ä‘á»“ng lÃºa báº¡t ngÃ n vÃ  tiáº¿ng thoi Ä‘Æ°a lÃ¡ch cÃ¡ch bÃªn khung dá»‡t truyá»n thá»‘ng. Äá»‘i vá»›i ngÆ°á»i ChÄƒm, lao Ä‘á»™ng khÃ´ng chá»‰ lÃ  cÃ¡ch Ä‘á»ƒ duy trÃ¬ sinh káº¿ mÃ  cÃ²n lÃ  má»™t hÃ¬nh thá»©c thá»±c hÃ nh vÄƒn hÃ³a. Nghá» dá»‡t thá»• cáº©m Má»¹ Nghiá»‡p hay nghá» gá»‘m BÃ u TrÃºc lÃ  minh chá»©ng cho Ä‘Ã´i bÃ n tay tÃ i hoa, nÆ¡i má»—i sáº£n pháº©m lÃ m ra Ä‘á»u mang hÆ¡i thá»Ÿ cá»§a Ä‘áº¥t máº¹ vÃ  niá»m tá»± hÃ o dÃ¢n tá»™c.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>ðŸ‘• Sáº¯c mÃ u Trang phá»¥c</h2>
+                <p>Trang phá»¥c ChÄƒm lÃ  má»™t biá»ƒu tÆ°á»£ng kiÃªu hÃ£nh cá»§a báº£n sáº¯c. Nhá»¯ng chiáº¿c vÃ¡y dÃ i (Aw yau) thÆ°á»›t tha cá»§a phá»¥ ná»¯, káº¿t há»£p cÃ¹ng khÄƒn Ä‘á»™i Ä‘áº§u (MÃ¡t-ra) vÃ  dÃ¢y tháº¯t lÆ°ng thÃªu hoa vÄƒn tinh xáº£o, táº¡o nÃªn váº» Ä‘áº¹p kÃ­n Ä‘Ã¡o nhÆ°ng vÃ´ cÃ¹ng quyáº¿n rÅ©. MÃ u sáº¯c cá»§a trang phá»¥c khÃ´ng chá»‰ Ä‘á»ƒ lÃ m Ä‘áº¹p mÃ  cÃ²n pháº£n Ã¡nh Ä‘á»‹a vá»‹ xÃ£ há»™i vÃ  cÃ¡c giÃ¡ trá»‹ tÃ­n ngÆ°á»¡ng trong nhá»¯ng dá»‹p lá»… há»™i thiÃªng liÃªng.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>ðŸ› Nghá»‡ thuáº­t áº¨m thá»±c</h2>
+                <p>áº¨m thá»±c ChÄƒm lÃ  má»™t hÃ nh trÃ¬nh khÃ¡m phÃ¡ vá»‹ giÃ¡c Ä‘áº§y áº¥n tÆ°á»£ng vá»›i sá»± káº¿t há»£p phong phÃº cá»§a cÃ¡c loáº¡i gia vá»‹ nhÆ° nghá»‡, á»›t, sáº£ vÃ  cá»‘t dá»«a. Chá»‹u áº£nh hÆ°á»Ÿng tá»« giao thoa vÄƒn hÃ³a áº¤n Äá»™ giÃ¡o vÃ  Há»“i giÃ¡o, cÃ¡c mÃ³n Äƒn nhÆ° CÃ  ri ChÄƒm hay canh bá»“i khÃ´ng chá»‰ Ä‘áº­m Ä‘Ã  hÆ°Æ¡ng vá»‹ mÃ  cÃ²n tuÃ¢n thá»§ nghiÃªm ngáº·t cÃ¡c quy táº¯c tÃ´n giÃ¡o, thá»ƒ hiá»‡n sá»± kÃ­nh trá»ng Ä‘á»‘i vá»›i nguá»“n thá»±c pháº©m Ä‘Æ°á»£c ban táº·ng.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>ðŸ‘¥ Sá»©c máº¡nh Cá»™ng Ä‘á»“ng</h2>
+                <p>NgÆ°á»i ChÄƒm cÃ³ tÃ­nh cá»™ng Ä‘á»“ng cá»±c ká»³ cao, thá»ƒ hiá»‡n qua sá»± gáº¯n káº¿t cháº·t cháº½ giá»¯a gia Ä‘Ã¬nh vÃ  lÃ ng xÃ£. Trong xÃ£ há»™i truyá»n thá»‘ng, vai trÃ² cá»§a ngÆ°á»i phá»¥ ná»¯ (theo cháº¿ Ä‘á»™ máº«u há»‡) ráº¥t quan trá»ng trong viá»‡c quáº£n lÃ½ gia Ä‘Ã¬nh vÃ  thá» cÃºng tá»• tiÃªn. Äá»i sá»‘ng cÃ¡ nhÃ¢n luÃ´n hÃ²a mÃ¬nh vÃ o dÃ²ng cháº£y chung cá»§a Palei, táº¡o nÃªn má»™t máº¡ng lÆ°á»›i há»— trá»£ láº«n nhau vÃ´ cÃ¹ng bá»n vá»¯ng qua bao tháº¿ há»‡.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>ðŸ›• Äá»i sá»‘ng TÃ¢m linh</h2>
+                <p>TÃ¢m linh lÃ  máº¡ch ngáº§m cháº£y xuyÃªn suá»‘t trong má»i hoáº¡t Ä‘á»™ng cá»§a ngÆ°á»i ChÄƒm. Niá»m tin vÃ o tháº§n linh vÃ  tá»• tiÃªn khÃ´ng náº±m á»Ÿ nhá»¯ng Ä‘iá»u xa vá»i mÃ  hiá»‡n diá»‡n ngay trong tá»«ng bá»¯a Äƒn, giáº¥c ngá»§ hay khi bÆ°á»›c chÃ¢n ra Ä‘á»“ng. Nhá»¯ng ngÃ´i thÃ¡p cá»• kÃ­nh khÃ´ng chá»‰ lÃ  di tÃ­ch, mÃ  lÃ  nhá»¯ng "thá»±c thá»ƒ sá»‘ng" nÆ¡i cá»™ng Ä‘á»“ng gá»­i gáº¯m niá»m tin vá» sá»± bÃ¬nh an, mÃ¹a mÃ ng bá»™i thu vÃ  sá»± thá»‹nh vÆ°á»£ng.</p>
+            </div>
+
+            <div class="story-card">
+                <h2>âš–ï¸ HÆ¡i thá»Ÿ Hiá»‡n Ä‘áº¡i</h2>
+                <p>Trong ká»· nguyÃªn sá»‘, ngÆ°á»i ChÄƒm khÃ´ng há» Ä‘á»©ng yÃªn. Tháº¿ há»‡ tráº» Ä‘ang tÃ­ch cá»±c há»c táº­p, á»©ng dá»¥ng cÃ´ng nghá»‡ Ä‘á»ƒ quáº£ng bÃ¡ vÄƒn hÃ³a dÃ¢n tá»™c ra tháº¿ giá»›i. Sá»± hÃ²a nháº­p xÃ£ há»™i diá»…n ra máº¡nh máº½ nhÆ°ng khÃ´ng lÃ m máº¥t Ä‘i "cÃ¡i gá»‘c" ChÄƒm. Há» Ä‘ang viáº¿t tiáº¿p nhá»¯ng trang sá»­ má»›i báº±ng tri thá»©c hiá»‡n Ä‘áº¡i nhÆ°ng váº«n mang trong mÃ¬nh tÃ¢m tháº¿ cá»§a nhá»¯ng ngÆ°á»i con thá»«a káº¿ vÆ°Æ¡ng quá»‘c Champa rá»±c rá»¡ nÄƒm xÆ°a.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Äáº¶C Sáº®C ===== -->
+<div class="section">
+
+    <!-- mÃ n hÃ¬nh Ä‘áº§u -->
+    <div class="special-start" id="specialStart">
+        <h2>HÃ£y nháº¥p vÃ o má»™t yáº¿u tá»‘ báº¡n muá»‘n khÃ¡m phÃ¡</h2>
+
+        <div class="special-grid">
+
+            <div class="special-item" onclick="openSpecial('thap')">
+                <img src="/assets/learn/thappp.jpg">
+                <span>ðŸ›• ThÃ¡p ChÄƒm</span>
+            </div>
+
+            <div class="special-item" onclick="openSpecial('lehoi')">
+                <img src="/assets/learn/lehoi.jpg">
+                <span>ðŸŽ­ Lá»… há»™i</span>
+            </div>
+
+            <div class="special-item" onclick="openSpecial('det')">
+                <img src="/assets/learn/det.jpg">
+                <span>ðŸ§µ Dá»‡t váº£i</span>
+            </div>
+
+            <div class="special-item" onclick="openSpecial('muanhac')">
+                <img src="/assets/learn/muanhac.jpg">
+                <span>ðŸŽ¶ Nghá»‡ thuáº­t mÃºa nháº¡c ChÄƒm</span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- OVERLAY Äáº¶C Sáº®C -->
+<div class="special-overlay" id="specialOverlay">
+
+    <!-- vÃ²ng áº£nh -->
+<div class="orbit-ring">
+
+    <div class="star" style="width:4px;height:4px;top:10%;left:15%;animation-duration:3s,12s;"></div>
+
+    <div class="star" style="width:6px;height:6px;top:20%;left:75%;animation-duration:2s,15s;"></div>
+
+    <div class="star" style="width:3px;height:3px;top:70%;left:20%;animation-duration:4s,10s;"></div>
+
+    <div class="star" style="width:5px;height:5px;top:80%;left:65%;animation-duration:3s,18s;"></div>
+
+    <div class="star" style="width:4px;height:4px;top:45%;left:90%;animation-duration:2s,14s;"></div>
+
+    <div class="star" style="width:7px;height:7px;top:35%;left:8%;animation-duration:3s,20s;"></div>
+
+    <div class="star" style="width:3px;height:3px;top:55%;left:50%;animation-duration:5s,13s;"></div>
+
+    <div class="star" style="width:5px;height:5px;top:15%;left:45%;animation-duration:2s,17s;"></div>
+
+    <div class="star" style="width:4px;height:4px;top:88%;left:40%;animation-duration:3s,16s;"></div>
+
+</div>
+
+    <!-- ná»™i dung -->
+    <div class="special-content" id="specialContent"></div>
+
+    <!-- nÃºt thoÃ¡t -->
+    <div class="special-close" onclick="closeSpecial()">âœ• Quay láº¡i</div>
+
+</div>
+<!-- ===== HIá»‚U Láº¦M ===== -->
+<div class="section">
+
+<div class="misconception-scene" onclick="revealTruth()">
+
+    <!-- background glow -->
+    <div class="scene-light"></div>
+
+    <!-- chá»¯ hiá»ƒu láº§m -->
+    <div class="fake-text" id="fakeText">
+        NGÆ¯á»œI CHÄ‚M<br>
+        CHá»ˆ THEO<br>
+        Má»˜T TÃ”N GIÃO
+    </div>
+
+    <!-- máº·t náº¡ -->
+<div class="mask" id="mask">
+
+    <img src="/assets/learn/mask.png">
+
+</div>
+
+    <!-- máº£nh vá»¡ -->
+<div class="mask-fragments">
+
+    <div class="frag f1"></div>
+    <div class="frag f2"></div>
+    <div class="frag f3"></div>
+    <div class="frag f4"></div>
+
+</div>
+
+<div class="crack"></div>
+
+    <!-- panel tháº­t -->
+    <div class="truth-panel" id="truthPanel">
+
+        <h2>âœ¨ Sá»± tháº­t phÃ­a sau</h2>
+
+        <p class="wrong">
+            âŒ Hiá»ƒu láº§m:
+            NgÆ°á»i ChÄƒm chá»‰ theo má»™t tÃ´n giÃ¡o
+        </p>
+
+        <p class="right">
+            âœ… Thá»±c táº¿:
+            NgÆ°á»i ChÄƒm tá»“n táº¡i nhiá»u há»‡ tÃ­n ngÆ°á»¡ng
+            nhÆ° BÃ  La MÃ´n, Bani vÃ  tÃ­n ngÆ°á»¡ng dÃ¢n gian.
+        </p>
+
+        <p class="final-line">
+            ChÃ­nh sá»± Ä‘a dáº¡ng áº¥y táº¡o nÃªn chiá»u sÃ¢u vÄƒn hÃ³a Ä‘áº·c sáº¯c.
+        </p>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">âœ•</span>
+        <div id="modalInner"></div>
+    </div>
+</div>
+
+<div id="imgBox" class="img-box" onclick="closeImg()">
+    <span class="close-img">âœ•</span>
+    <img id="imgFull">
+</div>
+
+<script>
+
+/* TAB */
+function tab(i){
+document.querySelectorAll(".tab").forEach((t,idx)=>t.classList.toggle("active",idx==i))
+document.querySelectorAll(".section").forEach((s,idx)=>s.classList.toggle("active",idx==i))
+}
+
+/* MINDMAP */
+function showContent(type){
+    const box = document.getElementById("contentBox");
+    const mindmap = document.getElementById("mindmap");
+
+    mindmap.classList.add("active");
+    box.style.display = "block";
+	let content = "";
+    if(type === "trangphuc"){
+        content = `
+        <h3>ðŸ‘— Trang phá»¥c</h3>
+        <p>
+         Trang phá»¥c cá»§a ngÆ°á»i ChÄƒm mang váº» Ä‘áº¹p tinh táº¿ vá»›i hoa vÄƒn dá»‡t thá»§ cÃ´ng Ä‘áº·c sáº¯c. 
+        Phá»¥ ná»¯ thÆ°á»ng máº·c vÃ¡y dÃ i, Ã¡o Ã´m sÃ¡t cÆ¡ thá»ƒ, káº¿t há»£p khÄƒn Ä‘á»™i Ä‘áº§u, 
+        táº¡o nÃªn váº» duyÃªn dÃ¡ng vÃ  má»m máº¡i. Nam giá»›i máº·c trang phá»¥c Ä‘Æ¡n giáº£n hÆ¡n 
+        nhÆ°ng váº«n toÃ¡t lÃªn nÃ©t trang nghiÃªm vÃ  truyá»n thá»‘ng.
+        </p>`;
+    }
+
+    if(type === "amthuc"){
+        content = `
+        <h3>ðŸ› áº¨m thá»±c</h3>
+        <p>
+         áº¨m thá»±c ChÄƒm Ä‘áº­m Ä‘Ã  vá»›i hÆ°Æ¡ng vá»‹ cÃ  ri Ä‘áº·c trÆ°ng, káº¿t há»£p nhiá»u loáº¡i gia vá»‹ 
+        nhÆ° nghá»‡, á»›t, sáº£. Nhá»¯ng mÃ³n Äƒn ná»•i báº­t nhÆ° cÆ¡m ná»‹, bÃ¡nh gá»«ng khÃ´ng chá»‰ ngon 
+        mÃ  cÃ²n gáº¯n liá»n vá»›i Ä‘á»i sá»‘ng vÄƒn hoÃ¡ vÃ  nghi lá»… cá»§a ngÆ°á»i ChÄƒm.
+        </p>`;
+    }
+
+    if(type === "kientruc"){
+        content = `
+        <h3>ðŸ› Kiáº¿n trÃºc</h3>
+        <p>
+        Kiáº¿n trÃºc ChÄƒm ná»•i báº­t vá»›i há»‡ thá»‘ng thÃ¡p cá»• xÃ¢y báº±ng gáº¡ch nung, tiÃªu biá»ƒu nhÆ° 
+        thÃ¡p Má»¹ SÆ¡n. CÃ¡c cÃ´ng trÃ¬nh mang Ä‘áº­m dáº¥u áº¥n tÃ´n giÃ¡o, thá»ƒ hiá»‡n sá»± áº£nh hÆ°á»Ÿng 
+        máº¡nh máº½ cá»§a áº¤n Äá»™ giÃ¡o vÃ  trÃ¬nh Ä‘á»™ ká»¹ thuáº­t xÃ¢y dá»±ng Ä‘á»™c Ä‘Ã¡o.
+        </p>`;
+    }
+
+    box.innerHTML = content;
+}
+
+/* STORY */
+let currentCard = 0;
+
+function updateButtons() {
+    const cards = document.querySelectorAll(".story-card");
+    const btnUp = document.getElementById("btnUp");
+    const btnDown = document.getElementById("btnDown");
+
+    // Náº¿u á»Ÿ card Ä‘áº§u (index 0), khÃ³a nÃºt LÃªn
+    btnUp.disabled = (currentCard === 0);
+    
+    // Náº¿u á»Ÿ card cuá»‘i, khÃ³a nÃºt Xuá»‘ng
+    btnDown.disabled = (currentCard === cards.length - 1);
+}
+
+function changeCard(n) {
+    const cards = document.querySelectorAll(".story-card");
+    
+    // Kiá»ƒm tra giá»›i háº¡n Ä‘á»ƒ khÃ´ng cho láº·p
+    let nextIndex = currentCard + n;
+    if (nextIndex < 0 || nextIndex >= cards.length) return;
+
+    // Chuyá»ƒn card
+    cards[currentCard].classList.remove("active");
+    currentCard = nextIndex;
+    cards[currentCard].classList.add("active");
+
+    updateButtons();
+}
+
+// Cáº­p nháº­t láº¡i hÃ m tab(i) Ä‘á»ƒ reset chuáº©n
+function tab(i){
+    document.querySelectorAll(".tab").forEach((t,idx)=>t.classList.toggle("active",idx==i))
+    document.querySelectorAll(".section").forEach((s,idx)=>s.classList.toggle("active",idx==i))
+    
+    if(i === 3) {
+        currentCard = 0;
+        const cards = document.querySelectorAll(".story-card");
+        cards.forEach(c => c.classList.remove("active"));
+        if(cards.length > 0) cards[0].classList.add("active");
+        updateButtons(); // Cáº­p nháº­t tráº¡ng thÃ¡i nÃºt ngay khi má»Ÿ tab
+    }
+}
+
+/* ORBIT */
+/* ===== Äáº¶C Sáº®C ===== */
+
+function openSpecial(type){
+
+    const overlay = document.getElementById("specialOverlay");
+    const content = document.getElementById("specialContent");
+
+    overlay.classList.add("show");
+
+    let html = "";
+
+    if(type === "thap"){
+        html = `
+        <h2>ðŸ›• ThÃ¡p ChÄƒm</h2>
+        <p>
+        ThÃ¡p ChÄƒm khÃ´ng chá»‰ lÃ  cÃ´ng trÃ¬nh kiáº¿n trÃºc cá»• mÃ  cÃ²n lÃ  biá»ƒu tÆ°á»£ng cho lá»‹ch sá»­ vÃ  Ä‘á»i sá»‘ng tÃ¢m linh cá»§a ngÆ°á»i ChÄƒm. Nhá»¯ng ngá»n thÃ¡p Ä‘Æ°á»£c xÃ¢y dá»±ng báº±ng gáº¡ch nung vá»›i ká»¹ thuáº­t Ä‘á»™c Ä‘Ã¡o, thá»ƒ hiá»‡n trÃ¬nh Ä‘á»™ nghá»‡ thuáº­t vÃ  tÆ° duy sÃ¡ng táº¡o cá»§a cÆ° dÃ¢n Champa xÆ°a. ÄÃ¢y lÃ  nÆ¡i thá» tháº§n linh, tá»• chá»©c nghi lá»… vÃ  lÆ°u giá»¯ dáº¥u áº¥n cá»§a má»™t ná»n vÄƒn minh tá»«ng phÃ¡t triá»ƒn rá»±c rá»¡ á»Ÿ miá»n Trung Viá»‡t Nam. Qua thá»i gian, thÃ¡p ChÄƒm trá»Ÿ thÃ nh minh chá»©ng cho sá»± bá»n vá»¯ng cá»§a vÄƒn hÃ³a ChÄƒm vÃ  giÃ¡ trá»‹ di sáº£n Ä‘Æ°á»£c truyá»n láº¡i cho cÃ¡c tháº¿ há»‡ sau.
+        </p>
+        `;
+    }
+
+    if(type === "lehoi"){
+        html = `
+        <h2>ðŸŽ­ Lá»… há»™i</h2>
+        <p>
+        Äá»‘i vá»›i ngÆ°á»i ChÄƒm, lá»… há»™i khÃ´ng chá»‰ lÃ  má»™t sá»± kiá»‡n vÄƒn hÃ³a mÃ  cÃ²n lÃ  khÃ´ng gian tÃ¢m linh thiÃªng liÃªng, nÆ¡i con ngÆ°á»i káº¿t ná»‘i vá»›i tháº§n linh vÃ  tá»• tiÃªn. ÄÃ¢y cÅ©ng lÃ  dá»‹p cá»™ng Ä‘á»“ng gáº·p gá»¡, gáº¯n káº¿t vÃ  cÃ¹ng nhau gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ truyá»n thá»‘ng lÃ¢u Ä‘á»i. ThÃ´ng qua cÃ¡c nghi lá»…, Ä‘iá»‡u mÃºa, tiáº¿ng trá»‘ng vÃ  trang phá»¥c truyá»n thá»‘ng, báº£n sáº¯c vÄƒn hÃ³a ChÄƒm Ä‘Æ°á»£c truyá»n láº¡i qua nhiá»u tháº¿ há»‡. Nhá»¯ng lá»… há»™i tiÃªu biá»ƒu nhÆ° Ka TÃª hay RamÆ°wan khÃ´ng chá»‰ pháº£n Ã¡nh Ä‘á»i sá»‘ng tÃ­n ngÆ°á»¡ng mÃ  cÃ²n thá»ƒ hiá»‡n tinh tháº§n Ä‘oÃ n káº¿t vÃ  niá»m tá»± hÃ o dÃ¢n tá»™c cá»§a ngÆ°á»i ChÄƒm.
+        <br><br>
+        ðŸŽ­ Kate khÃ´ng chá»‰ lÃ  má»™t lá»… há»™i mÃ  lÃ  trung tÃ¢m cá»§a Ä‘á»i sá»‘ng tinh tháº§n ngÆ°á»i ChÄƒm â†’ lÃ  biá»ƒu tÆ°á»£ng vÄƒn hÃ³a.
+        </p>
+        `;
+    }
+
+    if(type === "det"){
+        html = `
+        <h2>ðŸ§µ Dá»‡t váº£i</h2>
+        <p>
+        Dá»‡t thá»• cáº©m vÃ  lÃ m gá»‘m khÃ´ng chá»‰ lÃ  nghá» thá»§ cÃ´ng truyá»n thá»‘ng mÃ  cÃ²n lÃ  nÆ¡i lÆ°u giá»¯ tinh hoa vÄƒn hÃ³a cá»§a ngÆ°á»i ChÄƒm. Trong tá»«ng hoa vÄƒn, mÃ u sáº¯c hay hÃ¬nh dÃ¡ng sáº£n pháº©m Ä‘á»u chá»©a Ä‘á»±ng dáº¥u áº¥n vá» Ä‘á»i sá»‘ng, tÃ­n ngÆ°á»¡ng vÃ  quan niá»‡m tháº©m má»¹ cá»§a cá»™ng Ä‘á»“ng. Nhá»¯ng Ä‘Ã´i tay khÃ©o lÃ©o cá»§a ngÆ°á»i nghá»‡ nhÃ¢n Ä‘Ã£ biáº¿n cÃ¡c nguyÃªn liá»‡u giáº£n dá»‹ thÃ nh nhá»¯ng sáº£n pháº©m mang giÃ¡ trá»‹ nghá»‡ thuáº­t cao. Qua nhiá»u tháº¿ há»‡, nghá» dá»‡t vÃ  lÃ m gá»‘m khÃ´ng chá»‰ giÃºp báº£o tá»“n báº£n sáº¯c dÃ¢n tá»™c mÃ  cÃ²n gÃ³p pháº§n quáº£ng bÃ¡ vÄƒn hÃ³a ChÄƒm Ä‘áº¿n vá»›i nhiá»u ngÆ°á»i hÆ¡n.
+        </p>
+        `;
+    }
+
+    if(type === "muanhac"){
+        html = `
+        <h2>ðŸŽ¶ Nghá»‡ thuáº­t mÃºa nháº¡c ChÄƒm</h2>
+        <p>
+        Nghá»‡ thuáº­t mÃºa nháº¡c khÃ´ng chá»‰ lÃ  hÃ¬nh thá»©c biá»ƒu diá»…n mÃ  cÃ²n lÃ  tiáº¿ng nÃ³i tÃ¢m há»“n cá»§a ngÆ°á»i ChÄƒm. Nhá»¯ng Ä‘iá»‡u mÃºa uyá»ƒn chuyá»ƒn hÃ²a cÃ¹ng tiáº¿ng trá»‘ng vÃ  tiáº¿ng kÃ¨n táº¡o nÃªn khÃ´ng gian vÄƒn hÃ³a giÃ u cáº£m xÃºc vÃ  Ä‘áº­m cháº¥t truyá»n thá»‘ng. Ã‚m nháº¡c vÃ  mÃºa thÆ°á»ng xuáº¥t hiá»‡n trong cÃ¡c lá»… há»™i, nghi lá»… tÃ´n giÃ¡o vÃ  sinh hoáº¡t cá»™ng Ä‘á»“ng, gÃ³p pháº§n káº¿t ná»‘i con ngÆ°á»i vá»›i Ä‘á»i sá»‘ng tinh tháº§n cá»§a dÃ¢n tá»™c. Qua tá»«ng Ä‘á»™ng tÃ¡c, Ã¢m thanh vÃ  nhá»‹p Ä‘iá»‡u, ngÆ°á»i ChÄƒm gá»­i gáº¯m niá»m tin, tÃ¬nh yÃªu quÃª hÆ°Æ¡ng vÃ  khÃ¡t vá»ng gÃ¬n giá»¯ báº£n sáº¯c vÄƒn hÃ³a qua nhiá»u tháº¿ há»‡.
+        </p>
+        `;
+    }
+
+    content.classList.remove("show");
+
+    setTimeout(()=>{
+        content.innerHTML = html;
+        content.classList.add("show");
+    },700);
+}
+
+function closeSpecial(){
+    document.getElementById("specialOverlay").classList.remove("show");
+    document.getElementById("specialContent").classList.remove("show");
+}
+
+
+/* ===== HIá»‚U Láº¦M REVEAL ===== */
+
+let revealed = false;
+
+function revealTruth(){
+
+    const scene = document.querySelector(".misconception-scene");
+
+    if(revealed) return;
+    revealed = true;
+
+    // báº­t tráº¡ng thÃ¡i vá»¡
+    scene.classList.add("active");
+}
+
+function revealTruth(){
+
+    const scene = document.querySelector(".misconception-scene");
+    const text = document.getElementById("fakeText");
+
+    if(revealed) return;
+    revealed = true;
+
+    scene.classList.add("active");
+
+    // delay chá»¯
+    setTimeout(()=>{
+        text.style.opacity = "1";
+        text.style.transform = "scale(1)";
+    }, 600);
+}
+
+
+
+function goBack(){
+    window.history.back();
+}
+function openModal(type){
+    const modal = document.getElementById("modal");
+    const box = document.getElementById("modalInner");
+
+    let content = "";
+
+    if(type === "balamon"){
+        content = `
+        <div class="right">
+		    <div class="inner-flex">
+			    <div class="content-left">
+                    <h2>ðŸ›• BÃ  La MÃ´n</h2>
+                    <p>TÃ­n ngÆ°á»¡ng BÃ  La MÃ´n cá»§a ngÆ°á»i ChÄƒm lÃ  má»™t há»‡ thá»‘ng tÃ´n giÃ¡o cÃ³ nguá»“n gá»‘c tá»« áº¤n Äá»™ giÃ¡o, Ä‘Æ°á»£c du nháº­p vÃ  phÃ¡t triá»ƒn máº¡nh máº½ trong thá»i ká»³ vÆ°Æ¡ng quá»‘c Champa. Tráº£i qua quÃ¡ trÃ¬nh giao thoa vÄƒn hÃ³a, ngÆ°á»i ChÄƒm Ä‘Ã£ tiáº¿p nháº­n vÃ  biáº¿n Ä‘á»•i tÃ­n ngÆ°á»¡ng nÃ y, káº¿t há»£p vá»›i yáº¿u tá»‘ báº£n Ä‘á»‹a Ä‘á»ƒ hÃ¬nh thÃ nh nÃªn má»™t dáº¡ng BÃ  La MÃ´n giÃ¡o mang báº£n sáº¯c riÃªng.</p>
+                    <p>Trong tÃ­n ngÆ°á»¡ng nÃ y, ngÆ°á»i ChÄƒm chá»§ yáº¿u tÃ´n thá» cÃ¡c vá»‹ tháº§n quan trá»ng nhÆ° tháº§n Shiva â€“ vá»‹ tháº§n tá»‘i cao, cÃ¹ng vá»›i Brahma vÃ  Vishnu. Trong Ä‘Ã³, Shiva giá»¯ vai trÃ² trung tÃ¢m, thÆ°á»ng Ä‘Æ°á»£c thá» dÆ°á»›i dáº¡ng Linga â€“ biá»ƒu tÆ°á»£ng cá»§a sá»©c máº¡nh sÃ¡ng táº¡o vÃ  sá»± sinh sÃ´i cá»§a vÅ© trá»¥. BÃªn cáº¡nh Ä‘Ã³, ngÆ°á»i ChÄƒm cÅ©ng Ä‘á» cao viá»‡c thá» cÃºng tá»• tiÃªn, cÃ¡c vá»‹ vua vÃ  nhá»¯ng ngÆ°á»i cÃ³ cÃ´ng vá»›i cá»™ng Ä‘á»“ng.</p>
+                    <p>TÃ­n ngÆ°á»¡ng BÃ  La MÃ´n khÃ´ng chá»‰ thá»ƒ hiá»‡n qua niá»m tin mÃ  cÃ²n Ä‘Æ°á»£c duy trÃ¬ qua cÃ¡c nghi lá»… tÃ´n giÃ¡o, phong tá»¥c táº­p quÃ¡n vÃ  há»‡ thá»‘ng Ä‘á»n thÃ¡p cá»•. ÄÃ¢y lÃ  ná»n táº£ng quan trá»ng trong Ä‘á»i sá»‘ng tinh tháº§n, gÃ³p pháº§n gÃ¬n giá»¯ vÃ  Ä‘á»‹nh hÃ¬nh báº£n sáº¯c vÄƒn hÃ³a Ä‘áº·c trÆ°ng cá»§a ngÆ°á»i ChÄƒm qua nhiá»u tháº¿ há»‡.</p>
+                </div>
+                <div class="content-right">
+                    <img src="/assets/learn/blm.png" onclick="openImg(this.src)">
+                </div>
+            </div>
+        </div>
+    `;
+}	
+    if(type === "bani"){
+        content = `
+        <div class="right">
+		    <div class="inner-flex">
+			    <div class="content-left">
+                    <h2>ðŸŒ™ Há»“i giÃ¡o Bani</h2>
+                    <p>Há»“i giÃ¡o BÃ  Ni lÃ  má»™t dáº¡ng tÃ­n ngÆ°á»¡ng Ä‘áº·c trÆ°ng cá»§a má»™t bá»™ pháº­n ngÆ°á»i ChÄƒm, Ä‘Æ°á»£c biáº¿n Ä‘á»•i tá»« Há»“i giÃ¡o chÃ­nh thá»‘ng khi du nháº­p vÃ o Viá»‡t Nam. Tráº£i qua quÃ¡ trÃ¬nh giao thoa vá»›i vÄƒn hÃ³a báº£n Ä‘á»‹a, tÃ­n ngÆ°á»¡ng nÃ y mang mÃ u sáº¯c riÃªng, vá»«a giá»¯ yáº¿u tá»‘ Há»“i giÃ¡o, vá»«a káº¿t há»£p vá»›i phong tá»¥c truyá»n thá»‘ng cá»§a ngÆ°á»i ChÄƒm.</p>
+                    <p>NgÆ°á»i ChÄƒm BÃ  Ni tin vÃ o Ä‘áº¥ng tá»‘i cao Allah, nhÆ°ng cÃ¡ch thá»±c hÃ nh tÃ´n giÃ¡o cÃ³ pháº§n linh hoáº¡t hÆ¡n so vá»›i Há»“i giÃ¡o chÃ­nh thá»‘ng. CÃ¡c nghi lá»… thÆ°á»ng do chá»©c sáº¯c tÃ´n giÃ¡o Ä‘áº£m nhiá»‡m, vÃ  cá»™ng Ä‘á»“ng váº«n duy trÃ¬ nhiá»u táº­p tá»¥c cá»• truyá»n nhÆ° thá» cÃºng tá»• tiÃªn. TÃ­n ngÆ°á»¡ng nÃ y Ä‘Ã³ng vai trÃ² quan trá»ng trong Ä‘á»i sá»‘ng tinh tháº§n, gÃ³p pháº§n táº¡o nÃªn báº£n sáº¯c riÃªng cá»§a ngÆ°á»i ChÄƒm.</p>
+                </div>
+                <div class="content-right">
+                    <img src="/assets/learn/bani.png" onclick="openImg(this.src)">
+                </div>
+            </div>
+        </div>
+    `;
+}	
+
+    if(type === "kate"){
+        content = `
+        <div class="right">
+		    <div class="inner-flex">
+			    <div class="content-left">
+                    <h2>ðŸŽ­ Lá»… há»™i Kate</h2>
+                    <p>Lá»… há»™i KatÃª lÃ  lá»… há»™i lá»›n vÃ  quan trá»ng nháº¥t cá»§a ngÆ°á»i ChÄƒm theo tÃ­n ngÆ°á»¡ng BÃ  La MÃ´n, thÆ°á»ng diá»…n ra vÃ o khoáº£ng thÃ¡ng 9â€“10 dÆ°Æ¡ng lá»‹ch. ÄÃ¢y lÃ  dá»‹p Ä‘á»ƒ ngÆ°á»i dÃ¢n tÆ°á»Ÿng nhá»› cÃ¡c vá»‹ tháº§n, cÃ¡c vá»‹ vua vÃ  tá»• tiÃªn Ä‘Ã£ cÃ³ cÃ´ng vá»›i cá»™ng Ä‘á»“ng.</p>
+                    <p>Trong khÃ´ng khÃ­ trang nghiÃªm nhÆ°ng rá»™n rÃ ng, cÃ¡c nghi lá»… truyá»n thá»‘ng Ä‘Æ°á»£c tá»• chá»©c táº¡i thÃ¡p ChÄƒm vá»›i cÃ¡c hoáº¡t Ä‘á»™ng nhÆ° rÆ°á»›c y phá»¥c tháº§n, dÃ¢ng lá»… váº­t vÃ  cáº§u mong mÆ°a thuáº­n giÃ³ hÃ²a. KhÃ´ng chá»‰ mang Ã½ nghÄ©a tÃ¢m linh, lá»… há»™i KatÃª cÃ²n lÃ  dá»‹p Ä‘á»ƒ cá»™ng Ä‘á»“ng sum há»p, thá»ƒ hiá»‡n Ä‘á»i sá»‘ng vÄƒn hÃ³a qua Ã¢m nháº¡c, Ä‘iá»‡u mÃºa vÃ  trang phá»¥c truyá»n thá»‘ng Ä‘áº·c sáº¯c.</p>
+                </div>
+                <div class="content-right">
+                    <img src="/assets/learn/kate.png" onclick="openImg(this.src)">
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+    if(type === "ramuwan"){
+        content = `
+        <div class="right">
+		    <div class="inner-flex">
+			    <div class="content-left">
+                    <h2>ðŸŒ™ Ramuwan</h2>
+                    <p>Lá»… há»™i Ramuwan lÃ  má»™t trong nhá»¯ng nghi lá»… quan trá»ng nháº¥t cá»§a ngÆ°á»i ChÄƒm theo tÃ­n ngÆ°á»¡ng Há»“i giÃ¡o BÃ  Ni, thÆ°á»ng diá»…n ra vÃ o khoáº£ng thÃ¡ng 4â€“5 dÆ°Æ¡ng lá»‹ch. ÄÃ¢y Ä‘Æ°á»£c xem lÃ  â€œthÃ¡ng chayâ€ mang Ã½ nghÄ©a thiÃªng liÃªng, tÆ°Æ¡ng tá»± nhÆ° Ramadan trong Há»“i giÃ¡o, nhÆ°ng Ä‘Ã£ Ä‘Æ°á»£c báº£n Ä‘á»‹a hÃ³a theo phong tá»¥c ChÄƒm.</p>
+                    <p>TrÆ°á»›c khi bÆ°á»›c vÃ o thÃ¡ng lá»…, ngÆ°á»i ChÄƒm BÃ  Ni thá»±c hiá»‡n nghi thá»©c táº£o má»™, dá»n dáº¹p vÃ  cÃºng bÃ¡i tá»• tiÃªn, thá»ƒ hiá»‡n Ä‘áº¡o lÃ½ uá»‘ng nÆ°á»›c nhá»› nguá»“n. Trong suá»‘t thá»i gian RamÆ°wan, cÃ¡c chá»©c sáº¯c tÃ´n giÃ¡o sáº½ thay máº·t cá»™ng Ä‘á»“ng thá»±c hiá»‡n viá»‡c Äƒn chay vÃ  cáº§u nguyá»‡n táº¡i thÃ¡nh Ä‘Æ°á»ng, trong khi ngÆ°á»i dÃ¢n váº«n sinh hoáº¡t bÃ¬nh thÆ°á»ng nhÆ°ng giá»¯ tÃ¢m thanh tá»‹nh, hÆ°á»›ng thiá»‡n.</p>
+                    <p>Lá»… há»™i khÃ´ng chá»‰ mang Ã½ nghÄ©a tÃ´n giÃ¡o mÃ  cÃ²n lÃ  dá»‹p Ä‘á»ƒ gia Ä‘Ã¬nh sum há»p, cá»§ng cá»‘ tÃ¬nh cáº£m cá»™ng Ä‘á»“ng vÃ  gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ vÄƒn hÃ³a truyá»n thá»‘ng Ä‘áº·c sáº¯c cá»§a ngÆ°á»i ChÄƒm BÃ  Ni.</p>
+                </div>
+                <div class="content-right">
+                    <img src="/assets/learn/ramuwan.png" onclick="openImg(this.src)">
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+    box.innerHTML = content;
+    modal.classList.add("show");
+}
+
+function openImg(src){
+    document.getElementById("imgBox").style.display = "flex";
+    document.getElementById("imgFull").src = src;
+}
+
+function closeImg(){
+    document.getElementById("imgBox").style.display = "none";
+}
+/* Ä‘Ã³ng */
+function closeModal(){
+    document.getElementById("modal").classList.remove("show");
+}
+
+/* click ná»n Ä‘á»ƒ Ä‘Ã³ng */
+document.getElementById("modal").addEventListener("click", function(e){
+    if(e.target === this){
+        closeModal();
+    }
+});
+
+</script>
+
+</body>
+</html>
+
+

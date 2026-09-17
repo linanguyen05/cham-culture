@@ -18,6 +18,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.auth.routes import router as auth_router
 from app.community.routes import router as community_router
+from app.chatbot.routes import router as chatbot_router
 from app.config import get_settings
 from app.extensions import lifespan_context
 from app.middleware.security import OriginGuardMiddleware
@@ -98,6 +99,7 @@ def create_app() -> FastAPI:
     app.include_router(auth_router)
     app.include_router(community_router)
     app.include_router(profile_router)
+    app.include_router(chatbot_router)
 
     # Static mounts must come last so /api/* and compat routes win.
     mount_static(app, settings)

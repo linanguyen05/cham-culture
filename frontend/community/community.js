@@ -79,6 +79,7 @@
     editAvatarInput: $("editAvatarInput"),
     editAvatarPreview: $("editAvatarPreview"),
     editUsernameInput: $("editUsernameInput"),
+    editPublicStatusInput: $("editPublicStatusInput"),
     editProfileStatus: $("editProfileStatus"),
     editProfileSubmitBtn: $("editProfileSubmitBtn"),
     // search
@@ -636,6 +637,9 @@
         dom.editProfileBtn.classList.remove("is-hidden");
         if (dom.directEditAvatarBtn) dom.directEditAvatarBtn.classList.remove("is-hidden");
         dom.editUsernameInput.value = u.username || "";
+        if (dom.editPublicStatusInput) {
+            dom.editPublicStatusInput.value = u.public_status === false ? "false" : "true";
+        }
         if (dom.followUserBtn) dom.followUserBtn.classList.add("is-hidden");
       } else {
         dom.editProfileBtn.classList.add("is-hidden");
