@@ -40,6 +40,7 @@ class OriginalPostOut(BaseModel):
     created_at: datetime
     content: str
     image_urls: list[str] = Field(default_factory=list)
+    video_url: str | None = None
     author: AuthorOut
 
 
@@ -48,6 +49,7 @@ class PostOut(BaseModel):
     created_at: datetime
     content: str
     image_urls: list[str] = Field(default_factory=list)
+    video_url: str | None = None
     category: str
     shared_post_id: str | None = None
     author: AuthorOut
@@ -78,6 +80,8 @@ class CommentOut(BaseModel):
     id: str
     created_at: datetime
     content: str
+    image_url: str | None = None
+    video_url: str | None = None
     user: CommentUserOut
 
 
@@ -86,15 +90,12 @@ class CommentsResponse(BaseModel):
 
 
 class CommentCreate(BaseModel):
-    content: str = Field(min_length=1, max_length=1000)
+    content: str = Field(default="", max_length=1000)
 
     @field_validator("content")
     @classmethod
     def strip_content(cls, value: str) -> str:
-        value = value.strip()
-        if not value:
-            raise ValueError("Nội dung bình luận không được để trống.")
-        return value
+        return value.strip()
 
 
 class ShareCreate(BaseModel):

@@ -1,49 +1,11 @@
-﻿{% extends "base.html" %}
-{% block content %}
-
-<h2 class="title">Cá»™ng Ä‘á»“ng â€“ Chia sáº» & Tháº£o luáº­n</h2>
-
-<div class="community">
-
-    <div class="posts">
-        <textarea id="post"></textarea>
-        <button onclick="addPost()">ÄÄƒng</button>
-
-        <div id="list"></div>
-    </div>
-
-    <div class="sidebar">
-        <p># Lá»… há»™i Kate</p>
-        <p># VÄƒn hÃ³a ChÄƒm</p>
-    </div>
-
-</div>
-
-<script>
-function addPost(){
-let c=document.getElementById("post").value;
-
-fetch("/add_post",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({content:c})
-}).then(load);
-}
-
-function load(){
-fetch("/get_posts")
-.then(res=>res.json())
-.then(data=>{
-let html="";
-data.forEach(p=>{
-html += "<div class='post'>"+p.content+"</div>";
-});
-document.getElementById("list").innerHTML=html;
-});
-}
-
-load();
-</script>
-
-{% endblock %}
-
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/community/index.html">
+    <title>Chuyển hướng đến Cộng đồng...</title>
+</head>
+<body>
+    <script>window.location.href = "/community/index.html";</script>
+</body>
+</html>

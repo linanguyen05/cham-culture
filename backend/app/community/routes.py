@@ -68,12 +68,14 @@ async def create_post(
     content: str = Form(default=""),
     category: str = Form(default=""),
     images: list[UploadFile] = File(default_factory=list),
+    video: UploadFile | None = File(default=None),
 ) -> dict[str, Any]:
     post_id = await service.create_post(
         user_id=current_user.id,
         content=content,
         category=category,
         files=images,
+        video=video,
     )
     return {"id": post_id, "message": "Đăng bài thành công."}
 
@@ -109,16 +111,39 @@ async def get_comments(
 async def add_comment(
     request: Request,
     post_id: str,
-    payload: CommentCreate,
     current_user: CurrentUser = Depends(get_current_user),
     service: CommunityService = Depends(get_service),
 ) -> dict[str, Any]:
     if not await service.repo.post_exists(post_id):
         raise HTTPException(404, detail={"error": "NOT_FOUND", "message": "Bài viết không tồn tại."})
-    created = await service.repo.add_comment(
+
+    content_type = request.headers.get("content-type", "").lower()
+    content = ""
+    image_file: UploadFile | None = None
+    video_file: UploadFile | None = None
+
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        content = str(form.get("content") or "")
+        img = form.get("image")
+        if isinstance(img, UploadFile):
+            image_file = img
+        vid = form.get("video")
+        if isinstance(vid, UploadFile):
+            video_file = vid
+    elif "application/json" in content_type:
+        body = await request.json()
+        content = str(body.get("content") or "")
+    else:
+        form = await request.form()
+        content = str(form.get("content") or "")
+
+    created = await service.add_comment(
         user_id=current_user.id,
         post_id=post_id,
-        content=payload.content,
+        content=content,
+        image=image_file,
+        video=video_file,
     )
     comment = CommentOut.model_validate(
         {

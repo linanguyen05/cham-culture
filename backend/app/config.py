@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     # --- Content limits ---------------------------------------------------------
     max_upload_images: int = Field(default=4, ge=1, le=8)
     max_image_size_bytes: int = Field(default=10 * 1024 * 1024, ge=1)
+    max_video_size_bytes: int = Field(default=50 * 1024 * 1024, ge=1)
+    max_comment_media_size_bytes: int = Field(default=25 * 1024 * 1024, ge=1)
     max_content_length: int = Field(default=5000, ge=1)
     max_comment_length: int = Field(default=1000, ge=1)
     max_share_length: int = Field(default=2000, ge=1)

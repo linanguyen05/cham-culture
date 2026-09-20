@@ -51,7 +51,24 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-Write-Host "`n🎉 HOÀN THÀNH PUSH DOCKER IMAGE LÊN ECR!" -ForegroundColor Green
-Write-Host "Image URI của bạn: $IMAGE_TAG" -ForegroundColor Yellow
-Write-Host "`nBây giờ bạn có thể vào AWS App Runner Console tạo Service và chọn image này:" -ForegroundColor Cyan
-Write-Host "https://ap-southeast-1.console.aws.amazon.com/apprunner/home?region=$REGION" -ForegroundColor White
+Write-Host "`n=== BƯỚC 6: TRIỂN KHAI / ĐÁNH THỨC APP RUNNER ===" -ForegroundColor Cyan
+$SERVICE_ARN = "arn:aws:apprunner:ap-southeast-1:641532809384:service/cham-culture-app/0a18c689ecd544d794fbe96c03576343"
+try {
+    $svcInfo = aws apprunner describe-service --service-arn $SERVICE_ARN --region $REGION | ConvertFrom-Json
+    if ($svcInfo.Service.Status -eq "PAUSED") {
+        Write-Host "Dịch vụ App Runner đang tạm dừng (PAUSED). Đang kích hoạt lại (Resume)..." -ForegroundColor Yellow
+        aws apprunner resume-service --service-arn $SERVICE_ARN --region $REGION | Out-Null
+        Write-Host "Đã gửi lệnh Resume. Dịch vụ đang khởi động và nạp image mới nhất." -ForegroundColor Green
+    } else {
+        Write-Host "Dịch vụ đang hoạt động. Đang gửi lệnh triển khai image mới nhất (start-deployment)..." -ForegroundColor Yellow
+        aws apprunner start-deployment --service-arn $SERVICE_ARN --region $REGION | Out-Null
+        Write-Host "Đã kích hoạt triển khai thành công." -ForegroundColor Green
+    }
+} catch {
+    Write-Host "Không thể tự động kích hoạt App Runner: $_" -ForegroundColor Yellow
+}
+
+Write-Host "`n🎉 HOÀN TẤT QUY TRÌNH DEPLOY!" -ForegroundColor Green
+Write-Host "Image ECR: $IMAGE_TAG" -ForegroundColor Yellow
+Write-Host "URL ứng dụng: https://medxqx35ff.ap-southeast-1.awsapprunner.com" -ForegroundColor Cyan
+

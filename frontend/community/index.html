@@ -48,8 +48,8 @@
 
                 <nav class="nav-menu" aria-label="Điều hướng chính">
                     <a href="/dashboard/index.html" class="nav-item">Trang chủ</a>
-                    <a href="#" class="nav-item">Tìm hiểu</a>
-                    <a href="#" class="nav-item">Chatbot</a>
+                    <a href="/learn.html" class="nav-item">Tìm hiểu</a>
+                    <a href="/chatbot.html" class="nav-item">Chatbot</a>
                     <a href="/community/index.html" class="nav-item active" aria-current="page">Cộng đồng</a>
                 </nav>
 
@@ -319,10 +319,19 @@
                 <div class="upload-section">
                     <div class="upload-section-header">
                         <div>
-                            <label class="field-label">Hình ảnh</label>
-                            <p class="field-help">Tối đa 4 ảnh. Frontend gửi file gốc cho Backend/Python xử lý.</p>
+                            <label class="field-label">Hình ảnh & Video</label>
+                            <p class="field-help">Tải tối đa 4 ảnh (PNG/JPG/WebP) hoặc 1 video (MP4/WebM/MOV, tối đa 50MB).</p>
                         </div>
-                        <span id="selectedImageCount" class="image-count">0/4</span>
+                        <span id="selectedImageCount" class="image-count">0 file</span>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button type="button" id="btnSelectPhotos" class="btn-select-media" style="flex: 1; padding: 9px 12px; border: 1px solid #cbd5e0; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: #4a5568;">
+                            <i class="fa-solid fa-images" style="color: #A34925;"></i> Chọn Ảnh (tối đa 4)
+                        </button>
+                        <button type="button" id="btnSelectVideo" class="btn-select-media" style="flex: 1; padding: 9px 12px; border: 1px solid #cbd5e0; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: #4a5568;">
+                            <i class="fa-solid fa-video" style="color: #2b6cb0;"></i> Chọn Video (1 video)
+                        </button>
                     </div>
 
                     <div
@@ -330,12 +339,13 @@
                         id="dragZone"
                         tabindex="0"
                         role="button"
-                        aria-label="Chọn hình ảnh"
+                        aria-label="Chọn hình ảnh hoặc video"
                     >
-                        <i class="fa-solid fa-camera camera-icon" aria-hidden="true"></i>
-                        <strong>Nhấn hoặc kéo thả hình ảnh</strong>
-                        <span>PNG/JPG/WebP · tối đa 4 file</span>
+                        <i class="fa-solid fa-photo-film camera-icon" aria-hidden="true"></i>
+                        <strong>Nhấn hoặc kéo thả hình ảnh / video vào đây</strong>
+                        <span>PNG/JPG/WebP (tối đa 4 ảnh) hoặc MP4/WebM/MOV (1 video)</span>
                         <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" multiple hidden>
+                        <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime" hidden>
                     </div>
 
                     <div class="preview-slots" id="previewSlotsContainer"></div>

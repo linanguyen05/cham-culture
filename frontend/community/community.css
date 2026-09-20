@@ -7,3 +7,108 @@
    ========================================================================== */
 
 @import url("style.css");
+
+/* ==========================================================================
+   Video and Comment Media Enhancements
+   ========================================================================== */
+
+.post-video-container {
+    margin-top: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    max-height: 480px;
+}
+
+.post-video-container video {
+    width: 100%;
+    max-height: 480px;
+    display: block;
+    object-fit: contain;
+}
+
+.comment-media-img {
+    margin-top: 8px;
+    max-width: 240px;
+    max-height: 220px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comment-media-video {
+    margin-top: 8px;
+    max-width: 320px;
+    max-height: 240px;
+    border-radius: 8px;
+    display: block;
+    background: #000;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.comment-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.comment-form-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+}
+
+.comment-attach-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #718096;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.comment-attach-label:hover {
+    background: #edf2f7;
+    color: #A34925;
+}
+
+.comment-preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: #f7fafc;
+    border: 1px dashed #cbd5e0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.comment-preview-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #edf2f7;
+}
+
+.comment-preview-remove {
+    background: none;
+    border: none;
+    color: #e53e3e;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: auto;
+    padding: 2px 6px;
+}

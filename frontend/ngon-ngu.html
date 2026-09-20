@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>TÃ¬m hiá»ƒu dÃ¢n tá»™c ChÄƒm</title>`n<link rel="stylesheet" href="/dashboard/style.css">
+<link rel="stylesheet" href="/dashboard/style.css">
+<title>Tìm hiểu dân tộc Chăm</title>
 
 <style>
 :root{
@@ -14,13 +15,13 @@
 }
 body{
     margin:0;
-    font-family:"Times New Roman", Times, serif;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background:var(--bg-light);
 
-    height:100vh;          /* ðŸ”¥ thÃªm */
-    display:flex;          /* ðŸ”¥ thÃªm */
-    flex-direction:column; /* ðŸ”¥ thÃªm */
-    overflow:hidden;       /* ðŸ”¥ thÃªm (khÃ´ng cho scroll) */
+    height:100vh;          /* 🔥 thêm */
+    display:flex;          /* 🔥 thêm */
+    flex-direction:column; /* 🔥 thêm */
+    overflow-x:hidden; overflow-y:auto;
 }
 
 /* ===== HEADER ===== */
@@ -93,20 +94,20 @@ body{
     margin-left:30px;
 }
 
-.left a{   /* Ä‘á»•i div â†’ a */
-    display: block;   /* QUAN TRá»ŒNG */
+.left a{   /* đổi div → a */
+    display: block;   /* QUAN TRỌNG */
     padding:45px;
     border-radius:10px;
     cursor:pointer;
     font-size:24px;
-    font-weight:900;  /* bá» px */
-    font-family:"Times New Roman", Times, serif;
-    text-decoration: none; /* bá» gáº¡ch chÃ¢n */
+    font-weight:900;  /* bỏ px */
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none; /* bỏ gạch chân */
     color: black;
 }
 
 .left a:hover,
-.left a.active{   /* Ä‘á»•i láº¡i Ä‘Ã¢y luÃ´n */
+.left a.active{   /* đổi lại đây luôn */
     background:#f3e2d5;
     color:var(--main-brown);
 }
@@ -115,7 +116,7 @@ body{
     background:white;
     padding:10px 50px;
     border-radius:20px;
-    height:100%;   /* ðŸ”¥ thÃªm */
+    height:100%;   /* 🔥 thêm */
 }
 
 /* ===== MINDMAP ===== */
@@ -144,7 +145,7 @@ body{
 /* ===== CARD ===== */
 .cards{
     display:grid;
-    grid-template-columns:repeat(2,1fr); /* 2 cá»™t */
+    grid-template-columns:repeat(2,1fr); /* 2 cột */
     gap:30px;
     padding:40px 80px;
     height:100%;
@@ -161,7 +162,7 @@ body{
     align-items:center;
     justify-content:center;
 
-    height:150px; /* ðŸ”¥ chiá»u cao Ä‘á»u nhau */
+    height:150px; /* 🔥 chiều cao đều nhau */
 
     transition:.3s;
 }
@@ -186,7 +187,7 @@ body{
     z-index:999;
 }
 
-/* khi má»Ÿ */
+/* khi mở */
 .modal.show{
     opacity:1;
     pointer-events:auto;
@@ -203,16 +204,16 @@ body{
     opacity:0;
     transition:0.4s;
     box-shadow:0 30px 80px rgba(0,0,0,0.4);
-    max-height:90vh;  /* ðŸ”¥ tháº¥p láº¡i Ä‘á»ƒ lá»™ nÃºt X */
+    max-height:90vh;  /* 🔥 thấp lại để lộ nút X */
     overflow-y:auto;
 }
-/* animation vÃ o */
+/* animation vào */
 .modal.show .modal-content{
     transform:scale(1) translateY(0);
     opacity:1;
 }
 
-/* nÃºt Ä‘Ã³ng */
+/* nút đóng */
 .close-btn{
     position:absolute;
     top:20px;
@@ -221,7 +222,7 @@ body{
     cursor:pointer;
 }
 
-/* layout bÃªn trong */
+/* layout bên trong */
 .modal-inner{
     display:flex;
     gap:40px;
@@ -243,7 +244,7 @@ body{
     text-align:justify;
 }
 
-/* áº£nh */
+/* ảnh */
 .modal-img{
     width:50%;
     display:flex;
@@ -254,7 +255,7 @@ body{
     width:100%;
     border-radius:15px;
     box-shadow:0 15px 40px rgba(0,0,0,0.3);
-    max-width:750px;   /* ðŸ”¥ áº£nh to hÆ¡n */
+    max-width:750px;   /* 🔥 ảnh to hơn */
 }
 
 .img-box{
@@ -302,7 +303,7 @@ body{
 .story-container {
     position: relative;
     width: 100%;
-    height: 650px; /* TÄƒng chiá»u cao Ä‘á»ƒ khá»›p vá»›i ná»™i dung dÃ i */
+    height: 650px; /* Tăng chiều cao để khớp với nội dung dài */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -313,13 +314,13 @@ body{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 75%; /* To hÆ¡n cÅ© */
+    width: 75%; /* To hơn cũ */
     min-height: 400px;
     background: white;
-    padding: 60px; /* Padding rá»™ng rÃ£i */
+    padding: 60px; /* Padding rộng rãi */
     border-radius: 40px;
     box-shadow: 0 25px 70px rgba(0,0,0,0.15);
-    text-align: justify; /* CÄƒn Ä‘á»u chá»¯ cho Ä‘áº¹p */
+    text-align: justify; /* Căn đều chữ cho đẹp */
     
     opacity: 0;
     visibility: hidden;
@@ -333,19 +334,19 @@ body{
 }
 
 .story-card h2 {
-    font-size: 48px; /* TiÃªu Ä‘á» cá»±c to */
+    font-size: 48px; /* Tiêu đề cực to */
     color: #c96f2d;
     margin-bottom: 25px;
     text-align: center;
 }
 
 .story-card p {
-    font-size: 28px; /* Chá»¯ ná»™i dung to rÃµ */
+    font-size: 28px; /* Chữ nội dung to rõ */
     line-height: 1.8;
     color: #333;
 }
 
-/* NÃºt báº¥m tinh chá»‰nh */
+/* Nút bấm tinh chỉnh */
 .nav-controls {
     position: absolute;
     right: 50px;
@@ -366,14 +367,14 @@ body{
     transition: 0.3s;
 }
 
-/* Hiá»‡u á»©ng khi nÃºt bá»‹ vÃ´ hiá»‡u hÃ³a (Disabled) */
+/* Hiệu ứng khi nút bị vô hiệu hóa (Disabled) */
 .nav-btn:disabled {
     background: #ccc;
     cursor: not-allowed;
     opacity: 0.5;
 }
 /* ===== ORBIT ===== */
-/* ===== Äáº¶C Sáº®C Má»šI ===== */
+/* ===== ĐẶC SẮC MỚI ===== */
 
 .special-start{
     width:100%;
@@ -389,8 +390,8 @@ body{
     font-size:52px;
     text-align:center;
 
-    margin-bottom:40px; /* gáº§n áº£nh hÆ¡n */
-    margin-top:-20px;   /* kÃ©o lÃªn trÃªn */
+    margin-bottom:40px; /* gần ảnh hơn */
+    margin-top:-20px;   /* kéo lên trên */
 }
 
 .special-grid{
@@ -398,11 +399,11 @@ body{
     justify-content:center;
     align-items:flex-start;
 
-    gap:120px; /* khoáº£ng cÃ¡ch giá»¯a áº£nh rá»™ng hÆ¡n */
+    gap:120px; /* khoảng cách giữa ảnh rộng hơn */
 
     flex-wrap:wrap;
 
-    margin-top:10px; /* sÃ¡t tiÃªu Ä‘á» hÆ¡n */
+    margin-top:10px; /* sát tiêu đề hơn */
 }
 
 .special-item{
@@ -432,7 +433,7 @@ body{
     box-shadow:0 15px 40px rgba(0,0,0,0.25);
 }
 
-/* hover Ä‘áº¹p hÆ¡n */
+/* hover đẹp hơn */
 .special-item:hover img{
     transform:scale(1.05);
 }
@@ -505,7 +506,7 @@ body{
     floatStar linear infinite;
 }
 
-/* láº¥p lÃ¡nh */
+/* lấp lánh */
 @keyframes twinkle{
     from{
         opacity:0.2;
@@ -517,7 +518,7 @@ body{
     }
 }
 
-/* bay vÃ²ng */
+/* bay vòng */
 @keyframes floatStar{
     from{
         transform:translateY(0px) translateX(0px);
@@ -539,7 +540,7 @@ body{
         transform:translateY(0px) translateX(0px);
     }
 }
-/* vá»‹ trÃ­ quanh mÃ n hÃ¬nh */
+/* vị trí quanh màn hình */
 .img1{
     top:5%;
     left:40%;
@@ -575,7 +576,7 @@ body{
     }
 }
 
-/* content giá»¯a */
+/* content giữa */
 .special-content{
     position:absolute;
     top:50%;
@@ -605,7 +606,7 @@ body{
     line-height:2;
 }
 
-/* nÃºt quay láº¡i */
+/* nút quay lại */
 .special-close{
     position:absolute;
     top:30px;
@@ -652,7 +653,7 @@ canvas{
     display:flex;
     gap:60px;
     width:100%;
-    height:100%; /* ðŸ”¥ Ä‘á»ƒ cÄƒn giá»¯a dá»c */
+    height:100%; /* 🔥 để căn giữa dọc */
 }
 
 
@@ -678,7 +679,7 @@ canvas{
     display:block;
 }
 
-/* cá»¥m giá»¯a */
+/* cụm giữa */
 .thread-core{
     position:absolute;
     top:50%;
@@ -719,7 +720,7 @@ canvas{
     100%{transform:translate(-50%,-50%) translateY(0px);}
 }
 
-/* báº£ng tráº¯ng */
+/* bảng trắng */
 .truth-card{
     position:absolute;
 
@@ -783,14 +784,14 @@ canvas{
     display:block;
 }
 
-/* ===== HIá»‚U Láº¦M NEW ===== */
+/* ===== HIỂU LẦM NEW ===== */
 .misconception-scene{
     position:relative;
     width:100%;
     height:78vh;
     overflow:hidden;
 
-    background: #ffffff;   /* ðŸ”¥ Ä‘á»•i tráº¯ng */
+    background: #ffffff;   /* 🔥 đổi trắng */
 
     display:flex;
     justify-content:center;
@@ -827,7 +828,7 @@ canvas{
     100%{transform:scale(1);}
 }
 
-/* chá»¯ hiá»ƒu láº§m */
+/* chữ hiểu lầm */
 .fake-text{
     position:absolute;
     text-align:center;
@@ -848,11 +849,11 @@ canvas{
     z-index:5;
 }
 
-/* máº·t náº¡ */
+/* mặt nạ */
 .mask{
     position:absolute;
 
-    width:700px;   /* ðŸ”¥ to hÆ¡n ná»¯a */
+    width:700px;   /* 🔥 to hơn nữa */
     height:700px;
 
     z-index:10;
@@ -905,7 +906,7 @@ canvas{
     pointer-events:none;
 }
 
-/* máº£nh */
+/* mảnh */
 .frag{
     position:absolute;
 
@@ -924,7 +925,7 @@ canvas{
     drop-shadow(0 0 20px rgba(255,255,255,0.08));
 }
 
-/* ===== Cáº®T Tá»ªNG Máº¢NH ===== */
+/* ===== CẮT TỪNG MẢNH ===== */
 
 .f1{
     clip-path:polygon(
@@ -964,18 +965,18 @@ canvas{
 
 /* ===== ACTIVE ===== */
 
-/* máº·t náº¡ gá»‘c biáº¿n máº¥t */
+/* mặt nạ gốc biến mất */
 .misconception-scene.active .mask{
     opacity:0;
     transform:scale(1.05);
 }
 
-/* hiá»‡n máº£nh */
+/* hiện mảnh */
 .misconception-scene.active .frag{
     opacity:1;
 }
 
-/* tÃ¡ch nháº¹ */
+/* tách nhẹ */
 .misconception-scene.active .f1{
     transform:
     translate(-35px,-28px)
@@ -1000,7 +1001,7 @@ canvas{
     rotate(8deg);
 }
 
-/* ===== KHI Vá»  ===== */
+/* ===== KHI VỠ ===== */
 
 .misconception-scene.active .shards span{
     opacity:1;
@@ -1139,7 +1140,7 @@ canvas{
     transform:translate(120px,340px) rotate(240deg);
 }
 
-/* hiá»‡n truth */
+/* hiện truth */
 .misconception-scene.active .truth-panel{
     opacity:1;
 
@@ -1173,7 +1174,7 @@ canvas{
     opacity:1;
 }
 
-/* ===== CHá»ˆNH CHá»® ===== */
+/* ===== CHỈNH CHỮ ===== */
 .content-left h2{
     font-size:52px;
     margin-bottom:20px;
@@ -1228,11 +1229,11 @@ canvas{
     cursor:pointer;
 }
 
-/* ===== CHá»ˆNH áº¢NH ===== */
+/* ===== CHỈNH ẢNH ===== */
 .content-right{
     display:flex;
-    justify-content:center;   /* cÄƒn giá»¯a ngang */
-    align-items:center;       /* cÄƒn giá»¯a dá»c ðŸ”¥ */
+    justify-content:center;   /* căn giữa ngang */
+    align-items:center;       /* căn giữa dọc 🔥 */
 }
 
 .content-right img{
@@ -1242,12 +1243,12 @@ canvas{
     box-shadow:0 15px 40px rgba(0,0,0,0.2);
 }
 
-/* ===== VÄ‚N HÃ“A NÃ‚NG Cáº¤P ===== */
+/* ===== VĂN HÓA NÂNG CẤP ===== */
 :root{
     --main: #c96f2d;
 }
 
-/* mindmap Ä‘áº¹p hÆ¡n */
+/* mindmap đẹp hơn */
 .mindmap{
     display:flex;
     justify-content:center;
@@ -1255,7 +1256,7 @@ canvas{
     margin:40px 0;
 }
 
-/* node trÃ²n xá»‹n */
+/* node tròn xịn */
 .node{
     width:150px;
     height:150px;
@@ -1274,7 +1275,7 @@ canvas{
     box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* hover phÃ³ng to */
+/* hover phóng to */
 .node:hover{
     transform:scale(1.15) translateY(-5px);
     box-shadow:0 15px 35px rgba(0,0,0,0.35);
@@ -1305,7 +1306,7 @@ canvas{
     from{opacity:0; transform:translateY(20px);}
     to{opacity:1; transform:translateY(0);}
 }
-/* ===== VÄ‚N HÃ“A EFFECT ===== */
+/* ===== VĂN HÓA EFFECT ===== */
 .mindmap{
     display:flex;
     justify-content:center;
@@ -1314,14 +1315,14 @@ canvas{
     transition:0.6s;
 }
 
-/* sau khi click -> dáº¡t lÃªn */
+/* sau khi click -> dạt lên */
 .mindmap.active{
     margin-top:30px;
 }
 
-/* node Ä‘áº¹p */
+/* node đẹp */
 .node{
-    width:200px;   /* ðŸ”¥ tá»« 150 â†’ 180 */
+    width:200px;   /* 🔥 từ 150 → 180 */
     height:200px;
     border-radius:50%;
     background:#c96f2d;
@@ -1330,7 +1331,7 @@ canvas{
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    font-size:27px;   /* chá»¯ to hÆ¡n */
+    font-size:27px;   /* chữ to hơn */
     font-weight:bold;
     cursor:pointer;
     transition:0.3s;
@@ -1346,156 +1347,161 @@ canvas{
 </head>
 
 <body>
-<header><div class="logo"><img src="/1.png" alt="Logo"><span>Chăm Culture</span></div><nav><a href="/dashboard/index.html">Trang chủ</a><a href="/learn.html" class="active">Tìm hiểu</a><a href="/chatbot.html">Chatbot</a><a href="/community/index.html">Cộng đồng</a></nav><div class="search-icon">🔍</div></header>
-<div class="navbar">
+<header>
     <div class="logo">
-        ðŸ›• <span>ChÄƒm Culture</span>
+        <img src="/1.png" alt="Logo">
+        <span>Chăm Culture</span>
     </div>
-
-    <div class="back-btn" onclick="goBack()">â¬…</div>
-</div>
+    <nav>
+        <a href="/dashboard/index.html">Trang chủ</a>
+        <a href="/learn.html" class="active">Tìm hiểu</a>
+        <a href="/chatbot.html">Chatbot</a>
+        <a href="/community/index.html">Cộng đồng</a>
+    </nav>
+    <div class="search-icon">🔍</div>
+</header>
 <div class="header">
-    <img src="../assets/learn/thapp.png" class="icon-left">
-    <h1>TÃ¬m hiá»ƒu vá» dÃ¢n tá»™c ChÄƒm</h1>
-	<img src="../assets/learn/mua.png" class="icon-right">
+    <img src="/assets/learn/thapp.png" class="icon-left">
+    <h1>Tìm hiểu về dân tộc Chăm</h1>
+	<img src="/assets/learn/mua.png" class="icon-right">
 </div>
 
 <div class="tabs">
-<div class="tab active" onclick="tab(0)">ðŸ  Tá»•ng quan</div>
-<div class="tab" onclick="tab(1)">ðŸŽ¨ VÄƒn hÃ³a</div>
-<div class="tab" onclick="tab(2)">ðŸŽ­ TÃ­n ngÆ°á»¡ng</div>
-<div class="tab" onclick="tab(3)">ðŸŒ¾ Äá»i sá»‘ng</div>
-<div class="tab" onclick="tab(4)">âœ¨ Äáº·c sáº¯c</div>
-<div class="tab" onclick="tab(5)">ðŸ§µ Hiá»ƒu láº§m</div>
+<div class="tab active" onclick="tab(0)">🏠 Tổng quan</div>
+<div class="tab" onclick="tab(1)">🎨 Văn hóa</div>
+<div class="tab" onclick="tab(2)">🎭 Tín ngưỡng</div>
+<div class="tab" onclick="tab(3)">🌾 Đời sống</div>
+<div class="tab" onclick="tab(4)">✨ Đặc sắc</div>
+<div class="tab" onclick="tab(5)">🧵 Hiểu lầm</div>
 </div>
-<!-- ===== Tá»”NG QUAN ===== -->
+<!-- ===== TỔNG QUAN ===== -->
 <div class="section active">
     <div class="layout">
 
         <div class="left">
-            <a href="learn.html">Tá»”NG QUAN</a>
-            <a href="nguon-goc.html">NGUá»’N Gá»C</a>
-            <a href="dan-so.html">DÃ‚N Sá»</a>
-            <a href="ngon-ngu.html"class="active">NGÃ”N NGá»®</a>
-            <a href="khu-vuc.html">KHU Vá»°C</a>
+            <a href="/learn.html">TỔNG QUAN</a>
+            <a href="/nguon-goc.html">NGUỒN GỐC</a>
+            <a href="/dan-so.html">DÂN SỐ</a>
+            <a href="/ngon-ngu.html"class="active">NGÔN NGỮ</a>
+            <a href="/khu-vuc.html">KHU VỰC</a>
         </div>
 
         <div class="right">
             <div class="inner-flex">
                 <div class="content-left" style="width: 100%;">
-                    <h2>NgÃ´n ngá»¯</h2>
-                    <p>NgÃ´n ngá»¯ cá»§a ngÆ°á»i ChÄƒm lÃ  tiáº¿ng ChÄƒm, thuá»™c nhÃ³m ngÃ´n ngá»¯ Malayâ€“Polynesia (há» Nam Äáº£o), náº±m trong há»‡ ngÃ´n ngá»¯ Austronesian.</p>
+                    <h2>Ngôn ngữ</h2>
+                    <p>Ngôn ngữ của người Chăm là tiếng Chăm, thuộc nhóm ngôn ngữ Malay–Polynesia (họ Nam Đảo), nằm trong hệ ngôn ngữ Austronesian.</p>
 
-                    <p>Tiáº¿ng ChÄƒm cÃ³ lá»‹ch sá»­ lÃ¢u Ä‘á»i, gáº¯n liá»n vá»›i ná»n vÄƒn minh Champa cá»•. Hiá»‡n nay, tiáº¿ng ChÄƒm váº«n Ä‘Æ°á»£c sá»­ dá»¥ng trong cá»™ng Ä‘á»“ng ngÆ°á»i ChÄƒm, Ä‘áº·c biá»‡t trong sinh hoáº¡t háº±ng ngÃ y, tÃ­n ngÆ°á»¡ng vÃ  lá»… há»™i truyá»n thá»‘ng.</p>
+                    <p>Tiếng Chăm có lịch sử lâu đời, gắn liền với nền văn minh Champa cổ. Hiện nay, tiếng Chăm vẫn được sử dụng trong cộng đồng người Chăm, đặc biệt trong sinh hoạt hằng ngày, tín ngưỡng và lễ hội truyền thống.</p>
 
-                    <p>NgÃ´n ngá»¯ nÃ y cÃ³ hai nhÃ³m chÃ­nh:</p>
+                    <p>Ngôn ngữ này có hai nhóm chính:</p>
 
-                    <p>- ChÄƒm ÄÃ´ng (ChÄƒm BÃ lamÃ´n): chá»§ yáº¿u á»Ÿ Ninh Thuáº­n, BÃ¬nh Thuáº­n.</p>
+                    <p>- Chăm Đông (Chăm Bàlamôn): chủ yếu ở Ninh Thuận, Bình Thuận.</p>
 
 
-                    <p>- ChÄƒm Há»“i giÃ¡o (ChÄƒm Islam): má»™t pháº§n chá»‹u áº£nh hÆ°á»Ÿng tiáº¿ng MÃ£ Lai â€“ áº¢ Ráº­p trong tÃ´n giÃ¡o.</p>
+                    <p>- Chăm Hồi giáo (Chăm Islam): một phần chịu ảnh hưởng tiếng Mã Lai – Ả Rập trong tôn giáo.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ===== VÄ‚N HÃ“A ===== -->
+<!-- ===== VĂN HÓA ===== -->
 <div class="section">
     
     <div class="mindmap" id="mindmap">
-        <div class="node" onclick="showContent('trangphuc')">ðŸ‘—<br>Trang phá»¥c</div>
-        <div class="node" onclick="showContent('amthuc')">ðŸ›<br>áº¨m thá»±c</div>
-        <div class="node" onclick="showContent('kientruc')">ðŸ›<br>Kiáº¿n trÃºc</div>
+        <div class="node" onclick="showContent('trangphuc')">👗<br>Trang phục</div>
+        <div class="node" onclick="showContent('amthuc')">🍛<br>Ẩm thực</div>
+        <div class="node" onclick="showContent('kientruc')">🏛<br>Kiến trúc</div>
     </div>
 
     <div id="contentBox" class="content-box"></div>
 
 </div>
-<!-- ===== TÃN NGÆ¯á» NG ===== -->
+<!-- ===== TÍN NGƯỠNG ===== -->
 <div class="section">
 <div class="cards">
-<div class="card" onclick="openModal('balamon')">ðŸ›• BÃ  La MÃ´n</div>
-<div class="card" onclick="openModal('bani')">ðŸŒ™ Há»“i giÃ¡o Bani</div>
-<div class="card" onclick="openModal('kate')">ðŸŽ­ Lá»… há»™i Kate</div>
-<div class="card" onclick="openModal('ramuwan')">ðŸŒ™ Ramuwan</div>
+<div class="card" onclick="openModal('balamon')">🛕 Bà La Môn</div>
+<div class="card" onclick="openModal('bani')">🌙 Hồi giáo Bani</div>
+<div class="card" onclick="openModal('kate')">🎭 Lễ hội Kate</div>
+<div class="card" onclick="openModal('ramuwan')">🌙 Ramuwan</div>
 </div>
 </div>
 
-<!-- ===== Äá»œI Sá»NG ===== -->
+<!-- ===== ĐỜI SỐNG ===== -->
 <div class="section">
     <div class="story-container">
         <div class="nav-controls">
-            <button class="nav-btn up" id="btnUp" onclick="changeCard(-1)">â–²</button>
-            <button class="nav-btn down" id="btnDown" onclick="changeCard(1)">â–¼</button>
+            <button class="nav-btn up" id="btnUp" onclick="changeCard(-1)">▲</button>
+            <button class="nav-btn down" id="btnDown" onclick="changeCard(1)">▼</button>
         </div>
 
         <div class="story-wrap">
             <div class="story-card active">
-                <h2>ðŸ§© Bá»©c tranh Äá»i sá»‘ng</h2>
-                <p>Äá»i sá»‘ng ngÆ°á»i ChÄƒm khÃ´ng chá»‰ Ä‘Æ¡n thuáº§n lÃ  nhá»¯ng hoáº¡t Ä‘á»™ng sinh hoáº¡t â€œÄƒn â€“ máº·c â€“ á»Ÿâ€ thÆ°á»ng nháº­t, mÃ  Ä‘Ã³ lÃ  má»™t báº£n giao hÆ°á»Ÿng tuyá»‡t Ä‘áº¹p giá»¯a viá»‡c gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ truyá»n thá»‘ng nghÃ¬n nÄƒm vÃ  sá»± thÃ­ch nghi khÃ´n ngoan vá»›i dÃ²ng cháº£y hiá»‡n Ä‘áº¡i. Má»—i náº¿p nhÃ , má»—i lÃ ng ChÄƒm (Palei) Ä‘á»u chá»©a Ä‘á»±ng nhá»¯ng triáº¿t lÃ½ nhÃ¢n sinh sÃ¢u sáº¯c vá» sá»± gáº¯n káº¿t giá»¯a con ngÆ°á»i vÃ  tháº§n linh.</p>
+                <h2>🧩 Bức tranh Đời sống</h2>
+                <p>Đời sống người Chăm không chỉ đơn thuần là những hoạt động sinh hoạt “ăn – mặc – ở” thường nhật, mà đó là một bản giao hưởng tuyệt đẹp giữa việc gìn giữ những giá trị truyền thống nghìn năm và sự thích nghi khôn ngoan với dòng chảy hiện đại. Mỗi nếp nhà, mỗi làng Chăm (Palei) đều chứa đựng những triết lý nhân sinh sâu sắc về sự gắn kết giữa con người và thần linh.</p>
             </div>
 
             <div class="story-card">
-                <h2>ðŸŒ¾ GiÃ¡ trá»‹ Lao Ä‘á»™ng</h2>
-                <p>Gáº¯n liá»n vá»›i hÃ¬nh áº£nh nhá»¯ng cÃ¡nh Ä‘á»“ng lÃºa báº¡t ngÃ n vÃ  tiáº¿ng thoi Ä‘Æ°a lÃ¡ch cÃ¡ch bÃªn khung dá»‡t truyá»n thá»‘ng. Äá»‘i vá»›i ngÆ°á»i ChÄƒm, lao Ä‘á»™ng khÃ´ng chá»‰ lÃ  cÃ¡ch Ä‘á»ƒ duy trÃ¬ sinh káº¿ mÃ  cÃ²n lÃ  má»™t hÃ¬nh thá»©c thá»±c hÃ nh vÄƒn hÃ³a. Nghá» dá»‡t thá»• cáº©m Má»¹ Nghiá»‡p hay nghá» gá»‘m BÃ u TrÃºc lÃ  minh chá»©ng cho Ä‘Ã´i bÃ n tay tÃ i hoa, nÆ¡i má»—i sáº£n pháº©m lÃ m ra Ä‘á»u mang hÆ¡i thá»Ÿ cá»§a Ä‘áº¥t máº¹ vÃ  niá»m tá»± hÃ o dÃ¢n tá»™c.</p>
+                <h2>🌾 Giá trị Lao động</h2>
+                <p>Gắn liền với hình ảnh những cánh đồng lúa bạt ngàn và tiếng thoi đưa lách cách bên khung dệt truyền thống. Đối với người Chăm, lao động không chỉ là cách để duy trì sinh kế mà còn là một hình thức thực hành văn hóa. Nghề dệt thổ cẩm Mỹ Nghiệp hay nghề gốm Bàu Trúc là minh chứng cho đôi bàn tay tài hoa, nơi mỗi sản phẩm làm ra đều mang hơi thở của đất mẹ và niềm tự hào dân tộc.</p>
             </div>
 
             <div class="story-card">
-                <h2>ðŸ‘• Sáº¯c mÃ u Trang phá»¥c</h2>
-                <p>Trang phá»¥c ChÄƒm lÃ  má»™t biá»ƒu tÆ°á»£ng kiÃªu hÃ£nh cá»§a báº£n sáº¯c. Nhá»¯ng chiáº¿c vÃ¡y dÃ i (Aw yau) thÆ°á»›t tha cá»§a phá»¥ ná»¯, káº¿t há»£p cÃ¹ng khÄƒn Ä‘á»™i Ä‘áº§u (MÃ¡t-ra) vÃ  dÃ¢y tháº¯t lÆ°ng thÃªu hoa vÄƒn tinh xáº£o, táº¡o nÃªn váº» Ä‘áº¹p kÃ­n Ä‘Ã¡o nhÆ°ng vÃ´ cÃ¹ng quyáº¿n rÅ©. MÃ u sáº¯c cá»§a trang phá»¥c khÃ´ng chá»‰ Ä‘á»ƒ lÃ m Ä‘áº¹p mÃ  cÃ²n pháº£n Ã¡nh Ä‘á»‹a vá»‹ xÃ£ há»™i vÃ  cÃ¡c giÃ¡ trá»‹ tÃ­n ngÆ°á»¡ng trong nhá»¯ng dá»‹p lá»… há»™i thiÃªng liÃªng.</p>
+                <h2>👕 Sắc màu Trang phục</h2>
+                <p>Trang phục Chăm là một biểu tượng kiêu hãnh của bản sắc. Những chiếc váy dài (Aw yau) thướt tha của phụ nữ, kết hợp cùng khăn đội đầu (Mát-ra) và dây thắt lưng thêu hoa văn tinh xảo, tạo nên vẻ đẹp kín đáo nhưng vô cùng quyến rũ. Màu sắc của trang phục không chỉ để làm đẹp mà còn phản ánh địa vị xã hội và các giá trị tín ngưỡng trong những dịp lễ hội thiêng liêng.</p>
             </div>
 
             <div class="story-card">
-                <h2>ðŸ› Nghá»‡ thuáº­t áº¨m thá»±c</h2>
-                <p>áº¨m thá»±c ChÄƒm lÃ  má»™t hÃ nh trÃ¬nh khÃ¡m phÃ¡ vá»‹ giÃ¡c Ä‘áº§y áº¥n tÆ°á»£ng vá»›i sá»± káº¿t há»£p phong phÃº cá»§a cÃ¡c loáº¡i gia vá»‹ nhÆ° nghá»‡, á»›t, sáº£ vÃ  cá»‘t dá»«a. Chá»‹u áº£nh hÆ°á»Ÿng tá»« giao thoa vÄƒn hÃ³a áº¤n Äá»™ giÃ¡o vÃ  Há»“i giÃ¡o, cÃ¡c mÃ³n Äƒn nhÆ° CÃ  ri ChÄƒm hay canh bá»“i khÃ´ng chá»‰ Ä‘áº­m Ä‘Ã  hÆ°Æ¡ng vá»‹ mÃ  cÃ²n tuÃ¢n thá»§ nghiÃªm ngáº·t cÃ¡c quy táº¯c tÃ´n giÃ¡o, thá»ƒ hiá»‡n sá»± kÃ­nh trá»ng Ä‘á»‘i vá»›i nguá»“n thá»±c pháº©m Ä‘Æ°á»£c ban táº·ng.</p>
+                <h2>🍛 Nghệ thuật Ẩm thực</h2>
+                <p>Ẩm thực Chăm là một hành trình khám phá vị giác đầy ấn tượng với sự kết hợp phong phú của các loại gia vị như nghệ, ớt, sả và cốt dừa. Chịu ảnh hưởng từ giao thoa văn hóa Ấn Độ giáo và Hồi giáo, các món ăn như Cà ri Chăm hay canh bồi không chỉ đậm đà hương vị mà còn tuân thủ nghiêm ngặt các quy tắc tôn giáo, thể hiện sự kính trọng đối với nguồn thực phẩm được ban tặng.</p>
             </div>
 
             <div class="story-card">
-                <h2>ðŸ‘¥ Sá»©c máº¡nh Cá»™ng Ä‘á»“ng</h2>
-                <p>NgÆ°á»i ChÄƒm cÃ³ tÃ­nh cá»™ng Ä‘á»“ng cá»±c ká»³ cao, thá»ƒ hiá»‡n qua sá»± gáº¯n káº¿t cháº·t cháº½ giá»¯a gia Ä‘Ã¬nh vÃ  lÃ ng xÃ£. Trong xÃ£ há»™i truyá»n thá»‘ng, vai trÃ² cá»§a ngÆ°á»i phá»¥ ná»¯ (theo cháº¿ Ä‘á»™ máº«u há»‡) ráº¥t quan trá»ng trong viá»‡c quáº£n lÃ½ gia Ä‘Ã¬nh vÃ  thá» cÃºng tá»• tiÃªn. Äá»i sá»‘ng cÃ¡ nhÃ¢n luÃ´n hÃ²a mÃ¬nh vÃ o dÃ²ng cháº£y chung cá»§a Palei, táº¡o nÃªn má»™t máº¡ng lÆ°á»›i há»— trá»£ láº«n nhau vÃ´ cÃ¹ng bá»n vá»¯ng qua bao tháº¿ há»‡.</p>
+                <h2>👥 Sức mạnh Cộng đồng</h2>
+                <p>Người Chăm có tính cộng đồng cực kỳ cao, thể hiện qua sự gắn kết chặt chẽ giữa gia đình và làng xã. Trong xã hội truyền thống, vai trò của người phụ nữ (theo chế độ mẫu hệ) rất quan trọng trong việc quản lý gia đình và thờ cúng tổ tiên. Đời sống cá nhân luôn hòa mình vào dòng chảy chung của Palei, tạo nên một mạng lưới hỗ trợ lẫn nhau vô cùng bền vững qua bao thế hệ.</p>
             </div>
 
             <div class="story-card">
-                <h2>ðŸ›• Äá»i sá»‘ng TÃ¢m linh</h2>
-                <p>TÃ¢m linh lÃ  máº¡ch ngáº§m cháº£y xuyÃªn suá»‘t trong má»i hoáº¡t Ä‘á»™ng cá»§a ngÆ°á»i ChÄƒm. Niá»m tin vÃ o tháº§n linh vÃ  tá»• tiÃªn khÃ´ng náº±m á»Ÿ nhá»¯ng Ä‘iá»u xa vá»i mÃ  hiá»‡n diá»‡n ngay trong tá»«ng bá»¯a Äƒn, giáº¥c ngá»§ hay khi bÆ°á»›c chÃ¢n ra Ä‘á»“ng. Nhá»¯ng ngÃ´i thÃ¡p cá»• kÃ­nh khÃ´ng chá»‰ lÃ  di tÃ­ch, mÃ  lÃ  nhá»¯ng "thá»±c thá»ƒ sá»‘ng" nÆ¡i cá»™ng Ä‘á»“ng gá»­i gáº¯m niá»m tin vá» sá»± bÃ¬nh an, mÃ¹a mÃ ng bá»™i thu vÃ  sá»± thá»‹nh vÆ°á»£ng.</p>
+                <h2>🛕 Đời sống Tâm linh</h2>
+                <p>Tâm linh là mạch ngầm chảy xuyên suốt trong mọi hoạt động của người Chăm. Niềm tin vào thần linh và tổ tiên không nằm ở những điều xa vời mà hiện diện ngay trong từng bữa ăn, giấc ngủ hay khi bước chân ra đồng. Những ngôi tháp cổ kính không chỉ là di tích, mà là những "thực thể sống" nơi cộng đồng gửi gắm niềm tin về sự bình an, mùa màng bội thu và sự thịnh vượng.</p>
             </div>
 
             <div class="story-card">
-                <h2>âš–ï¸ HÆ¡i thá»Ÿ Hiá»‡n Ä‘áº¡i</h2>
-                <p>Trong ká»· nguyÃªn sá»‘, ngÆ°á»i ChÄƒm khÃ´ng há» Ä‘á»©ng yÃªn. Tháº¿ há»‡ tráº» Ä‘ang tÃ­ch cá»±c há»c táº­p, á»©ng dá»¥ng cÃ´ng nghá»‡ Ä‘á»ƒ quáº£ng bÃ¡ vÄƒn hÃ³a dÃ¢n tá»™c ra tháº¿ giá»›i. Sá»± hÃ²a nháº­p xÃ£ há»™i diá»…n ra máº¡nh máº½ nhÆ°ng khÃ´ng lÃ m máº¥t Ä‘i "cÃ¡i gá»‘c" ChÄƒm. Há» Ä‘ang viáº¿t tiáº¿p nhá»¯ng trang sá»­ má»›i báº±ng tri thá»©c hiá»‡n Ä‘áº¡i nhÆ°ng váº«n mang trong mÃ¬nh tÃ¢m tháº¿ cá»§a nhá»¯ng ngÆ°á»i con thá»«a káº¿ vÆ°Æ¡ng quá»‘c Champa rá»±c rá»¡ nÄƒm xÆ°a.</p>
+                <h2>⚖️ Hơi thở Hiện đại</h2>
+                <p>Trong kỷ nguyên số, người Chăm không hề đứng yên. Thế hệ trẻ đang tích cực học tập, ứng dụng công nghệ để quảng bá văn hóa dân tộc ra thế giới. Sự hòa nhập xã hội diễn ra mạnh mẽ nhưng không làm mất đi "cái gốc" Chăm. Họ đang viết tiếp những trang sử mới bằng tri thức hiện đại nhưng vẫn mang trong mình tâm thế của những người con thừa kế vương quốc Champa rực rỡ năm xưa.</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ===== Äáº¶C Sáº®C ===== -->
+<!-- ===== ĐẶC SẮC ===== -->
 <div class="section">
 
-    <!-- mÃ n hÃ¬nh Ä‘áº§u -->
+    <!-- màn hình đầu -->
     <div class="special-start" id="specialStart">
-        <h2>HÃ£y nháº¥p vÃ o má»™t yáº¿u tá»‘ báº¡n muá»‘n khÃ¡m phÃ¡</h2>
+        <h2>Hãy nhấp vào một yếu tố bạn muốn khám phá</h2>
 
         <div class="special-grid">
 
             <div class="special-item" onclick="openSpecial('thap')">
                 <img src="/assets/learn/thappp.jpg">
-                <span>ðŸ›• ThÃ¡p ChÄƒm</span>
+                <span>🛕 Tháp Chăm</span>
             </div>
 
             <div class="special-item" onclick="openSpecial('lehoi')">
                 <img src="/assets/learn/lehoi.jpg">
-                <span>ðŸŽ­ Lá»… há»™i</span>
+                <span>🎭 Lễ hội</span>
             </div>
 
             <div class="special-item" onclick="openSpecial('det')">
                 <img src="/assets/learn/det.jpg">
-                <span>ðŸ§µ Dá»‡t váº£i</span>
+                <span>🧵 Dệt vải</span>
             </div>
 
             <div class="special-item" onclick="openSpecial('muanhac')">
                 <img src="/assets/learn/muanhac.jpg">
-                <span>ðŸŽ¶ Nghá»‡ thuáº­t mÃºa nháº¡c ChÄƒm</span>
+                <span>🎶 Nghệ thuật múa nhạc Chăm</span>
             </div>
 
         </div>
@@ -1503,10 +1509,10 @@ canvas{
 
 </div>
 
-<!-- OVERLAY Äáº¶C Sáº®C -->
+<!-- OVERLAY ĐẶC SẮC -->
 <div class="special-overlay" id="specialOverlay">
 
-    <!-- vÃ²ng áº£nh -->
+    <!-- vòng ảnh -->
 <div class="orbit-ring">
 
     <div class="star" style="width:4px;height:4px;top:10%;left:15%;animation-duration:3s,12s;"></div>
@@ -1529,14 +1535,14 @@ canvas{
 
 </div>
 
-    <!-- ná»™i dung -->
+    <!-- nội dung -->
     <div class="special-content" id="specialContent"></div>
 
-    <!-- nÃºt thoÃ¡t -->
-    <div class="special-close" onclick="closeSpecial()">âœ• Quay láº¡i</div>
+    <!-- nút thoát -->
+    <div class="special-close" onclick="closeSpecial()">✕ Quay lại</div>
 
 </div>
-<!-- ===== HIá»‚U Láº¦M ===== -->
+<!-- ===== HIỂU LẦM ===== -->
 <div class="section">
 
 <div class="misconception-scene" onclick="revealTruth()">
@@ -1544,21 +1550,21 @@ canvas{
     <!-- background glow -->
     <div class="scene-light"></div>
 
-    <!-- chá»¯ hiá»ƒu láº§m -->
+    <!-- chữ hiểu lầm -->
     <div class="fake-text" id="fakeText">
-        NGÆ¯á»œI CHÄ‚M<br>
-        CHá»ˆ THEO<br>
-        Má»˜T TÃ”N GIÃO
+        NGƯỜI CHĂM<br>
+        CHỈ THEO<br>
+        MỘT TÔN GIÁO
     </div>
 
-    <!-- máº·t náº¡ -->
+    <!-- mặt nạ -->
 <div class="mask" id="mask">
 
     <img src="/assets/learn/mask.png">
 
 </div>
 
-    <!-- máº£nh vá»¡ -->
+    <!-- mảnh vỡ -->
 <div class="mask-fragments">
 
     <div class="frag f1"></div>
@@ -1570,24 +1576,24 @@ canvas{
 
 <div class="crack"></div>
 
-    <!-- panel tháº­t -->
+    <!-- panel thật -->
     <div class="truth-panel" id="truthPanel">
 
-        <h2>âœ¨ Sá»± tháº­t phÃ­a sau</h2>
+        <h2>✨ Sự thật phía sau</h2>
 
         <p class="wrong">
-            âŒ Hiá»ƒu láº§m:
-            NgÆ°á»i ChÄƒm chá»‰ theo má»™t tÃ´n giÃ¡o
+            ❌ Hiểu lầm:
+            Người Chăm chỉ theo một tôn giáo
         </p>
 
         <p class="right">
-            âœ… Thá»±c táº¿:
-            NgÆ°á»i ChÄƒm tá»“n táº¡i nhiá»u há»‡ tÃ­n ngÆ°á»¡ng
-            nhÆ° BÃ  La MÃ´n, Bani vÃ  tÃ­n ngÆ°á»¡ng dÃ¢n gian.
+            ✅ Thực tế:
+            Người Chăm tồn tại nhiều hệ tín ngưỡng
+            như Bà La Môn, Bani và tín ngưỡng dân gian.
         </p>
 
         <p class="final-line">
-            ChÃ­nh sá»± Ä‘a dáº¡ng áº¥y táº¡o nÃªn chiá»u sÃ¢u vÄƒn hÃ³a Ä‘áº·c sáº¯c.
+            Chính sự đa dạng ấy tạo nên chiều sâu văn hóa đặc sắc.
         </p>
 
     </div>
@@ -1598,13 +1604,13 @@ canvas{
 
 <div class="modal" id="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">âœ•</span>
+        <span class="close-btn" onclick="closeModal()">✕</span>
         <div id="modalInner"></div>
     </div>
 </div>
 
 <div id="imgBox" class="img-box" onclick="closeImg()">
-    <span class="close-img">âœ•</span>
+    <span class="close-img">✕</span>
     <img id="imgFull">
 </div>
 
@@ -1626,32 +1632,32 @@ function showContent(type){
 	let content = "";
     if(type === "trangphuc"){
         content = `
-        <h3>ðŸ‘— Trang phá»¥c</h3>
+        <h3>👗 Trang phục</h3>
         <p>
-         Trang phá»¥c cá»§a ngÆ°á»i ChÄƒm mang váº» Ä‘áº¹p tinh táº¿ vá»›i hoa vÄƒn dá»‡t thá»§ cÃ´ng Ä‘áº·c sáº¯c. 
-        Phá»¥ ná»¯ thÆ°á»ng máº·c vÃ¡y dÃ i, Ã¡o Ã´m sÃ¡t cÆ¡ thá»ƒ, káº¿t há»£p khÄƒn Ä‘á»™i Ä‘áº§u, 
-        táº¡o nÃªn váº» duyÃªn dÃ¡ng vÃ  má»m máº¡i. Nam giá»›i máº·c trang phá»¥c Ä‘Æ¡n giáº£n hÆ¡n 
-        nhÆ°ng váº«n toÃ¡t lÃªn nÃ©t trang nghiÃªm vÃ  truyá»n thá»‘ng.
+         Trang phục của người Chăm mang vẻ đẹp tinh tế với hoa văn dệt thủ công đặc sắc. 
+        Phụ nữ thường mặc váy dài, áo ôm sát cơ thể, kết hợp khăn đội đầu, 
+        tạo nên vẻ duyên dáng và mềm mại. Nam giới mặc trang phục đơn giản hơn 
+        nhưng vẫn toát lên nét trang nghiêm và truyền thống.
         </p>`;
     }
 
     if(type === "amthuc"){
         content = `
-        <h3>ðŸ› áº¨m thá»±c</h3>
+        <h3>🍛 Ẩm thực</h3>
         <p>
-         áº¨m thá»±c ChÄƒm Ä‘áº­m Ä‘Ã  vá»›i hÆ°Æ¡ng vá»‹ cÃ  ri Ä‘áº·c trÆ°ng, káº¿t há»£p nhiá»u loáº¡i gia vá»‹ 
-        nhÆ° nghá»‡, á»›t, sáº£. Nhá»¯ng mÃ³n Äƒn ná»•i báº­t nhÆ° cÆ¡m ná»‹, bÃ¡nh gá»«ng khÃ´ng chá»‰ ngon 
-        mÃ  cÃ²n gáº¯n liá»n vá»›i Ä‘á»i sá»‘ng vÄƒn hoÃ¡ vÃ  nghi lá»… cá»§a ngÆ°á»i ChÄƒm.
+         Ẩm thực Chăm đậm đà với hương vị cà ri đặc trưng, kết hợp nhiều loại gia vị 
+        như nghệ, ớt, sả. Những món ăn nổi bật như cơm nị, bánh gừng không chỉ ngon 
+        mà còn gắn liền với đời sống văn hoá và nghi lễ của người Chăm.
         </p>`;
     }
 
     if(type === "kientruc"){
         content = `
-        <h3>ðŸ› Kiáº¿n trÃºc</h3>
+        <h3>🏛 Kiến trúc</h3>
         <p>
-        Kiáº¿n trÃºc ChÄƒm ná»•i báº­t vá»›i há»‡ thá»‘ng thÃ¡p cá»• xÃ¢y báº±ng gáº¡ch nung, tiÃªu biá»ƒu nhÆ° 
-        thÃ¡p Má»¹ SÆ¡n. CÃ¡c cÃ´ng trÃ¬nh mang Ä‘áº­m dáº¥u áº¥n tÃ´n giÃ¡o, thá»ƒ hiá»‡n sá»± áº£nh hÆ°á»Ÿng 
-        máº¡nh máº½ cá»§a áº¤n Äá»™ giÃ¡o vÃ  trÃ¬nh Ä‘á»™ ká»¹ thuáº­t xÃ¢y dá»±ng Ä‘á»™c Ä‘Ã¡o.
+        Kiến trúc Chăm nổi bật với hệ thống tháp cổ xây bằng gạch nung, tiêu biểu như 
+        tháp Mỹ Sơn. Các công trình mang đậm dấu ấn tôn giáo, thể hiện sự ảnh hưởng 
+        mạnh mẽ của Ấn Độ giáo và trình độ kỹ thuật xây dựng độc đáo.
         </p>`;
     }
 
@@ -1666,21 +1672,21 @@ function updateButtons() {
     const btnUp = document.getElementById("btnUp");
     const btnDown = document.getElementById("btnDown");
 
-    // Náº¿u á»Ÿ card Ä‘áº§u (index 0), khÃ³a nÃºt LÃªn
+    // Nếu ở card đầu (index 0), khóa nút Lên
     btnUp.disabled = (currentCard === 0);
     
-    // Náº¿u á»Ÿ card cuá»‘i, khÃ³a nÃºt Xuá»‘ng
+    // Nếu ở card cuối, khóa nút Xuống
     btnDown.disabled = (currentCard === cards.length - 1);
 }
 
 function changeCard(n) {
     const cards = document.querySelectorAll(".story-card");
     
-    // Kiá»ƒm tra giá»›i háº¡n Ä‘á»ƒ khÃ´ng cho láº·p
+    // Kiểm tra giới hạn để không cho lặp
     let nextIndex = currentCard + n;
     if (nextIndex < 0 || nextIndex >= cards.length) return;
 
-    // Chuyá»ƒn card
+    // Chuyển card
     cards[currentCard].classList.remove("active");
     currentCard = nextIndex;
     cards[currentCard].classList.add("active");
@@ -1688,7 +1694,7 @@ function changeCard(n) {
     updateButtons();
 }
 
-// Cáº­p nháº­t láº¡i hÃ m tab(i) Ä‘á»ƒ reset chuáº©n
+// Cập nhật lại hàm tab(i) để reset chuẩn
 function tab(i){
     document.querySelectorAll(".tab").forEach((t,idx)=>t.classList.toggle("active",idx==i))
     document.querySelectorAll(".section").forEach((s,idx)=>s.classList.toggle("active",idx==i))
@@ -1698,12 +1704,12 @@ function tab(i){
         const cards = document.querySelectorAll(".story-card");
         cards.forEach(c => c.classList.remove("active"));
         if(cards.length > 0) cards[0].classList.add("active");
-        updateButtons(); // Cáº­p nháº­t tráº¡ng thÃ¡i nÃºt ngay khi má»Ÿ tab
+        updateButtons(); // Cập nhật trạng thái nút ngay khi mở tab
     }
 }
 
 /* ORBIT */
-/* ===== Äáº¶C Sáº®C ===== */
+/* ===== ĐẶC SẮC ===== */
 
 function openSpecial(type){
 
@@ -1716,38 +1722,38 @@ function openSpecial(type){
 
     if(type === "thap"){
         html = `
-        <h2>ðŸ›• ThÃ¡p ChÄƒm</h2>
+        <h2>🛕 Tháp Chăm</h2>
         <p>
-        ThÃ¡p ChÄƒm khÃ´ng chá»‰ lÃ  cÃ´ng trÃ¬nh kiáº¿n trÃºc cá»• mÃ  cÃ²n lÃ  biá»ƒu tÆ°á»£ng cho lá»‹ch sá»­ vÃ  Ä‘á»i sá»‘ng tÃ¢m linh cá»§a ngÆ°á»i ChÄƒm. Nhá»¯ng ngá»n thÃ¡p Ä‘Æ°á»£c xÃ¢y dá»±ng báº±ng gáº¡ch nung vá»›i ká»¹ thuáº­t Ä‘á»™c Ä‘Ã¡o, thá»ƒ hiá»‡n trÃ¬nh Ä‘á»™ nghá»‡ thuáº­t vÃ  tÆ° duy sÃ¡ng táº¡o cá»§a cÆ° dÃ¢n Champa xÆ°a. ÄÃ¢y lÃ  nÆ¡i thá» tháº§n linh, tá»• chá»©c nghi lá»… vÃ  lÆ°u giá»¯ dáº¥u áº¥n cá»§a má»™t ná»n vÄƒn minh tá»«ng phÃ¡t triá»ƒn rá»±c rá»¡ á»Ÿ miá»n Trung Viá»‡t Nam. Qua thá»i gian, thÃ¡p ChÄƒm trá»Ÿ thÃ nh minh chá»©ng cho sá»± bá»n vá»¯ng cá»§a vÄƒn hÃ³a ChÄƒm vÃ  giÃ¡ trá»‹ di sáº£n Ä‘Æ°á»£c truyá»n láº¡i cho cÃ¡c tháº¿ há»‡ sau.
+        Tháp Chăm không chỉ là công trình kiến trúc cổ mà còn là biểu tượng cho lịch sử và đời sống tâm linh của người Chăm. Những ngọn tháp được xây dựng bằng gạch nung với kỹ thuật độc đáo, thể hiện trình độ nghệ thuật và tư duy sáng tạo của cư dân Champa xưa. Đây là nơi thờ thần linh, tổ chức nghi lễ và lưu giữ dấu ấn của một nền văn minh từng phát triển rực rỡ ở miền Trung Việt Nam. Qua thời gian, tháp Chăm trở thành minh chứng cho sự bền vững của văn hóa Chăm và giá trị di sản được truyền lại cho các thế hệ sau.
         </p>
         `;
     }
 
     if(type === "lehoi"){
         html = `
-        <h2>ðŸŽ­ Lá»… há»™i</h2>
+        <h2>🎭 Lễ hội</h2>
         <p>
-        Äá»‘i vá»›i ngÆ°á»i ChÄƒm, lá»… há»™i khÃ´ng chá»‰ lÃ  má»™t sá»± kiá»‡n vÄƒn hÃ³a mÃ  cÃ²n lÃ  khÃ´ng gian tÃ¢m linh thiÃªng liÃªng, nÆ¡i con ngÆ°á»i káº¿t ná»‘i vá»›i tháº§n linh vÃ  tá»• tiÃªn. ÄÃ¢y cÅ©ng lÃ  dá»‹p cá»™ng Ä‘á»“ng gáº·p gá»¡, gáº¯n káº¿t vÃ  cÃ¹ng nhau gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ truyá»n thá»‘ng lÃ¢u Ä‘á»i. ThÃ´ng qua cÃ¡c nghi lá»…, Ä‘iá»‡u mÃºa, tiáº¿ng trá»‘ng vÃ  trang phá»¥c truyá»n thá»‘ng, báº£n sáº¯c vÄƒn hÃ³a ChÄƒm Ä‘Æ°á»£c truyá»n láº¡i qua nhiá»u tháº¿ há»‡. Nhá»¯ng lá»… há»™i tiÃªu biá»ƒu nhÆ° Ka TÃª hay RamÆ°wan khÃ´ng chá»‰ pháº£n Ã¡nh Ä‘á»i sá»‘ng tÃ­n ngÆ°á»¡ng mÃ  cÃ²n thá»ƒ hiá»‡n tinh tháº§n Ä‘oÃ n káº¿t vÃ  niá»m tá»± hÃ o dÃ¢n tá»™c cá»§a ngÆ°á»i ChÄƒm.
+        Đối với người Chăm, lễ hội không chỉ là một sự kiện văn hóa mà còn là không gian tâm linh thiêng liêng, nơi con người kết nối với thần linh và tổ tiên. Đây cũng là dịp cộng đồng gặp gỡ, gắn kết và cùng nhau gìn giữ những giá trị truyền thống lâu đời. Thông qua các nghi lễ, điệu múa, tiếng trống và trang phục truyền thống, bản sắc văn hóa Chăm được truyền lại qua nhiều thế hệ. Những lễ hội tiêu biểu như Ka Tê hay Ramưwan không chỉ phản ánh đời sống tín ngưỡng mà còn thể hiện tinh thần đoàn kết và niềm tự hào dân tộc của người Chăm.
         <br><br>
-        ðŸŽ­ Kate khÃ´ng chá»‰ lÃ  má»™t lá»… há»™i mÃ  lÃ  trung tÃ¢m cá»§a Ä‘á»i sá»‘ng tinh tháº§n ngÆ°á»i ChÄƒm â†’ lÃ  biá»ƒu tÆ°á»£ng vÄƒn hÃ³a.
+        🎭 Kate không chỉ là một lễ hội mà là trung tâm của đời sống tinh thần người Chăm → là biểu tượng văn hóa.
         </p>
         `;
     }
 
     if(type === "det"){
         html = `
-        <h2>ðŸ§µ Dá»‡t váº£i</h2>
+        <h2>🧵 Dệt vải</h2>
         <p>
-        Dá»‡t thá»• cáº©m vÃ  lÃ m gá»‘m khÃ´ng chá»‰ lÃ  nghá» thá»§ cÃ´ng truyá»n thá»‘ng mÃ  cÃ²n lÃ  nÆ¡i lÆ°u giá»¯ tinh hoa vÄƒn hÃ³a cá»§a ngÆ°á»i ChÄƒm. Trong tá»«ng hoa vÄƒn, mÃ u sáº¯c hay hÃ¬nh dÃ¡ng sáº£n pháº©m Ä‘á»u chá»©a Ä‘á»±ng dáº¥u áº¥n vá» Ä‘á»i sá»‘ng, tÃ­n ngÆ°á»¡ng vÃ  quan niá»‡m tháº©m má»¹ cá»§a cá»™ng Ä‘á»“ng. Nhá»¯ng Ä‘Ã´i tay khÃ©o lÃ©o cá»§a ngÆ°á»i nghá»‡ nhÃ¢n Ä‘Ã£ biáº¿n cÃ¡c nguyÃªn liá»‡u giáº£n dá»‹ thÃ nh nhá»¯ng sáº£n pháº©m mang giÃ¡ trá»‹ nghá»‡ thuáº­t cao. Qua nhiá»u tháº¿ há»‡, nghá» dá»‡t vÃ  lÃ m gá»‘m khÃ´ng chá»‰ giÃºp báº£o tá»“n báº£n sáº¯c dÃ¢n tá»™c mÃ  cÃ²n gÃ³p pháº§n quáº£ng bÃ¡ vÄƒn hÃ³a ChÄƒm Ä‘áº¿n vá»›i nhiá»u ngÆ°á»i hÆ¡n.
+        Dệt thổ cẩm và làm gốm không chỉ là nghề thủ công truyền thống mà còn là nơi lưu giữ tinh hoa văn hóa của người Chăm. Trong từng hoa văn, màu sắc hay hình dáng sản phẩm đều chứa đựng dấu ấn về đời sống, tín ngưỡng và quan niệm thẩm mỹ của cộng đồng. Những đôi tay khéo léo của người nghệ nhân đã biến các nguyên liệu giản dị thành những sản phẩm mang giá trị nghệ thuật cao. Qua nhiều thế hệ, nghề dệt và làm gốm không chỉ giúp bảo tồn bản sắc dân tộc mà còn góp phần quảng bá văn hóa Chăm đến với nhiều người hơn.
         </p>
         `;
     }
 
     if(type === "muanhac"){
         html = `
-        <h2>ðŸŽ¶ Nghá»‡ thuáº­t mÃºa nháº¡c ChÄƒm</h2>
+        <h2>🎶 Nghệ thuật múa nhạc Chăm</h2>
         <p>
-        Nghá»‡ thuáº­t mÃºa nháº¡c khÃ´ng chá»‰ lÃ  hÃ¬nh thá»©c biá»ƒu diá»…n mÃ  cÃ²n lÃ  tiáº¿ng nÃ³i tÃ¢m há»“n cá»§a ngÆ°á»i ChÄƒm. Nhá»¯ng Ä‘iá»‡u mÃºa uyá»ƒn chuyá»ƒn hÃ²a cÃ¹ng tiáº¿ng trá»‘ng vÃ  tiáº¿ng kÃ¨n táº¡o nÃªn khÃ´ng gian vÄƒn hÃ³a giÃ u cáº£m xÃºc vÃ  Ä‘áº­m cháº¥t truyá»n thá»‘ng. Ã‚m nháº¡c vÃ  mÃºa thÆ°á»ng xuáº¥t hiá»‡n trong cÃ¡c lá»… há»™i, nghi lá»… tÃ´n giÃ¡o vÃ  sinh hoáº¡t cá»™ng Ä‘á»“ng, gÃ³p pháº§n káº¿t ná»‘i con ngÆ°á»i vá»›i Ä‘á»i sá»‘ng tinh tháº§n cá»§a dÃ¢n tá»™c. Qua tá»«ng Ä‘á»™ng tÃ¡c, Ã¢m thanh vÃ  nhá»‹p Ä‘iá»‡u, ngÆ°á»i ChÄƒm gá»­i gáº¯m niá»m tin, tÃ¬nh yÃªu quÃª hÆ°Æ¡ng vÃ  khÃ¡t vá»ng gÃ¬n giá»¯ báº£n sáº¯c vÄƒn hÃ³a qua nhiá»u tháº¿ há»‡.
+        Nghệ thuật múa nhạc không chỉ là hình thức biểu diễn mà còn là tiếng nói tâm hồn của người Chăm. Những điệu múa uyển chuyển hòa cùng tiếng trống và tiếng kèn tạo nên không gian văn hóa giàu cảm xúc và đậm chất truyền thống. Âm nhạc và múa thường xuất hiện trong các lễ hội, nghi lễ tôn giáo và sinh hoạt cộng đồng, góp phần kết nối con người với đời sống tinh thần của dân tộc. Qua từng động tác, âm thanh và nhịp điệu, người Chăm gửi gắm niềm tin, tình yêu quê hương và khát vọng gìn giữ bản sắc văn hóa qua nhiều thế hệ.
         </p>
         `;
     }
@@ -1766,7 +1772,7 @@ function closeSpecial(){
 }
 
 
-/* ===== HIá»‚U Láº¦M REVEAL ===== */
+/* ===== HIỂU LẦM REVEAL ===== */
 
 let revealed = false;
 
@@ -1777,7 +1783,7 @@ function revealTruth(){
     if(revealed) return;
     revealed = true;
 
-    // báº­t tráº¡ng thÃ¡i vá»¡
+    // bật trạng thái vỡ
     scene.classList.add("active");
 }
 
@@ -1791,7 +1797,7 @@ function revealTruth(){
 
     scene.classList.add("active");
 
-    // delay chá»¯
+    // delay chữ
     setTimeout(()=>{
         text.style.opacity = "1";
         text.style.transform = "scale(1)";
@@ -1814,10 +1820,10 @@ function openModal(type){
         <div class="right">
 		    <div class="inner-flex">
 			    <div class="content-left">
-                    <h2>ðŸ›• BÃ  La MÃ´n</h2>
-                    <p>TÃ­n ngÆ°á»¡ng BÃ  La MÃ´n cá»§a ngÆ°á»i ChÄƒm lÃ  má»™t há»‡ thá»‘ng tÃ´n giÃ¡o cÃ³ nguá»“n gá»‘c tá»« áº¤n Äá»™ giÃ¡o, Ä‘Æ°á»£c du nháº­p vÃ  phÃ¡t triá»ƒn máº¡nh máº½ trong thá»i ká»³ vÆ°Æ¡ng quá»‘c Champa. Tráº£i qua quÃ¡ trÃ¬nh giao thoa vÄƒn hÃ³a, ngÆ°á»i ChÄƒm Ä‘Ã£ tiáº¿p nháº­n vÃ  biáº¿n Ä‘á»•i tÃ­n ngÆ°á»¡ng nÃ y, káº¿t há»£p vá»›i yáº¿u tá»‘ báº£n Ä‘á»‹a Ä‘á»ƒ hÃ¬nh thÃ nh nÃªn má»™t dáº¡ng BÃ  La MÃ´n giÃ¡o mang báº£n sáº¯c riÃªng.</p>
-                    <p>Trong tÃ­n ngÆ°á»¡ng nÃ y, ngÆ°á»i ChÄƒm chá»§ yáº¿u tÃ´n thá» cÃ¡c vá»‹ tháº§n quan trá»ng nhÆ° tháº§n Shiva â€“ vá»‹ tháº§n tá»‘i cao, cÃ¹ng vá»›i Brahma vÃ  Vishnu. Trong Ä‘Ã³, Shiva giá»¯ vai trÃ² trung tÃ¢m, thÆ°á»ng Ä‘Æ°á»£c thá» dÆ°á»›i dáº¡ng Linga â€“ biá»ƒu tÆ°á»£ng cá»§a sá»©c máº¡nh sÃ¡ng táº¡o vÃ  sá»± sinh sÃ´i cá»§a vÅ© trá»¥. BÃªn cáº¡nh Ä‘Ã³, ngÆ°á»i ChÄƒm cÅ©ng Ä‘á» cao viá»‡c thá» cÃºng tá»• tiÃªn, cÃ¡c vá»‹ vua vÃ  nhá»¯ng ngÆ°á»i cÃ³ cÃ´ng vá»›i cá»™ng Ä‘á»“ng.</p>
-                    <p>TÃ­n ngÆ°á»¡ng BÃ  La MÃ´n khÃ´ng chá»‰ thá»ƒ hiá»‡n qua niá»m tin mÃ  cÃ²n Ä‘Æ°á»£c duy trÃ¬ qua cÃ¡c nghi lá»… tÃ´n giÃ¡o, phong tá»¥c táº­p quÃ¡n vÃ  há»‡ thá»‘ng Ä‘á»n thÃ¡p cá»•. ÄÃ¢y lÃ  ná»n táº£ng quan trá»ng trong Ä‘á»i sá»‘ng tinh tháº§n, gÃ³p pháº§n gÃ¬n giá»¯ vÃ  Ä‘á»‹nh hÃ¬nh báº£n sáº¯c vÄƒn hÃ³a Ä‘áº·c trÆ°ng cá»§a ngÆ°á»i ChÄƒm qua nhiá»u tháº¿ há»‡.</p>
+                    <h2>🛕 Bà La Môn</h2>
+                    <p>Tín ngưỡng Bà La Môn của người Chăm là một hệ thống tôn giáo có nguồn gốc từ Ấn Độ giáo, được du nhập và phát triển mạnh mẽ trong thời kỳ vương quốc Champa. Trải qua quá trình giao thoa văn hóa, người Chăm đã tiếp nhận và biến đổi tín ngưỡng này, kết hợp với yếu tố bản địa để hình thành nên một dạng Bà La Môn giáo mang bản sắc riêng.</p>
+                    <p>Trong tín ngưỡng này, người Chăm chủ yếu tôn thờ các vị thần quan trọng như thần Shiva – vị thần tối cao, cùng với Brahma và Vishnu. Trong đó, Shiva giữ vai trò trung tâm, thường được thờ dưới dạng Linga – biểu tượng của sức mạnh sáng tạo và sự sinh sôi của vũ trụ. Bên cạnh đó, người Chăm cũng đề cao việc thờ cúng tổ tiên, các vị vua và những người có công với cộng đồng.</p>
+                    <p>Tín ngưỡng Bà La Môn không chỉ thể hiện qua niềm tin mà còn được duy trì qua các nghi lễ tôn giáo, phong tục tập quán và hệ thống đền tháp cổ. Đây là nền tảng quan trọng trong đời sống tinh thần, góp phần gìn giữ và định hình bản sắc văn hóa đặc trưng của người Chăm qua nhiều thế hệ.</p>
                 </div>
                 <div class="content-right">
                     <img src="/assets/learn/blm.png" onclick="openImg(this.src)">
@@ -1831,9 +1837,9 @@ function openModal(type){
         <div class="right">
 		    <div class="inner-flex">
 			    <div class="content-left">
-                    <h2>ðŸŒ™ Há»“i giÃ¡o Bani</h2>
-                    <p>Há»“i giÃ¡o BÃ  Ni lÃ  má»™t dáº¡ng tÃ­n ngÆ°á»¡ng Ä‘áº·c trÆ°ng cá»§a má»™t bá»™ pháº­n ngÆ°á»i ChÄƒm, Ä‘Æ°á»£c biáº¿n Ä‘á»•i tá»« Há»“i giÃ¡o chÃ­nh thá»‘ng khi du nháº­p vÃ o Viá»‡t Nam. Tráº£i qua quÃ¡ trÃ¬nh giao thoa vá»›i vÄƒn hÃ³a báº£n Ä‘á»‹a, tÃ­n ngÆ°á»¡ng nÃ y mang mÃ u sáº¯c riÃªng, vá»«a giá»¯ yáº¿u tá»‘ Há»“i giÃ¡o, vá»«a káº¿t há»£p vá»›i phong tá»¥c truyá»n thá»‘ng cá»§a ngÆ°á»i ChÄƒm.</p>
-                    <p>NgÆ°á»i ChÄƒm BÃ  Ni tin vÃ o Ä‘áº¥ng tá»‘i cao Allah, nhÆ°ng cÃ¡ch thá»±c hÃ nh tÃ´n giÃ¡o cÃ³ pháº§n linh hoáº¡t hÆ¡n so vá»›i Há»“i giÃ¡o chÃ­nh thá»‘ng. CÃ¡c nghi lá»… thÆ°á»ng do chá»©c sáº¯c tÃ´n giÃ¡o Ä‘áº£m nhiá»‡m, vÃ  cá»™ng Ä‘á»“ng váº«n duy trÃ¬ nhiá»u táº­p tá»¥c cá»• truyá»n nhÆ° thá» cÃºng tá»• tiÃªn. TÃ­n ngÆ°á»¡ng nÃ y Ä‘Ã³ng vai trÃ² quan trá»ng trong Ä‘á»i sá»‘ng tinh tháº§n, gÃ³p pháº§n táº¡o nÃªn báº£n sáº¯c riÃªng cá»§a ngÆ°á»i ChÄƒm.</p>
+                    <h2>🌙 Hồi giáo Bani</h2>
+                    <p>Hồi giáo Bà Ni là một dạng tín ngưỡng đặc trưng của một bộ phận người Chăm, được biến đổi từ Hồi giáo chính thống khi du nhập vào Việt Nam. Trải qua quá trình giao thoa với văn hóa bản địa, tín ngưỡng này mang màu sắc riêng, vừa giữ yếu tố Hồi giáo, vừa kết hợp với phong tục truyền thống của người Chăm.</p>
+                    <p>Người Chăm Bà Ni tin vào đấng tối cao Allah, nhưng cách thực hành tôn giáo có phần linh hoạt hơn so với Hồi giáo chính thống. Các nghi lễ thường do chức sắc tôn giáo đảm nhiệm, và cộng đồng vẫn duy trì nhiều tập tục cổ truyền như thờ cúng tổ tiên. Tín ngưỡng này đóng vai trò quan trọng trong đời sống tinh thần, góp phần tạo nên bản sắc riêng của người Chăm.</p>
                 </div>
                 <div class="content-right">
                     <img src="/assets/learn/bani.png" onclick="openImg(this.src)">
@@ -1848,9 +1854,9 @@ function openModal(type){
         <div class="right">
 		    <div class="inner-flex">
 			    <div class="content-left">
-                    <h2>ðŸŽ­ Lá»… há»™i Kate</h2>
-                    <p>Lá»… há»™i KatÃª lÃ  lá»… há»™i lá»›n vÃ  quan trá»ng nháº¥t cá»§a ngÆ°á»i ChÄƒm theo tÃ­n ngÆ°á»¡ng BÃ  La MÃ´n, thÆ°á»ng diá»…n ra vÃ o khoáº£ng thÃ¡ng 9â€“10 dÆ°Æ¡ng lá»‹ch. ÄÃ¢y lÃ  dá»‹p Ä‘á»ƒ ngÆ°á»i dÃ¢n tÆ°á»Ÿng nhá»› cÃ¡c vá»‹ tháº§n, cÃ¡c vá»‹ vua vÃ  tá»• tiÃªn Ä‘Ã£ cÃ³ cÃ´ng vá»›i cá»™ng Ä‘á»“ng.</p>
-                    <p>Trong khÃ´ng khÃ­ trang nghiÃªm nhÆ°ng rá»™n rÃ ng, cÃ¡c nghi lá»… truyá»n thá»‘ng Ä‘Æ°á»£c tá»• chá»©c táº¡i thÃ¡p ChÄƒm vá»›i cÃ¡c hoáº¡t Ä‘á»™ng nhÆ° rÆ°á»›c y phá»¥c tháº§n, dÃ¢ng lá»… váº­t vÃ  cáº§u mong mÆ°a thuáº­n giÃ³ hÃ²a. KhÃ´ng chá»‰ mang Ã½ nghÄ©a tÃ¢m linh, lá»… há»™i KatÃª cÃ²n lÃ  dá»‹p Ä‘á»ƒ cá»™ng Ä‘á»“ng sum há»p, thá»ƒ hiá»‡n Ä‘á»i sá»‘ng vÄƒn hÃ³a qua Ã¢m nháº¡c, Ä‘iá»‡u mÃºa vÃ  trang phá»¥c truyá»n thá»‘ng Ä‘áº·c sáº¯c.</p>
+                    <h2>🎭 Lễ hội Kate</h2>
+                    <p>Lễ hội Katê là lễ hội lớn và quan trọng nhất của người Chăm theo tín ngưỡng Bà La Môn, thường diễn ra vào khoảng tháng 9–10 dương lịch. Đây là dịp để người dân tưởng nhớ các vị thần, các vị vua và tổ tiên đã có công với cộng đồng.</p>
+                    <p>Trong không khí trang nghiêm nhưng rộn ràng, các nghi lễ truyền thống được tổ chức tại tháp Chăm với các hoạt động như rước y phục thần, dâng lễ vật và cầu mong mưa thuận gió hòa. Không chỉ mang ý nghĩa tâm linh, lễ hội Katê còn là dịp để cộng đồng sum họp, thể hiện đời sống văn hóa qua âm nhạc, điệu múa và trang phục truyền thống đặc sắc.</p>
                 </div>
                 <div class="content-right">
                     <img src="/assets/learn/kate.png" onclick="openImg(this.src)">
@@ -1865,10 +1871,10 @@ function openModal(type){
         <div class="right">
 		    <div class="inner-flex">
 			    <div class="content-left">
-                    <h2>ðŸŒ™ Ramuwan</h2>
-                    <p>Lá»… há»™i Ramuwan lÃ  má»™t trong nhá»¯ng nghi lá»… quan trá»ng nháº¥t cá»§a ngÆ°á»i ChÄƒm theo tÃ­n ngÆ°á»¡ng Há»“i giÃ¡o BÃ  Ni, thÆ°á»ng diá»…n ra vÃ o khoáº£ng thÃ¡ng 4â€“5 dÆ°Æ¡ng lá»‹ch. ÄÃ¢y Ä‘Æ°á»£c xem lÃ  â€œthÃ¡ng chayâ€ mang Ã½ nghÄ©a thiÃªng liÃªng, tÆ°Æ¡ng tá»± nhÆ° Ramadan trong Há»“i giÃ¡o, nhÆ°ng Ä‘Ã£ Ä‘Æ°á»£c báº£n Ä‘á»‹a hÃ³a theo phong tá»¥c ChÄƒm.</p>
-                    <p>TrÆ°á»›c khi bÆ°á»›c vÃ o thÃ¡ng lá»…, ngÆ°á»i ChÄƒm BÃ  Ni thá»±c hiá»‡n nghi thá»©c táº£o má»™, dá»n dáº¹p vÃ  cÃºng bÃ¡i tá»• tiÃªn, thá»ƒ hiá»‡n Ä‘áº¡o lÃ½ uá»‘ng nÆ°á»›c nhá»› nguá»“n. Trong suá»‘t thá»i gian RamÆ°wan, cÃ¡c chá»©c sáº¯c tÃ´n giÃ¡o sáº½ thay máº·t cá»™ng Ä‘á»“ng thá»±c hiá»‡n viá»‡c Äƒn chay vÃ  cáº§u nguyá»‡n táº¡i thÃ¡nh Ä‘Æ°á»ng, trong khi ngÆ°á»i dÃ¢n váº«n sinh hoáº¡t bÃ¬nh thÆ°á»ng nhÆ°ng giá»¯ tÃ¢m thanh tá»‹nh, hÆ°á»›ng thiá»‡n.</p>
-                    <p>Lá»… há»™i khÃ´ng chá»‰ mang Ã½ nghÄ©a tÃ´n giÃ¡o mÃ  cÃ²n lÃ  dá»‹p Ä‘á»ƒ gia Ä‘Ã¬nh sum há»p, cá»§ng cá»‘ tÃ¬nh cáº£m cá»™ng Ä‘á»“ng vÃ  gÃ¬n giá»¯ nhá»¯ng giÃ¡ trá»‹ vÄƒn hÃ³a truyá»n thá»‘ng Ä‘áº·c sáº¯c cá»§a ngÆ°á»i ChÄƒm BÃ  Ni.</p>
+                    <h2>🌙 Ramuwan</h2>
+                    <p>Lễ hội Ramuwan là một trong những nghi lễ quan trọng nhất của người Chăm theo tín ngưỡng Hồi giáo Bà Ni, thường diễn ra vào khoảng tháng 4–5 dương lịch. Đây được xem là “tháng chay” mang ý nghĩa thiêng liêng, tương tự như Ramadan trong Hồi giáo, nhưng đã được bản địa hóa theo phong tục Chăm.</p>
+                    <p>Trước khi bước vào tháng lễ, người Chăm Bà Ni thực hiện nghi thức tảo mộ, dọn dẹp và cúng bái tổ tiên, thể hiện đạo lý uống nước nhớ nguồn. Trong suốt thời gian Ramưwan, các chức sắc tôn giáo sẽ thay mặt cộng đồng thực hiện việc ăn chay và cầu nguyện tại thánh đường, trong khi người dân vẫn sinh hoạt bình thường nhưng giữ tâm thanh tịnh, hướng thiện.</p>
+                    <p>Lễ hội không chỉ mang ý nghĩa tôn giáo mà còn là dịp để gia đình sum họp, củng cố tình cảm cộng đồng và gìn giữ những giá trị văn hóa truyền thống đặc sắc của người Chăm Bà Ni.</p>
                 </div>
                 <div class="content-right">
                     <img src="/assets/learn/ramuwan.png" onclick="openImg(this.src)">
@@ -1890,12 +1896,12 @@ function openImg(src){
 function closeImg(){
     document.getElementById("imgBox").style.display = "none";
 }
-/* Ä‘Ã³ng */
+/* đóng */
 function closeModal(){
     document.getElementById("modal").classList.remove("show");
 }
 
-/* click ná»n Ä‘á»ƒ Ä‘Ã³ng */
+/* click nền để đóng */
 document.getElementById("modal").addEventListener("click", function(e){
     if(e.target === this){
         closeModal();
@@ -1906,5 +1912,3 @@ document.getElementById("modal").addEventListener("click", function(e){
 
 </body>
 </html>
-
-

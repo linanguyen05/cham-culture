@@ -52,6 +52,7 @@ async def get_profile(
                     COALESCE(p.category, 'Chung') AS category,
                     p.shared_post_id::text AS shared_post_id,
                     COALESCE(p.image_url, '') AS image_url,
+                    p.video_url AS video_url,
                     u.id::text AS author_id,
                     u.username AS author_username,
                     u.avatar_url AS author_avatar_url,
@@ -84,6 +85,7 @@ async def get_profile(
                         p.created_at AS created_at,
                         COALESCE(p.content, '') AS content,
                         COALESCE(p.image_url, '') AS image_url,
+                        p.video_url AS video_url,
                         p.user_id::text AS author_id,
                         u.username AS author_username,
                         u.avatar_url AS author_avatar_url
@@ -99,6 +101,7 @@ async def get_profile(
                         "created_at": original["created_at"],
                         "content": original["content"],
                         "image_urls": CommunityRepository._decode_image_urls(original["image_url"]),
+                        "video_url": original.get("video_url") or None,
                         "author": {
                             "id": original["author_id"],
                             "username": original["author_username"] or "Người dùng",
@@ -116,7 +119,7 @@ async def get_profile(
             following_count = int((await cur.fetchone())["c"])
 
             is_following = False
-            if not is_current_user:
+            if viewer_id and target_id and viewer_id != target_id:
                 await cur.execute(
                     "SELECT 1 FROM follows WHERE follower_id = %s AND following_id = %s",
                     (viewer_id, target_id)
@@ -131,6 +134,7 @@ async def get_profile(
                 "created_at": row["created_at"],
                 "content": row["content"],
                 "image_urls": CommunityRepository._decode_image_urls(row["image_url"]),
+                "video_url": row.get("video_url") or None,
                 "category": from_db_category(row["category"]),
                 "shared_post_id": row["shared_post_id"],
                 "author": {

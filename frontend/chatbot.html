@@ -1,42 +1,525 @@
-﻿{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot AI - Tìm Hiểu Văn Hóa Chăm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/dashboard/style.css">
+    <style>
+        :root {
+            --primary: #A34925;
+            --primary-dark: #873618;
+            --primary-light: #fbeee8;
+            --bg-page: #fdf8f4;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #ebdcd3;
+            --card-bg: #ffffff;
+        }
 
-<h2 class="title">Chatbot â€“ Há»i gÃ¬ vá» dÃ¢n tá»™c ChÄƒm?</h2>
+        body {
+            background: var(--bg-page);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-<div class="chat-layout">
+        .chat-page-container {
+            flex: 1;
+            max-width: 960px;
+            width: 92%;
+            margin: 25px auto 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
 
-    <div class="suggest">
-        <p>Gá»£i Ã½ cÃ¢u há»i</p>
-        <button>NgÆ°á»i ChÄƒm á»Ÿ Ä‘Ã¢u?</button>
-        <button>Lá»… há»™i gÃ¬?</button>
+        /* Top Header Card */
+        .ai-header-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px 28px;
+            box-shadow: 0 4px 20px rgba(163, 73, 37, 0.08);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ai-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .ai-avatar-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #A34925, #d28242);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(163, 73, 37, 0.25);
+        }
+
+        .ai-title-wrap h1 {
+            font-size: 1.35rem;
+            margin: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .ai-title-wrap p {
+            margin: 3px 0 0 0;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .quota-badge {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(163, 73, 37, 0.2);
+        }
+
+        /* Suggestion Chips */
+        .suggestions-bar {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 14px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .suggestions-bar span.label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chips-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip-btn {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .chip-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Main Chat Container */
+        .chat-main-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 580px;
+            overflow: hidden;
+        }
+
+        /* Chat messages list */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 12px;
+            max-width: 82%;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-row.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-row.bot {
+            align-self: flex-start;
+        }
+
+        .msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .message-row.bot .msg-avatar {
+            background: linear-gradient(135deg, #A34925, #d28242);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(163, 73, 37, 0.2);
+        }
+
+        .message-row.user .msg-avatar {
+            background: #4a5568;
+            color: #fff;
+        }
+
+        .msg-bubble {
+            padding: 13px 18px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        .message-row.bot .msg-bubble {
+            background: #f7fafc;
+            color: var(--text-main);
+            border: 1px solid #edf2f7;
+            border-top-left-radius: 4px;
+        }
+
+        .message-row.user .msg-bubble {
+            background: linear-gradient(135deg, #A34925, #b8542d);
+            color: #ffffff;
+            border-top-right-radius: 4px;
+            box-shadow: 0 3px 10px rgba(163, 73, 37, 0.2);
+        }
+
+        .msg-bubble p {
+            margin: 0 0 8px 0;
+        }
+
+        .msg-bubble p:last-child {
+            margin: 0;
+        }
+
+        .msg-bubble strong {
+            font-weight: 600;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #a0aec0;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        /* Input section */
+        .chat-input-bar {
+            padding: 16px 20px;
+            background: #ffffff;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 13px 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+
+        #userInput:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(163, 73, 37, 0.12);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(163, 73, 37, 0.25);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .chat-page-container {
+                width: 95%;
+                margin: 15px auto;
+            }
+            .message-row {
+                max-width: 92%;
+            }
+            .send-btn span {
+                display: none;
+            }
+            .send-btn {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Header Navigation -->
+    <header>
+        <div class="logo">
+            <img src="/1.png" alt="Logo"> 
+            <span>Chăm Culture</span>
+        </div>
+        <nav>
+            <a href="/dashboard/index.html">Trang chủ</a>
+            <a href="/learn.html">Tìm hiểu</a>
+            <a href="/chatbot.html" class="active">Chatbot</a>
+            <a href="/community/index.html">Cộng đồng</a>
+        </nav>
+        <div class="search-icon">🔍</div>
+    </header>
+
+    <div class="chat-page-container">
+        <!-- AI Assistant Banner -->
+        <div class="ai-header-card">
+            <div class="ai-title-wrap">
+                <div class="ai-avatar-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h1>Trợ Lý AI Văn Hóa Chăm</h1>
+                    <p>Khám phá văn hóa, phong tục, lịch sử Champa được hỗ trợ bởi Google Gemini AI</p>
+                </div>
+            </div>
+            <div class="quota-badge">
+                <i class="fa-solid fa-bolt"></i> Hạn mức: <span id="counter">0/20</span>
+            </div>
+        </div>
+
+        <!-- Quick Question Suggestions -->
+        <div class="suggestions-bar">
+            <span class="label"><i class="fa-regular fa-lightbulb"></i> Gợi ý câu hỏi nhanh:</span>
+            <div class="chips-wrapper">
+                <button class="chip-btn" onclick="sendSuggestion('Người Chăm sinh sống chủ yếu ở đâu?')">📍 Người Chăm ở đâu?</button>
+                <button class="chip-btn" onclick="sendSuggestion('Ý nghĩa và thời gian diễn ra Lễ hội Katê?')">🎉 Lễ hội Katê là gì?</button>
+                <button class="chip-btn" onclick="sendSuggestion('Trang phục truyền thống của phụ nữ và nam giới người Chăm?')">👗 Trang phục truyền thống</button>
+                <button class="chip-btn" onclick="sendSuggestion('Nét độc đáo của làng gốm Bàu Trúc của người Chăm?')">🏺 Gốm Bàu Trúc</button>
+                <button class="chip-btn" onclick="sendSuggestion('Tín ngưỡng Bà La Môn và Hồi giáo Bà Ni của người Chăm có gì khác nhau?')">🕌 Tín ngưỡng & Tôn giáo</button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main-card">
+            <div class="chat-messages" id="chatbox">
+                <div class="message-row bot">
+                    <div class="msg-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="msg-bubble">
+                        <p>Xin chào! Tôi là trợ lý AI tìm hiểu về <strong>Văn hóa Dân tộc Chăm</strong>. Bạn có thể hỏi tôi bất kỳ câu hỏi nào về nguồn gốc lịch sử, lễ hội Katê, Ramuwan, đền tháp, trang phục hay phong tục tập quán của người Chăm!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-bar">
+                <input id="userInput" type="text" placeholder="Nhập câu hỏi của bạn về văn hóa Chăm... (Nhấn Enter để gửi)" autocomplete="off">
+                <button id="sendBtn" class="send-btn" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Gửi</span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="chat-box" id="chat"></div>
+    <script>
+        const input = document.getElementById("userInput");
+        const chatbox = document.getElementById("chatbox");
+        const counter = document.getElementById("counter");
 
-</div>
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
 
-<div class="chat-input">
-    <input id="msg">
-    <button onclick="send()">âž¤</button>
-</div>
+        function sendSuggestion(text) {
+            input.value = text;
+            sendMessage();
+        }
 
-<script>
-function send(){
-let msg=document.getElementById("msg").value;
+        function formatReply(text) {
+            if (!text) return "";
+            // Escape html
+            let safe = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // Basic bold markdown **text**
+            safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Line breaks
+            safe = safe.replace(/\n/g, '<br>');
+            return safe;
+        }
 
-fetch("/ask",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:msg})
-})
-.then(res=>res.json())
-.then(data=>{
-document.getElementById("chat").innerHTML += 
-"<div class='user'>"+msg+"</div>" +
-"<div class='bot'>"+data.reply+"</div>";
-});
-}
-</script>
+        async function sendMessage() {
+            const msg = input.value.trim();
+            if (!msg) return;
 
-{% endblock %}
+            // Append user bubble
+            const userRow = document.createElement("div");
+            userRow.className = "message-row user";
+            userRow.innerHTML = `
+                <div class="msg-avatar"><i class="fa-solid fa-user"></i></div>
+                <div class="msg-bubble">${msg.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            `;
+            chatbox.appendChild(userRow);
+            input.value = "";
+            chatbox.scrollTop = chatbox.scrollHeight;
 
+            // Append bot loading bubble
+            const loadingRow = document.createElement("div");
+            loadingRow.className = "message-row bot loading";
+            loadingRow.innerHTML = `
+                <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="msg-bubble">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatbox.appendChild(loadingRow);
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            try {
+                // Call Chatbot API
+                let res = await fetch("/api/chatbot/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: msg })
+                });
+
+                if (!res.ok && res.status === 404) {
+                    // Fallback to /chat or /ask
+                    res = await fetch("/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: msg })
+                    });
+                }
+
+                const data = await res.json();
+                chatbox.removeChild(loadingRow);
+
+                const botRow = document.createElement("div");
+                botRow.className = "message-row bot";
+                const replyHtml = formatReply(data.reply || "Không có phản hồi từ máy chủ.");
+                botRow.innerHTML = `
+                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="msg-bubble">${replyHtml}</div>
+                `;
+                chatbox.appendChild(botRow);
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                if (data.count !== undefined && data.limit !== undefined) {
+                    counter.innerText = `${data.count}/${data.limit}`;
+                }
+            } catch (err) {
+                console.error("Chat error:", err);
+                if (loadingRow.parentNode) {
+                    chatbox.removeChild(loadingRow);
+                }
+                const errRow = document.createElement("div");
+                errRow.className = "message-row bot";
+                errRow.innerHTML = `
+                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="msg-bubble" style="color:#e53e3e;">Đã xảy ra lỗi khi kết nối với máy chủ AI. Vui lòng thử lại sau.</div>
+                `;
+                chatbox.appendChild(errRow);
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>

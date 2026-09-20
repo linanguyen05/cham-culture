@@ -68,7 +68,8 @@ class CommunityRepository:
                     SELECT 1 FROM post_likes my_like
                     WHERE my_like.post_id = p.id AND my_like.user_id = %s
                 ) AS liked_by_current_user,
-                COALESCE(p.image_url, '') AS image_url
+                COALESCE(p.image_url, '') AS image_url,
+                p.video_url AS video_url
             FROM posts p
             JOIN users u ON u.id = p.user_id
             {filters}
@@ -91,6 +92,7 @@ class CommunityRepository:
         for row in rows:
             row["category"] = from_db_category(row["category"])
             row["image_urls"] = self._decode_image_urls(row.pop("image_url", ""))
+            row["video_url"] = row.get("video_url") or None
             row["author"] = {
                 "id": row.pop("author_id"),
                 "username": row.pop("author_username") or "Người dùng",
@@ -113,6 +115,7 @@ class CommunityRepository:
                 COALESCE(p.content, '') AS content,
                 p.user_id::text AS user_id,
                 COALESCE(p.image_url, '') AS image_url,
+                p.video_url AS video_url,
                 u.username AS username,
                 u.avatar_url AS avatar_url
             FROM posts p
@@ -128,6 +131,7 @@ class CommunityRepository:
                 "created_at": row["created_at"],
                 "content": row["content"],
                 "image_urls": self._decode_image_urls(row["image_url"]),
+                "video_url": row.get("video_url") or None,
                 "author": {
                     "id": row["user_id"],
                     "username": row["username"] or "Người dùng",
@@ -166,6 +170,7 @@ class CommunityRepository:
         category: str,
         image_urls: list[str],
         shared_post_id: str | None = None,
+        video_url: str | None = None,
     ) -> str:
         image_url = (
             json.dumps(image_urls, ensure_ascii=False, separators=(",", ":"))
@@ -176,8 +181,8 @@ class CommunityRepository:
             async with conn.cursor() as cur:
                 await cur.execute(
                     """
-                    INSERT INTO posts (content, image_url, user_id, category, shared_post_id)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO posts (content, image_url, user_id, category, shared_post_id, video_url)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     RETURNING id::text AS id
                     """,
                     (
@@ -186,21 +191,36 @@ class CommunityRepository:
                         _to_str(user_id),
                         to_db_category(category),
                         _to_str(shared_post_id) if shared_post_id is not None else None,
+                        _to_str(video_url) if video_url else None,
                     ),
                 )
                 row = await cur.fetchone()
         return row["id"]
 
-    async def add_comment(self, *, user_id: str, post_id: str, content: str) -> dict[str, Any]:
+    async def add_comment(
+        self,
+        *,
+        user_id: str,
+        post_id: str,
+        content: str,
+        image_url: str | None = None,
+        video_url: str | None = None,
+    ) -> dict[str, Any]:
         async with self.pool.connection() as conn:
             async with conn.cursor() as cur:
                 await cur.execute(
                     """
-                    INSERT INTO comments (content, user_id, post_id)
-                    VALUES (%s, %s, %s)
-                    RETURNING id::text AS id, created_at, content
+                    INSERT INTO comments (content, user_id, post_id, image_url, video_url)
+                    VALUES (%s, %s, %s, %s, %s)
+                    RETURNING id::text AS id, created_at, content, image_url, video_url
                     """,
-                    (content, _to_str(user_id), _to_str(post_id)),
+                    (
+                        content,
+                        _to_str(user_id),
+                        _to_str(post_id),
+                        _to_str(image_url) if image_url else None,
+                        _to_str(video_url) if video_url else None,
+                    ),
                 )
                 row = await cur.fetchone()
         return dict(row)
@@ -217,6 +237,8 @@ class CommunityRepository:
                         c.id::text AS id,
                         c.created_at AS created_at,
                         c.content AS content,
+                        c.image_url AS image_url,
+                        c.video_url AS video_url,
                         u.id::text AS user_id,
                         u.username AS username,
                         u.avatar_url AS avatar_url
@@ -233,6 +255,8 @@ class CommunityRepository:
                 "id": row["id"],
                 "created_at": row["created_at"],
                 "content": row["content"],
+                "image_url": row.get("image_url") or None,
+                "video_url": row.get("video_url") or None,
                 "user": {
                     "id": row["user_id"],
                     "username": row["username"] or "Người dùng",

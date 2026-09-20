@@ -42,6 +42,9 @@
     postContentInput: $("postContentInput"),
     postCharCount: $("postCharCount"),
     fileInput: $("fileInput"),
+    videoFileInput: $("videoFileInput"),
+    btnSelectPhotos: $("btnSelectPhotos"),
+    btnSelectVideo: $("btnSelectVideo"),
     dragZone: $("dragZone"),
     previewSlots: $("previewSlotsContainer"),
     selectedImageCount: $("selectedImageCount"),
@@ -95,6 +98,7 @@
     filter: { category: "", sort: "latest" },
     posts: [],
     selectedFiles: [],
+    selectedVideo: null,
     shareTargetId: null,
     loading: false,
   };
@@ -180,6 +184,12 @@
     return `<div class="${cls}" data-count="${count}">${imgs}</div>`;
   }
 
+  function videoPlayer(url, opts = {}) {
+    if (!url || typeof url !== "string" || !url.trim()) return "";
+    const cls = opts.embedded ? "embedded-video-container" : "post-video-container";
+    return `<div class="${cls}"><video src="${escapeHtml(url)}" controls playsinline preload="metadata"></video></div>`;
+  }
+
   // ----------------------------------------------------------------------- //
   // Auth gate
   // ----------------------------------------------------------------------- //
@@ -255,6 +265,7 @@
         </div>
         ${orig.content ? `<p class="embedded-content">${escapeHtml(orig.content)}</p>` : ""}
         ${imagesGrid(orig.image_urls, { embedded: true })}
+        ${videoPlayer(orig.video_url, { embedded: true })}
       </div>`;
   }
 
@@ -279,6 +290,7 @@
           </div>
           ${post.content ? `<p class="post-text">${escapeHtml(post.content)}</p>` : ""}
           ${imagesGrid(post.image_urls)}
+          ${videoPlayer(post.video_url)}
           ${embeddedHtml(post)}
           <div class="post-footer">
             <button type="button" class="action-item like-button${liked}" data-action="like">
@@ -352,12 +364,17 @@
 
   function commentItemHtml(c) {
     const u = c.user || { username: "Người dùng", avatar_url: null };
+    const mediaHtml = `
+      ${c.image_url ? `<div class="comment-media"><img class="comment-media-img" src="${escapeHtml(c.image_url)}" alt="Hình ảnh bình luận" loading="lazy" onclick="window.open(this.src, '_blank')"></div>` : ""}
+      ${c.video_url ? `<div class="comment-media"><video class="comment-media-video" src="${escapeHtml(c.video_url)}" controls playsinline preload="metadata"></video></div>` : ""}
+    `;
     return `
       <div class="comment-item">
         <img class="comment-avatar" src="${escapeHtml(avatarOf(u.avatar_url))}" alt="">
         <div class="comment-bubble">
           <span class="comment-author">${escapeHtml(u.username)}</span>
-          <p class="comment-content">${escapeHtml(c.content)}</p>
+          ${c.content ? `<p class="comment-content">${escapeHtml(c.content)}</p>` : ""}
+          ${mediaHtml}
           <div class="comment-time">${escapeHtml(relativeTime(c.created_at))}</div>
         </div>
       </div>`;
@@ -369,34 +386,111 @@
         ${comments.length ? comments.map(commentItemHtml).join("") : '<p class="comment-time">Chưa có bình luận nào.</p>'}
       </div>
       <form class="comment-form">
-        <textarea class="comment-input" placeholder="Viết bình luận..." maxlength="1000" required></textarea>
-        <button type="submit" class="comment-submit-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="comment-input-row">
+          <textarea class="comment-input" placeholder="Viết bình luận..." maxlength="1000"></textarea>
+          <label class="comment-attach-label" title="Đính kèm ảnh hoặc video">
+            <i class="fa-solid fa-paperclip"></i>
+            <input type="file" class="comment-file-input" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" hidden>
+          </label>
+          <button type="submit" class="comment-submit-btn" title="Gửi"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <div class="comment-preview-bar is-hidden"></div>
       </form>`;
     const form = panel.querySelector(".comment-form");
+    const fileInput = form.querySelector(".comment-file-input");
+    const previewBar = form.querySelector(".comment-preview-bar");
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        previewBar.innerHTML = "";
+        previewBar.classList.add("is-hidden");
+        return;
+      }
+      if (file.size > 25 * 1024 * 1024) {
+        toast("File đính kèm không được vượt quá 25MB.", "error");
+        fileInput.value = "";
+        previewBar.innerHTML = "";
+        previewBar.classList.add("is-hidden");
+        return;
+      }
+      const isVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov)$/i.test(file.name);
+      const isImage = file.type.startsWith("image/") || /\.(png|jpe?g|webp)$/i.test(file.name);
+      if (!isVideo && !isImage) {
+        toast("Chỉ hỗ trợ file ảnh hoặc video.", "error");
+        fileInput.value = "";
+        previewBar.innerHTML = "";
+        previewBar.classList.add("is-hidden");
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      previewBar.innerHTML = `
+        ${isVideo ? `<video src="${url}" class="comment-preview-thumb" muted></video>` : `<img src="${url}" class="comment-preview-thumb" alt="preview">`}
+        <span class="comment-preview-name" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(file.name)}</span>
+        <button type="button" class="comment-preview-remove" title="Xóa đính kèm">&times;</button>
+      `;
+      previewBar.classList.remove("is-hidden");
+      previewBar.querySelector(".comment-preview-remove").addEventListener("click", () => {
+        fileInput.value = "";
+        previewBar.innerHTML = "";
+        previewBar.classList.add("is-hidden");
+      });
+    });
+
     form.addEventListener("submit", (e) => submitComment(e, postId, panel));
   }
 
   async function submitComment(event, postId, panel) {
     event.preventDefault();
     const input = panel.querySelector(".comment-input");
+    const fileInput = panel.querySelector(".comment-file-input");
+    const previewBar = panel.querySelector(".comment-preview-bar");
     const btn = panel.querySelector(".comment-submit-btn");
     const content = input.value.trim();
-    if (!content) return;
+    const file = fileInput && fileInput.files && fileInput.files[0];
+
+    if (!content && !file) {
+      toast("Vui lòng nhập bình luận hoặc đính kèm ảnh/video.", "info");
+      return;
+    }
+
     btn.disabled = true;
     try {
-      const comment = await apiFetch(`${API}/posts/${postId}/comments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
+      let comment;
+      if (file) {
+        const fd = new FormData();
+        fd.append("content", content);
+        const isVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov)$/i.test(file.name);
+        if (isVideo) {
+          fd.append("video", file);
+        } else {
+          fd.append("image", file);
+        }
+        comment = await apiFetch(`${API}/posts/${postId}/comments`, {
+          method: "POST",
+          body: fd,
+        });
+      } else {
+        comment = await apiFetch(`${API}/posts/${postId}/comments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        });
+      }
+
       const list = panel.querySelector(".comments-list");
       const placeholder = list.querySelector("p.comment-time");
       if (placeholder) placeholder.remove();
       list.insertAdjacentHTML("beforeend", commentItemHtml(comment));
       input.value = "";
+      if (fileInput) fileInput.value = "";
+      if (previewBar) {
+        previewBar.innerHTML = "";
+        previewBar.classList.add("is-hidden");
+      }
       bumpCounter(postId, ".comment-count", +1);
     } catch (err) {
-      toast(err.message, "error");
+      toast(err.message || "Không thể gửi bình luận.", "error");
     } finally {
       btn.disabled = false;
     }
@@ -425,13 +519,24 @@
   function resetCreateForm() {
     if (dom.postForm) dom.postForm.reset();
     state.selectedFiles = [];
+    state.selectedVideo = null;
     if (dom.fileInput) dom.fileInput.value = "";
+    if (dom.videoFileInput) dom.videoFileInput.value = "";
     renderPreviews();
     if (dom.postCharCount) dom.postCharCount.textContent = "0";
   }
 
   function renderPreviews() {
     if (!dom.previewSlots) return;
+    if (state.selectedVideo) {
+      dom.previewSlots.innerHTML = `
+        <div class="preview-slot">
+          <video src="${URL.createObjectURL(state.selectedVideo)}" muted style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"></video>
+          <button type="button" class="remove-preview-btn" data-remove-video="1">&times;</button>
+        </div>`;
+      if (dom.selectedImageCount) dom.selectedImageCount.textContent = "1 video";
+      return;
+    }
     dom.previewSlots.innerHTML = state.selectedFiles
       .map(
         (f, i) => `
@@ -441,22 +546,43 @@
         </div>`
       )
       .join("");
-    if (dom.selectedImageCount) dom.selectedImageCount.textContent = `${state.selectedFiles.length}/4`;
+    if (dom.selectedImageCount) dom.selectedImageCount.textContent = `${state.selectedFiles.length}/4 ảnh`;
   }
 
   function addFiles(fileList) {
     const incoming = Array.from(fileList || []);
+    if (incoming.length === 0) return;
+    if (state.selectedVideo) {
+      state.selectedVideo = null;
+      if (dom.videoFileInput) dom.videoFileInput.value = "";
+    }
     for (const f of incoming) {
       if (state.selectedFiles.length >= 4) {
         toast("Chỉ được tối đa 4 ảnh.", "info");
         break;
       }
-      if (!/^image\/(png|jpeg|webp)$/.test(f.type)) {
+      if (!/^image\/(png|jpeg|webp)$/.test(f.type) && !/\.(png|jpe?g|webp)$/i.test(f.name)) {
         toast(`Bỏ qua ${f.name}: chỉ nhận PNG/JPG/WebP.`, "info");
         continue;
       }
       state.selectedFiles.push(f);
     }
+    renderPreviews();
+  }
+
+  function addVideo(file) {
+    if (!file) return;
+    if (!/^video\/(mp4|webm|quicktime)$/.test(file.type) && !/\.(mp4|webm|mov)$/i.test(file.name)) {
+      toast("Chỉ hỗ trợ video định dạng MP4, WebM hoặc MOV.", "error");
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      toast("Kích thước video tối đa là 50MB.", "error");
+      return;
+    }
+    state.selectedFiles = [];
+    if (dom.fileInput) dom.fileInput.value = "";
+    state.selectedVideo = file;
     renderPreviews();
   }
 
@@ -479,14 +605,17 @@
       return;
     }
 
-    if (!content && state.selectedFiles.length === 0) {
-      toast("Vui lòng nhập nội dung hoặc chọn ảnh.", "info");
+    if (!content && state.selectedFiles.length === 0 && !state.selectedVideo) {
+      toast("Vui lòng nhập nội dung, chọn ảnh hoặc chọn video.", "info");
       return;
     }
     const fd = new FormData();
     fd.append("content", content);
     fd.append("category", category);
     state.selectedFiles.forEach((f) => fd.append("images", f));
+    if (state.selectedVideo) {
+      fd.append("video", state.selectedVideo);
+    }
 
     dom.submitPostBtn.disabled = true;
     const original = dom.submitPostBtn.innerHTML;
@@ -846,8 +975,22 @@
         dom.postCharCount.textContent = String(dom.postContentInput.value.length);
       });
     }
+    if (dom.btnSelectPhotos && dom.fileInput) {
+      dom.btnSelectPhotos.addEventListener("click", () => dom.fileInput.click());
+    }
+    if (dom.btnSelectVideo && dom.videoFileInput) {
+      dom.btnSelectVideo.addEventListener("click", () => dom.videoFileInput.click());
+    }
+    if (dom.videoFileInput) {
+      dom.videoFileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) addVideo(e.target.files[0]);
+      });
+    }
     if (dom.dragZone && dom.fileInput) {
-      dom.dragZone.addEventListener("click", () => dom.fileInput.click());
+      dom.dragZone.addEventListener("click", (e) => {
+        if (e.target.closest("button") || e.target.closest("input")) return;
+        dom.fileInput.click();
+      });
       dom.dragZone.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); dom.fileInput.click(); }
       });
@@ -856,12 +999,25 @@
       dom.dragZone.addEventListener("drop", (e) => {
         e.preventDefault();
         dom.dragZone.classList.remove("is-dragging");
-        addFiles(e.dataTransfer.files);
+        const files = Array.from(e.dataTransfer.files || []);
+        const video = files.find((f) => f.type.startsWith("video/") || /\.(mp4|webm|mov)$/i.test(f.name));
+        if (video) {
+          addVideo(video);
+        } else {
+          addFiles(files);
+        }
       });
       dom.fileInput.addEventListener("change", (e) => addFiles(e.target.files));
     }
     if (dom.previewSlots) {
       dom.previewSlots.addEventListener("click", (e) => {
+        const removeVideoBtn = e.target.closest("[data-remove-video]");
+        if (removeVideoBtn) {
+          state.selectedVideo = null;
+          if (dom.videoFileInput) dom.videoFileInput.value = "";
+          renderPreviews();
+          return;
+        }
         const btn = e.target.closest("[data-remove]");
         if (!btn) return;
         state.selectedFiles.splice(parseInt(btn.dataset.remove, 10), 1);
