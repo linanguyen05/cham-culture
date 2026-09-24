@@ -27,6 +27,7 @@ class CurrentUser:
     username: str
     email: str
     avatar_url: str | None
+    public_status: bool = True
 
 
 def _fernet(settings: Settings) -> Fernet:
@@ -81,7 +82,7 @@ async def load_user(resources: AppResources, user_id: str) -> dict[str, Any] | N
     async with resources.pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.execute(
-                "SELECT id::text AS id, username, email, avatar_url FROM users WHERE id = %s",
+                "SELECT id::text AS id, username, email, avatar_url, public_status FROM users WHERE id = %s",
                 (uid,),
             )
             row = await cur.fetchone()
@@ -121,4 +122,5 @@ async def get_current_user(
         username=user["username"] or "Người dùng",
         email=user["email"] or "",
         avatar_url=user["avatar_url"],
+        public_status=bool(user.get("public_status", True) if user.get("public_status") is not None else True),
     )

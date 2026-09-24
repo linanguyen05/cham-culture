@@ -195,7 +195,10 @@
                     </div>
                     <div class="profile-identity-text">
                         <p class="eyebrow">PROFILE</p>
-                        <h1 id="profileViewTitle" class="profile-name">Đang tải...</h1>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <h1 id="profileViewTitle" class="profile-name" style="margin-bottom: 0;">Đang tải...</h1>
+                            <span id="profileStatusBadge" class="profile-status-badge is-hidden"></span>
+                        </div>
                         <p id="profileEmail" class="profile-email is-hidden"></p>
                         <div class="profile-stats" style="display: flex; gap: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
                             <div class="stat-item" style="display: flex; gap: 0.25rem;">
@@ -253,6 +256,15 @@
                 <label class="field-label" for="editUsernameInput">Tên người dùng</label>
                 <input type="text" id="editUsernameInput" name="username" class="modal-input" required>
                 
+                <label class="field-label" for="editPublicStatusInput">Chế độ tài khoản</label>
+                <select id="editPublicStatusInput" name="public_status" class="modal-input">
+                    <option value="true">Công khai (Public) - Mọi người đều có thể xem bài viết</option>
+                    <option value="false">Riêng tư (Private) - Chỉ người theo dõi mới xem được bài viết</option>
+                </select>
+                <p class="field-help" style="margin-top: -0.25rem; margin-bottom: 0.75rem; font-size: 0.8rem; color: #718096;">
+                    Khi đặt riêng tư, chỉ những người theo dõi mới có thể xem danh sách bài viết trên trang cá nhân của bạn.
+                </p>
+
                 <label class="field-label" for="editAvatarInput">Ảnh đại diện (tùy chọn)</label>
                 <div class="avatar-upload-wrapper">
                     <img id="editAvatarPreview" src="/avatarmacdinh.svg" alt="" class="mini-avatar" style="width: 64px; height: 64px; margin-bottom: 0.5rem; border-radius: 50%;">

@@ -67,6 +67,7 @@
     directEditAvatarBtn: $("directEditAvatarBtn"),
     directAvatarInput: $("directAvatarInput"),
     profileViewTitle: $("profileViewTitle"),
+    profileStatusBadge: $("profileStatusBadge"),
     profileEmail: $("profileEmail"),
     profilePostCount: $("profilePostCount"),
     profileFollowersCount: $("profileFollowersCount"),
@@ -762,7 +763,21 @@
       } else {
         dom.profileEmail.classList.add("is-hidden");
       }
-      if (state.currentUser && String(userId) === String(state.currentUser.id)) {
+      const isOwner = state.currentUser && String(userId) === String(state.currentUser.id);
+
+      // Status badge
+      if (dom.profileStatusBadge) {
+        dom.profileStatusBadge.classList.remove("is-hidden", "public", "private");
+        if (u.public_status === false) {
+          dom.profileStatusBadge.classList.add("private");
+          dom.profileStatusBadge.innerHTML = `<i class="fa-solid fa-lock" aria-hidden="true"></i> Riêng tư`;
+        } else {
+          dom.profileStatusBadge.classList.add("public");
+          dom.profileStatusBadge.innerHTML = `<i class="fa-solid fa-globe" aria-hidden="true"></i> Công khai`;
+        }
+      }
+
+      if (isOwner) {
         dom.editProfileBtn.classList.remove("is-hidden");
         if (dom.directEditAvatarBtn) dom.directEditAvatarBtn.classList.remove("is-hidden");
         dom.editUsernameInput.value = u.username || "";
@@ -791,9 +806,13 @@
       if (dom.profileFollowersCount) dom.profileFollowersCount.textContent = String(profile.followers_count || 0);
       if (dom.profileFollowingCount) dom.profileFollowingCount.textContent = String(profile.following_count || 0);
       dom.profileState.innerHTML = "";
-      dom.profilePostsContainer.innerHTML = allItems.length
-        ? allItems.map(postCardHtml).join("")
-        : stateCard("fa-feather", "Chưa có bài viết", "Người dùng này chưa đăng bài nào.");
+      if (profile.can_view_posts === false || (!isOwner && u.public_status === false && !profile.is_following)) {
+        dom.profilePostsContainer.innerHTML = stateCard("fa-lock", "Tài khoản riêng tư", "Người dùng này đã đặt tài khoản ở chế độ riêng tư. Hãy theo dõi để xem bài viết của họ.");
+      } else if (allItems.length) {
+        dom.profilePostsContainer.innerHTML = allItems.map(postCardHtml).join("");
+      } else {
+        dom.profilePostsContainer.innerHTML = stateCard("fa-feather", "Chưa có bài viết", "Người dùng này chưa đăng bài nào.");
+      }
     } catch (err) {
       dom.profileState.innerHTML = stateCard("fa-triangle-exclamation", "Không tải được hồ sơ", err.message);
     }
@@ -1052,6 +1071,9 @@
 
     if (dom.editProfileBtn) {
       dom.editProfileBtn.addEventListener("click", () => {
+        if (state.currentUser && dom.editPublicStatusInput) {
+          dom.editPublicStatusInput.value = state.currentUser.public_status === false ? "false" : "true";
+        }
         openModal(dom.editProfileModal);
       });
     }

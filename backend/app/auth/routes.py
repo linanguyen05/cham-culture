@@ -79,6 +79,7 @@ async def me(user: CurrentUser = Depends(get_current_user)) -> dict[str, Any]:
             "username": user.username,
             "email": user.email,
             "avatar_url": user.avatar_url,
+            "public_status": user.public_status,
         },
     }
 
