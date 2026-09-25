@@ -1,0 +1,742 @@
+/* ==========================================================================
+   learn-responsive.css
+   Modern, fluid, fully responsive layout enhancements for Cham Culture Learn
+   pages: learn.html, dan-so.html, khu-vuc.html, ngon-ngu.html, nguon-goc.html
+   ========================================================================== */
+
+/* Universal container adjustments */
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+    height: auto !important; /* Allow natural scrolling on all screen heights */
+}
+
+/* Base resets for fluid sizing */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ==========================================================================
+   TOP NAVIGATION BAR RESPONSIVE (Header & Nav)
+   ========================================================================== */
+@media (max-width: 880px) {
+    header {
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-areas: 
+            "logo search"
+            "nav nav" !important;
+        row-gap: 12px !important;
+        column-gap: 10px !important;
+        padding: 12px 16px !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .logo {
+        grid-area: logo !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        white-space: nowrap !important;
+        text-decoration: none !important;
+    }
+
+    .logo img {
+        height: 36px !important;
+        width: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    .logo span {
+        font-size: 1.18rem !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+        color: var(--primary-color, #A34925) !important;
+    }
+
+    .search-icon {
+        grid-area: search !important;
+        font-size: 1.2rem !important;
+        justify-self: end !important;
+        align-self: center !important;
+        padding: 6px !important;
+    }
+
+    nav {
+        grid-area: nav !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background: #fdf8f4 !important;
+        padding: 4px !important;
+        border-radius: 12px !important;
+        border: 1px solid #ebdcd3 !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    nav a {
+        flex: 1 !important;
+        text-align: center !important;
+        padding: 8px 6px !important;
+        font-size: 0.84rem !important;
+        font-weight: 700 !important;
+        color: #4a5568 !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+        border-radius: 8px !important;
+        margin: 0 !important;
+        transition: all 0.2s ease !important;
+        border: none !important;
+    }
+
+    nav a:hover {
+        color: var(--primary-color, #A34925) !important;
+        background: rgba(163, 73, 37, 0.08) !important;
+    }
+
+    nav a.active {
+        background: var(--primary-color, #A34925) !important;
+        color: #ffffff !important;
+        border-bottom: none !important;
+        box-shadow: 0 2px 6px rgba(163, 73, 37, 0.25) !important;
+    }
+}
+
+/* ==========================================================================
+   BREAKPOINT: Large Tablet & Desktop (<= 1200px)
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .header h1 {
+        font-size: 48px;
+    }
+
+    .tabs {
+        gap: 40px;
+    }
+
+    .tab {
+        padding: 20px;
+        font-size: 22px;
+    }
+
+    .cards {
+        padding: 30px 40px;
+        gap: 20px;
+    }
+
+    .card {
+        font-size: 28px;
+        padding: 25px;
+    }
+
+    .mindmap {
+        gap: 120px;
+        margin-top: 60px;
+    }
+
+    .special-grid {
+        gap: 60px;
+    }
+}
+
+/* ==========================================================================
+   BREAKPOINT: Tablet (<= 992px)
+   ========================================================================== */
+@media (max-width: 992px) {
+    /* Header Banner */
+    .header {
+        padding: 24px 20px;
+    }
+
+    .header h1 {
+        font-size: 34px;
+        letter-spacing: 1.5px;
+    }
+
+    .icon-left, .icon-right {
+        height: 60px;
+        opacity: 0.3;
+    }
+
+    .icon-left { left: 15px; }
+    .icon-right { right: 15px; }
+
+    /* Tabs Bar */
+    .tabs {
+        gap: 10px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 12px 16px;
+        scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab {
+        padding: 10px 16px;
+        font-size: 16px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 8px;
+    }
+
+    /* Tab 0: Layout & Left Menu */
+    .layout {
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        padding: 16px;
+    }
+
+    .left {
+        width: 100%;
+        margin-left: 0;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+        scrollbar-width: none;
+    }
+
+    .left::-webkit-scrollbar {
+        display: none;
+    }
+
+    .left a {
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border: 1px solid #ebdcd3;
+        border-radius: 20px;
+        background: #ffffff;
+    }
+
+    .left a.active {
+        background: var(--main-brown, #a65d37);
+        color: #ffffff;
+        border-color: var(--main-brown, #a65d37);
+    }
+
+    .right {
+        padding: 24px;
+        height: auto;
+        border-radius: 16px;
+    }
+
+    .inner-flex {
+        flex-direction: column;
+        gap: 24px;
+        height: auto;
+    }
+
+    .content-left {
+        width: 100%;
+    }
+
+    .content-left h2 {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+
+    .content-left p {
+        font-size: 17px;
+        line-height: 1.75;
+        margin-bottom: 16px;
+    }
+
+    .content-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content-right img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Tab 1: Culture Mindmap */
+    .mindmap {
+        gap: 30px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+
+    .node {
+        width: 140px;
+        height: 140px;
+        font-size: 18px;
+    }
+
+    .content-box {
+        width: 95%;
+        padding: 24px;
+        font-size: 18px;
+        margin: 24px auto;
+    }
+
+    /* Tab 2: Religion Cards */
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 20px;
+        gap: 16px;
+        height: auto;
+    }
+
+    .card {
+        font-size: 22px;
+        padding: 24px;
+        height: auto;
+        min-height: 110px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .modal-inner {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .modal-text {
+        width: 100%;
+    }
+
+    .modal-text h2 {
+        font-size: 24px;
+    }
+
+    .modal-text p {
+        font-size: 15px;
+    }
+
+    .modal-img {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Tab 3: Story Cards */
+    .story-container {
+        height: auto;
+        min-height: 520px;
+        padding: 20px 16px 80px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .story-card {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        min-height: 380px;
+        padding: 30px 24px;
+        border-radius: 24px;
+        display: none;
+    }
+
+    .story-card.active {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .story-card h2 {
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .story-card p {
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    .nav-controls {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        gap: 24px;
+        margin-top: 24px;
+    }
+
+    .nav-btn {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        font-size: 22px;
+    }
+
+    /* Tab 4: Special Grid */
+    .special-start {
+        padding-top: 30px;
+    }
+
+    .special-start h2 {
+        font-size: 32px;
+        margin-bottom: 24px;
+        margin-top: 0;
+    }
+
+    .special-grid {
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .special-item {
+        width: 260px;
+    }
+
+    .special-item img {
+        width: 260px;
+        height: 180px;
+    }
+
+    .special-item span {
+        font-size: 20px;
+    }
+
+    .special-content {
+        width: 85%;
+    }
+
+    .special-content h2 {
+        font-size: 32px;
+    }
+
+    .special-content p {
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    /* Tab 5: Misconception */
+    .misconception-scene {
+        height: 70vh;
+        min-height: 480px;
+    }
+
+    .mask {
+        width: 400px;
+        height: 400px;
+    }
+
+    .fake-text {
+        font-size: 42px;
+        letter-spacing: 2px;
+    }
+
+    .truth-panel {
+        width: calc(100% - 40px);
+        max-width: 600px;
+        padding: 30px 24px;
+        border-radius: 24px;
+    }
+
+    .truth-panel h2 {
+        font-size: 30px;
+        margin-bottom: 16px;
+    }
+
+    .truth-panel p {
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    .truth-card {
+        width: calc(100% - 40px);
+        max-width: 600px;
+        padding: 30px 24px;
+    }
+
+    .truth-card h2 {
+        font-size: 28px;
+    }
+
+    .truth-card p {
+        font-size: 17px;
+    }
+}
+
+/* ==========================================================================
+   BREAKPOINT: Mobile (<= 640px)
+   ========================================================================== */
+@media (max-width: 640px) {
+    /* Header Banner */
+    .header {
+        padding: 16px 12px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+        letter-spacing: 0.5px;
+    }
+
+    .icon-left, .icon-right {
+        height: 40px;
+        opacity: 0.2;
+    }
+
+    .icon-left { left: 8px; }
+    .icon-right { right: 8px; }
+
+    /* Tabs */
+    .tabs {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    /* Tab 0: Layout */
+    .layout {
+        padding: 10px;
+        gap: 14px;
+    }
+
+    .left {
+        gap: 6px;
+    }
+
+    .left a {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .right {
+        padding: 16px 14px;
+        border-radius: 12px;
+    }
+
+    .content-left h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .content-left p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin-bottom: 12px;
+    }
+
+    /* Tab 1: Mindmap */
+    .mindmap {
+        gap: 16px;
+        margin-top: 24px;
+    }
+
+    .node {
+        width: 100px;
+        height: 100px;
+        font-size: 13px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .content-box {
+        padding: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        border-left-width: 4px;
+    }
+
+    /* Tab 2: Cards */
+    .cards {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .card {
+        font-size: 16px;
+        padding: 18px 14px;
+        min-height: 70px;
+        border-radius: 12px;
+    }
+
+    .modal-content {
+        padding: 20px 14px;
+        max-height: 88vh;
+    }
+
+    .modal-text h2 {
+        font-size: 18px;
+    }
+
+    .modal-text p {
+        font-size: 13.5px;
+    }
+
+    .close-btn {
+        top: 12px;
+        right: 14px;
+        font-size: 22px;
+    }
+
+    /* Tab 3: Story Cards */
+    .story-container {
+        padding: 14px 10px 70px 10px;
+        min-height: 440px;
+    }
+
+    .story-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+        min-height: 300px;
+    }
+
+    .story-card h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .story-card p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .nav-controls {
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .nav-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
+        border-radius: 12px;
+    }
+
+    /* Tab 4: Special Grid */
+    .special-start {
+        padding-top: 16px;
+    }
+
+    .special-start h2 {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .special-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .special-item {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .special-item img {
+        width: 100%;
+        height: 160px;
+    }
+
+    .special-item span {
+        font-size: 16px;
+    }
+
+    .special-content {
+        width: 90%;
+    }
+
+    .special-content h2 {
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+
+    .special-content p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .special-close {
+        top: 14px;
+        right: 14px;
+        font-size: 14px;
+        padding: 6px 14px;
+        border-radius: 10px;
+    }
+
+    /* Tab 5: Misconception */
+    .misconception-scene {
+        height: 60vh;
+        min-height: 380px;
+    }
+
+    .mask {
+        width: 250px;
+        height: 250px;
+    }
+
+    .fake-text {
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+
+    .truth-panel {
+        width: calc(100% - 24px);
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .truth-panel h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .truth-panel p {
+        font-size: 13.5px;
+        line-height: 1.6;
+    }
+
+    .final-line {
+        font-size: 13.5px;
+        margin-top: 12px;
+    }
+
+    .truth-card {
+        width: calc(100% - 24px);
+        padding: 20px 16px;
+    }
+
+    .truth-card h2 {
+        font-size: 20px;
+    }
+
+    .truth-card p {
+        font-size: 13.5px;
+    }
+
+    .close-img {
+        top: 14px;
+        right: 16px;
+        font-size: 26px;
+    }
+}

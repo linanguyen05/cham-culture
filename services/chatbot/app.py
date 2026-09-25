@@ -30,10 +30,19 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY environment variable is not set. Please configure it in a .env file.")
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-2.5-flash")
+model_name = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+system_instruction = (
+    "Bạn là Chăm Culture AI - trợ lý ảo thông thái, thân thiện và tận tâm của nền tảng Văn Hóa Chăm (Cham Culture). "
+    "Sứ mệnh cốt lõi của bạn là giới thiệu, giải đáp và lan tỏa vẻ đẹp về lịch sử Champa, phong tục tập quán, "
+    "lễ hội truyền thống (Katê, Ramuwan, Rija Nưgar...), kiến trúc đền tháp, làng nghề thủ công và đời sống người Chăm.\n\n"
+    "NGUYÊN TẮC PHẢN HỒI:\n"
+    "1. Với câu hỏi về văn hóa Chăm: Trả lời sâu sắc, chuẩn xác và trân trọng giá trị truyền thống.\n"
+    "2. Với các câu hỏi ngoài lề: Trả lời ngắn gọn, chuẩn xác; đồng thời ở cuối phản hồi, luôn khéo léo đính kèm câu gợi mở tìm hiểu Văn hóa Chăm.\n"
+    "3. Luôn dùng tiếng Việt lịch sự, thân thiện."
+)
+model = genai.GenerativeModel(model_name, system_instruction=system_instruction)
 
 question_count = load_count()
-daily_limit = 20   # hạn mức free tier
 
 @app.route("/")
 def index():
@@ -55,30 +64,22 @@ def chat():
             return jsonify({
                 "reply": reply,
                 "count": question_count,
-                "limit": daily_limit
+                "limit": "unlimited"
             })
 
     try:
-        # ====== Kiểm tra hạn mức ======
-        if question_count >= daily_limit:
-            return jsonify({
-                "reply": "Bạn đã vượt quá hạn mức miễn phí trong ngày (20 câu hỏi). Vui lòng thử lại ngày mai hoặc bật billing để tăng quota.",
-                "count": question_count,
-                "limit": daily_limit
-            })
-
-        # ====== Gọi Gemini ======
+        # ====== Gọi Gemini (Không giới hạn câu hỏi) ======
         response = model.generate_content(user_msg)
         reply = response.text if hasattr(response, "text") else ""
 
-        # ====== Tăng biến đếm ======
+        # ====== Tăng biến đếm thống kê ======
         question_count += 1
         save_count(question_count)
 
         return jsonify({
             "reply": reply.strip(),
             "count": question_count,
-            "limit": daily_limit
+            "limit": "unlimited"
         })
 
     except exceptions.ResourceExhausted:
@@ -88,7 +89,7 @@ def chat():
         return jsonify({
             "reply": "Quota của Gemini đã hết, vui lòng thử lại sau hoặc bật billing để tăng hạn mức.",
             "count": question_count,
-            "limit": daily_limit
+            "limit": "unlimited"
         })
 
 if __name__ == "__main__":

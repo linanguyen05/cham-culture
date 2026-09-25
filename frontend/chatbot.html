@@ -373,7 +373,7 @@
                 </div>
             </div>
             <div class="quota-badge">
-                <i class="fa-solid fa-bolt"></i> Hạn mức: <span id="counter">0/20</span>
+                <i class="fa-solid fa-infinity"></i> Hạn mức: <span id="counter">Không giới hạn</span>
             </div>
         </div>
 
@@ -502,8 +502,12 @@
                 chatbox.appendChild(botRow);
                 chatbox.scrollTop = chatbox.scrollHeight;
 
-                if (data.count !== undefined && data.limit !== undefined) {
-                    counter.innerText = `${data.count}/${data.limit}`;
+                if (data.count !== undefined) {
+                    if (data.limit === "unlimited" || !data.limit) {
+                        counter.innerText = `Không giới hạn (${data.count} đã hỏi)`;
+                    } else {
+                        counter.innerText = `${data.count}/${data.limit}`;
+                    }
                 }
             } catch (err) {
                 console.error("Chat error:", err);

@@ -70,6 +70,7 @@ class Settings(BaseSettings):
 
     # --- Chatbot API ---
     gemini_api_key: str | None = None
+    gemini_model: str = "gemini-3.1-flash-lite"
 
     @field_validator("session_samesite")
     @classmethod
